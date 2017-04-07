@@ -25,8 +25,8 @@ class JMAYtList extends JMAYtVideo {
         }
 
         $trans_id .= $this->id;
-        $return = get_transient( $trans_id );
-        if(false === $return) {
+        //$return = get_transient( $trans_id );
+        /*if(false === $return) {*/
             $yt_api_array = JMAYtList::yt_loop($this->id);
             $yt_loop_items = $yt_api_array['items'];
             $count = count($yt_loop_items);
@@ -66,7 +66,7 @@ class JMAYtList extends JMAYtVideo {
                 }
                 set_transient( $trans_id, $return, HOUR_IN_SECONDS );
             }
-        }
+        //}
         return $return;
     }
 }

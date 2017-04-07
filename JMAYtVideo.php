@@ -10,6 +10,14 @@ class JMAYtVideo {
     }
     protected function curl($url){
         $curl = curl_init($url);
+
+        $whitelist = array('127.0.0.1', "::1");
+        if(in_array($_SERVER['REMOTE_ADDR'], $whitelist)){
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);//for localhost
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);//for localhost
+        }
+
+        //curl_setopt($curl, CURLOPT_SSLVERSION,3);//forMAMP
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         $result = curl_exec($curl);
         curl_close($curl);
