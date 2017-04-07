@@ -45,8 +45,7 @@ class JMAYtList extends JMAYtVideo {
                         default:
                             $val = '020';
                     }
-                    $col_class .= ' ';
-                    $col_class .= 'col-' . $break . '-' . $val;
+                    $col_class .= ' col-' . $break . '-' . $val;
                 }
                 $return = '';
                 foreach($yt_loop_items as $yt_loop_item){

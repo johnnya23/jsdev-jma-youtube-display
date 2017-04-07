@@ -38,7 +38,6 @@ class JMAYtVideo {
         $curl_array = JMAYtVideo::curl($youtube);
         if($curl_array)
             $snippet = $curl_array['items'][0]['snippet'];
-
         return $snippet;
     }
 
@@ -51,10 +50,11 @@ class JMAYtVideo {
  * */
     private function map_meta($snippet, $id){//map youtude array to schema proprties
         $yt_meta_array_items['name'] = $snippet['title'];
+        $yt_meta_array_items['publisher'] = $snippet['channelTitle'];
+        $yt_meta_array_items['description'] = $snippet['description'];
         $yt_meta_array_items['thumbnailUrl'] = $snippet['thumbnails']['default']['url'];
         $yt_meta_array_items['embedURL'] = 'https://www.youtube.com/embed/' . $id;
         $yt_meta_array_items['uploadDate'] = $snippet['publishedAt'];
-        $yt_meta_array_items['description'] = $snippet['description'];
         return $yt_meta_array_items;
     }
 

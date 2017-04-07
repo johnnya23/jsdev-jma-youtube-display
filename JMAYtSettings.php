@@ -29,10 +29,10 @@ class JMAYtSettings
     {
         // This page will be under "Settings"
         add_options_page(
-            'Settings Admin',
-            'YouTube Api Settings',
+            'YouTube Settings',
+            'YouTube Settings',
             'manage_options',
-            'my-setting-admin',
+            'jma-yt-setting-admin',
             array( $this, 'create_admin_page' )
         );
     }
@@ -43,7 +43,7 @@ class JMAYtSettings
     public function create_admin_page()
     {
         // Set class property
-        $this->options = get_option( 'jma_yt_api' );
+        $this->options = get_option( 'jma_yt_settings' );
         ?>
         <div class="wrap">
             <h1>Api Settings</h1>
@@ -51,7 +51,7 @@ class JMAYtSettings
                 <?php
                 // This prints out all hidden setting fields
                 settings_fields( 'my_option_group' );
-                do_settings_sections( 'my-setting-admin' );
+                do_settings_sections( 'jma-yt-setting-admin' );
                 submit_button();
                 ?>
             </form>
@@ -66,7 +66,7 @@ class JMAYtSettings
     {
         register_setting(
             'my_option_group', // Option group
-            'jma_yt_api', // Option name
+            'jma_yt_settings', // Option name
             array( $this, 'sanitize' ) // Sanitize
         );
 
@@ -74,14 +74,14 @@ class JMAYtSettings
             'setting_section_id', // ID
             'Insert Api', // Title
             array( $this, 'print_section_info' ), // Callback
-            'my-setting-admin' // Page
+            'jma-yt-setting-admin' // Page
         );
 
         add_settings_field(
             'api_number', // ID
             'Api Number', // Title
             array( $this, 'api_number_callback' ), // Callback
-            'my-setting-admin', // Page
+            'jma-yt-setting-admin', // Page
             'setting_section_id' // Section
         );
     }
@@ -114,7 +114,7 @@ class JMAYtSettings
     public function api_number_callback()
     {
         printf(
-            '<input type="text" size="50" id="api_number" name="jma_yt_api[api_number]" value="%s" />',
+            '<input type="text" size="50" id="api_number" name="jma_yt_settings[api_number]" value="%s" />',
             isset( $this->options['api_number'] ) ? esc_attr( $this->options['api_number']) : ''
         );
     }
