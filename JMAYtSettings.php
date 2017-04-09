@@ -13,9 +13,10 @@ class JMAYtSettings {
     public function __construct() {
         $this->file =  __FILE__ ;
         $this->dir = dirname( $this->file );
-        $this->assets_dir = trailingslashit( $this->dir ) . 'assets';
-        $this->assets_url = esc_url($this->file );
+        $this->assets_dir = trailingslashit( $this->dir );
+        $this->assets_url = esc_url( trailingslashit( plugins_url( '/', $this->file ) ) );
         $this->settings_base = 'jmayt_';
+        $this->db_option = 'jmaty_options_array';
 
         // Initialise settings
         add_action( 'admin_init', array( $this, 'init' ) );
@@ -62,8 +63,8 @@ class JMAYtSettings {
         // If you're not including an image upload then you can leave this function call out
         wp_enqueue_media();
 
-        wp_register_script( 'wpt-admin-js', $this->assets_url . '/settings.js', array( 'farbtastic', 'jquery' ), '1.0.0' );
-        wp_enqueue_script( 'wpt-admin-js' );
+        wp_register_script( $this->settings_base . 'admin-js', $this->assets_url . 'settings.js', array( 'farbtastic', 'jquery' ), '1.0.0' );
+        wp_enqueue_script( $this->settings_base . 'admin-js' );
     }
 
     /**
@@ -203,7 +204,7 @@ class JMAYtSettings {
     public function register_settings() {
         if( is_array( $this->settings ) ) {
 
-            $option_name = 'jmaty_options_array';
+            $option_name = $this->db_option;
 
             foreach( $this->settings as $section => $data ) {
 
@@ -245,9 +246,9 @@ class JMAYtSettings {
 
         $html = '';
         $option_array = array();
-;       $option_array_name = $this->settings_base . $field['id'];
-        $option_name = 'jmaty_options_array[' . $this->settings_base . $field['id'] . ']';
-        $option_array = get_option( 'jmaty_options_array' );
+;       $option_array_name = $field['id'];
+        $option_name = $this->db_option . '[' . $field['id'] . ']';
+        $option_array = get_option( $this->db_option );
         if(is_array($option_array))
         $option = $option_array[$option_array_name];
 
@@ -332,10 +333,10 @@ class JMAYtSettings {
                 if( $data ) {
                     $image_thumb = wp_get_attachment_thumb_url( $data );
                 }
-                $html .= '<img id="' . $option_name . '_preview" class="image_preview" src="' . $image_thumb . '" /><br/>' . "\n";
-                $html .= '<input id="' . $option_name . '_button" type="button" data-uploader_title="' . __( 'Upload an image' , 'jmayt_textdomain' ) . '" data-uploader_button_text="' . __( 'Use image' , 'jmayt_textdomain' ) . '" class="image_upload_button button" value="'. __( 'Upload new image' , 'jmayt_textdomain' ) . '" />' . "\n";
-                $html .= '<input id="' . $option_name . '_delete" type="button" class="image_delete_button button" value="'. __( 'Remove image' , 'jmayt_textdomain' ) . '" />' . "\n";
-                $html .= '<input id="' . $option_name . '" class="image_data_field" type="hidden" name="' . $option_name . '" value="' . $data . '"/><br/>' . "\n";
+                $html .= '<img id="' . $option_array_name . '_preview" class="image_preview" src="' . $image_thumb . '" /><br/>' . "\n";
+                $html .= '<input id="' . $option_array_name . '_button" type="button" data-uploader_title="' . __( 'Upload an image' , 'jmayt_textdomain' ) . '" data-uploader_button_text="' . __( 'Use image' , 'jmayt_textdomain' ) . '" class="image_upload_button button" value="'. __( 'Upload new image' , 'jmayt_textdomain' ) . '" />' . "\n";
+                $html .= '<input id="' . $option_array_name . '_delete" type="button" class="image_delete_button button" value="'. __( 'Remove image' , 'jmayt_textdomain' ) . '" />' . "\n";
+                $html .= '<input id="' . $option_array_name . '" class="image_data_field" type="hidden" name="' . $option_name . '" value="' . $data . '"/><br/>' . "\n";
                 break;
 
             case 'color':
@@ -386,16 +387,6 @@ class JMAYtSettings {
         $html = '<div class="wrap" id="jmayt_settings">' . "\n";
         $html .= '<h2>' . __( 'YouTube w/ Meta Settings' , 'jmayt_textdomain' ) . '</h2>' . "\n";
         $html .= '<form method="post" action="options.php" enctype="multipart/form-data">' . "\n";
-
-        // Setup navigation
-        $html .= '<ul id="settings-sections" class="subsubsub hide-if-no-js">' . "\n";
-        $html .= '<li><a class="tab all current" href="#all">' . __( 'All' , 'jmayt_textdomain' ) . '</a></li>' . "\n";
-
-        foreach( $this->settings as $section => $data ) {
-            $html .= '<li>| <a class="tab" href="#' . $section . '">' . $data['title'] . '</a></li>' . "\n";
-        }
-
-        $html .= '</ul>' . "\n";
 
         $html .= '<div class="clear"></div>' . "\n";
 
