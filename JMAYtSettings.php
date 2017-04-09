@@ -10,13 +10,15 @@ class JMAYtSettings {
     private $settings_base;
     private $settings;
 
-    public function __construct() {
+    public function __construct($base = 'jma_plugin', $title = 'Cool Plugin', $settings = array()) {
         $this->file =  __FILE__ ;
         $this->dir = dirname( $this->file );
         $this->assets_dir = trailingslashit( $this->dir );
         $this->assets_url = esc_url( trailingslashit( plugins_url( '/', $this->file ) ) );
-        $this->settings_base = 'jmayt_';
-        $this->db_option = 'jmaty_options_array';
+        $this->settings_base = $base . '_';
+        $this->db_option = $this->settings_base . 'options_array';
+        $this->page_title = $title;
+        $this->settings = $settings;
 
         // Initialise settings
         add_action( 'admin_init', array( $this, 'init' ) );
@@ -44,7 +46,7 @@ class JMAYtSettings {
      * @return void
      */
     public function add_menu_item() {
-        $page = add_options_page( __( 'YouTube w/ Meta', 'jmayt_textdomain' ) , __( 'YouTube w/ Meta', 'jmayt_textdomain' ) , 'manage_options' , 'jmayt_settings' ,  array( $this, 'settings_page' ) );
+        $page = add_options_page( __( $this->page_title, $this->settings_base . 'textdomain' ) , __( $this->page_title, $this->settings_base . 'textdomain' ) , 'manage_options' , $this->settings_base . 'settings' ,  array( $this, 'settings_page' ) );
         add_action( 'admin_print_styles-' . $page, array( $this, 'settings_assets' ) );
     }
 
@@ -73,7 +75,7 @@ class JMAYtSettings {
      * @return array 		Modified links
      */
     public function add_settings_link( $links ) {
-        $settings_link = '<a href="options-general.php?page=jmayt_settings">' . __( 'Settings', 'jmayt_textdomain' ) . '</a>';
+        $settings_link = '<a href="options-general.php?page=' . $this->settings_base . 'settings">' . __( 'Settings', $this->settings_base . 'textdomain' ) . '</a>';
         array_push( $links, $settings_link );
         return $links;
     }
@@ -83,118 +85,9 @@ class JMAYtSettings {
      * @return array Fields to be displayed on settings page
      */
     private function settings_fields() {
+        $this->settings = apply_filters( $this->settings_base . 'settings_fields', $this->settings );
 
-        $settings['standard'] = array(
-            'title'					=> __( 'Standard', 'jmayt_textdomain' ),
-            'description'			=> __( 'These are fairly standard form input fields.', 'jmayt_textdomain' ),
-            'fields'				=> array(
-                array(
-                    'id' 			=> 'text_field',
-                    'label'			=> __( 'Some Text' , 'jmayt_textdomain' ),
-                    'description'	=> __( 'This is a standard text field.', 'jmayt_textdomain' ),
-                    'type'			=> 'text',
-                    'default'		=> '',
-                    'placeholder'	=> __( 'Placeholder text', 'jmayt_textdomain' )
-                ),
-                array(
-                    'id' 			=> 'password_field',
-                    'label'			=> __( 'A Password' , 'jmayt_textdomain' ),
-                    'description'	=> __( 'This is a standard password field.', 'jmayt_textdomain' ),
-                    'type'			=> 'password',
-                    'default'		=> '',
-                    'placeholder'	=> __( 'Placeholder text', 'jmayt_textdomain' )
-                ),
-                array(
-                    'id' 			=> 'secret_text_field',
-                    'label'			=> __( 'Some Secret Text' , 'jmayt_textdomain' ),
-                    'description'	=> __( 'This is a secret text field - any data saved here will not be displayed after the page has reloaded, but it will be saved.', 'jmayt_textdomain' ),
-                    'type'			=> 'text_secret',
-                    'default'		=> '',
-                    'placeholder'	=> __( 'Placeholder text', 'jmayt_textdomain' )
-                ),
-                array(
-                    'id' 			=> 'text_block',
-                    'label'			=> __( 'A Text Block' , 'jmayt_textdomain' ),
-                    'description'	=> __( 'This is a standard text area.', 'jmayt_textdomain' ),
-                    'type'			=> 'textarea',
-                    'default'		=> '',
-                    'placeholder'	=> __( 'Placeholder text for this textarea', 'jmayt_textdomain' )
-                ),
-                array(
-                    'id' 			=> 'single_checkbox',
-                    'label'			=> __( 'An Option', 'jmayt_textdomain' ),
-                    'description'	=> __( 'A standard checkbox - if you save this option as checked then it will store the option as \'on\', otherwise it will be an empty string.', 'jmayt_textdomain' ),
-                    'type'			=> 'checkbox',
-                    'default'		=> ''
-                ),
-                array(
-                    'id' 			=> 'select_box',
-                    'label'			=> __( 'A Select Box', 'jmayt_textdomain' ),
-                    'description'	=> __( 'A standard select box.', 'jmayt_textdomain' ),
-                    'type'			=> 'select',
-                    'options'		=> array( 'drupal' => 'Drupal', 'joomla' => 'Joomla', 'wordpress' => 'WordPress' ),
-                    'default'		=> 'wordpress'
-                ),
-                array(
-                    'id' 			=> 'radio_buttons',
-                    'label'			=> __( 'Some Options', 'jmayt_textdomain' ),
-                    'description'	=> __( 'A standard set of radio buttons.', 'jmayt_textdomain' ),
-                    'type'			=> 'radio',
-                    'options'		=> array( 'superman' => 'Superman', 'batman' => 'Batman', 'ironman' => 'Iron Man' ),
-                    'default'		=> 'batman'
-                ),
-                array(
-                    'id' 			=> 'multiple_checkboxes',
-                    'label'			=> __( 'Some Items', 'jmayt_textdomain' ),
-                    'description'	=> __( 'You can select multiple items and they will be stored as an array.', 'jmayt_textdomain' ),
-                    'type'			=> 'checkbox_multi',
-                    'options'		=> array( 'square' => 'Square', 'circle' => 'Circle', 'rectangle' => 'Rectangle', 'triangle' => 'Triangle' ),
-                    'default'		=> array( 'circle', 'triangle' )
-                )
-            )
-        );
-
-        $settings['extra'] = array(
-            'title'					=> __( 'Extra', 'jmayt_textdomain' ),
-            'description'			=> __( 'These are some extra input fields that maybe aren\'t as common as the others.', 'jmayt_textdomain' ),
-            'fields'				=> array(
-                array(
-                    'id' 			=> 'number_field',
-                    'label'			=> __( 'A Number' , 'jmayt_textdomain' ),
-                    'description'	=> __( 'This is a standard number field - if this field contains anything other than numbers then the form will not be submitted.', 'jmayt_textdomain' ),
-                    'type'			=> 'number',
-                    'default'		=> '',
-                    'placeholder'	=> __( '42', 'jmayt_textdomain' )
-                ),
-                array(
-                    'id' 			=> 'colour_picker',
-                    'label'			=> __( 'Pick a colour', 'jmayt_textdomain' ),
-                    'description'	=> __( 'This uses WordPress\' built-in colour picker - the option is stored as the colour\'s hex code.', 'jmayt_textdomain' ),
-                    'type'			=> 'color',
-                    'default'		=> '#21759B'
-                ),
-                array(
-                    'id' 			=> 'an_image',
-                    'label'			=> __( 'An Image' , 'jmayt_textdomain' ),
-                    'description'	=> __( 'This will upload an image to your media library and store the attachment ID in the option field. Once you have uploaded an imge the thumbnail will display above these buttons.', 'jmayt_textdomain' ),
-                    'type'			=> 'image',
-                    'default'		=> '',
-                    'placeholder'	=> ''
-                ),
-                array(
-                    'id' 			=> 'multi_select_box',
-                    'label'			=> __( 'A Multi-Select Box', 'jmayt_textdomain' ),
-                    'description'	=> __( 'A standard multi-select box - the saved data is stored as an array.', 'jmayt_textdomain' ),
-                    'type'			=> 'select_multi',
-                    'options'		=> array( 'linux' => 'Linux', 'mac' => 'Mac', 'windows' => 'Windows' ),
-                    'default'		=> array( 'linux' )
-                )
-            )
-        );
-
-        $settings = apply_filters( 'jmayt_settings_fields', $settings );
-
-        return $settings;
+        return $this->settings;
     }
 
     /**
@@ -209,7 +102,7 @@ class JMAYtSettings {
             foreach( $this->settings as $section => $data ) {
 
                 // Add section to page
-                add_settings_section( $section, $data['title'], array( $this, 'settings_section' ), 'jmayt_settings' );
+                add_settings_section( $section, $data['title'], array( $this, 'settings_section' ), $this->settings_base . 'settings' );
 
                 foreach( $data['fields'] as $field ) {
 
@@ -221,10 +114,10 @@ class JMAYtSettings {
 
                     // Register field
 
-                    register_setting( 'jmayt_settings', $option_name, $validation );
+                    register_setting( $this->settings_base . 'settings', $option_name, $validation );
 
                     // Add field to page
-                    add_settings_field( $field['id'], $field['label'], array( $this, 'display_field' ), 'jmayt_settings', $section, array( 'field' => $field ) );
+                    add_settings_field( $field['id'], $field['label'], array( $this, 'display_field' ), $this->settings_base . 'settings', $section, array( 'field' => $field ) );
                 }
             }
         }
@@ -245,17 +138,16 @@ class JMAYtSettings {
         $field = $args['field'];
 
         $html = '';
-        $option_array = array();
 ;       $option_array_name = $field['id'];
         $option_name = $this->db_option . '[' . $field['id'] . ']';
         $option_array = get_option( $this->db_option );
         if(is_array($option_array))
-        $option = $option_array[$option_array_name];
+            $option = $option_array[$option_array_name];
 
         $data = '';
         if( isset( $field['default'] ) ) {
             $data = $field['default'];
-            if( $option ) {
+            if( $option !== null ) {
                 $data = $option;
             }
         }
@@ -334,8 +226,8 @@ class JMAYtSettings {
                     $image_thumb = wp_get_attachment_thumb_url( $data );
                 }
                 $html .= '<img id="' . $option_array_name . '_preview" class="image_preview" src="' . $image_thumb . '" /><br/>' . "\n";
-                $html .= '<input id="' . $option_array_name . '_button" type="button" data-uploader_title="' . __( 'Upload an image' , 'jmayt_textdomain' ) . '" data-uploader_button_text="' . __( 'Use image' , 'jmayt_textdomain' ) . '" class="image_upload_button button" value="'. __( 'Upload new image' , 'jmayt_textdomain' ) . '" />' . "\n";
-                $html .= '<input id="' . $option_array_name . '_delete" type="button" class="image_delete_button button" value="'. __( 'Remove image' , 'jmayt_textdomain' ) . '" />' . "\n";
+                $html .= '<input id="' . $option_array_name . '_button" type="button" data-uploader_title="' . __( 'Upload an image' , $this->settings_base . 'textdomain' ) . '" data-uploader_button_text="' . __( 'Use image' , $this->settings_base . 'textdomain' ) . '" class="image_upload_button button" value="'. __( 'Upload new image' , $this->settings_base . 'textdomain' ) . '" />' . "\n";
+                $html .= '<input id="' . $option_array_name . '_delete" type="button" class="image_delete_button button" value="'. __( 'Remove image' , $this->settings_base . 'textdomain' ) . '" />' . "\n";
                 $html .= '<input id="' . $option_array_name . '" class="image_data_field" type="hidden" name="' . $option_name . '" value="' . $data . '"/><br/>' . "\n";
                 break;
 
@@ -384,20 +276,20 @@ class JMAYtSettings {
     public function settings_page() {
 
         // Build page HTML
-        $html = '<div class="wrap" id="jmayt_settings">' . "\n";
-        $html .= '<h2>' . __( 'YouTube w/ Meta Settings' , 'jmayt_textdomain' ) . '</h2>' . "\n";
+        $html = '<div class="wrap" id="' . $this->settings_base . 'settings">' . "\n";
+        $html .= '<h2>' . __( $this->page_title . ' Settings' , $this->settings_base . 'textdomain' ) . '</h2>' . "\n";
         $html .= '<form method="post" action="options.php" enctype="multipart/form-data">' . "\n";
 
         $html .= '<div class="clear"></div>' . "\n";
 
         // Get settings fields
         ob_start();
-        settings_fields( 'jmayt_settings' );
-        do_settings_sections( 'jmayt_settings' );
+        settings_fields( $this->settings_base . 'settings' );
+        do_settings_sections( $this->settings_base . 'settings' );
         $html .= ob_get_clean();
 
         $html .= '<p class="submit">' . "\n";
-        $html .= '<input name="Submit" type="submit" class="button-primary" value="' . esc_attr( __( 'Save Settings' , 'jmayt_textdomain' ) ) . '" />' . "\n";
+        $html .= '<input name="Submit" type="submit" class="button-primary" value="' . esc_attr( __( 'Save Settings' , $this->settings_base . 'textdomain' ) ) . '" />' . "\n";
         $html .= '</p>' . "\n";
         $html .= '</form>' . "\n";
         $html .= '</div>' . "\n";

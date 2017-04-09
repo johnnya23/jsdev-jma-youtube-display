@@ -51,8 +51,140 @@ function jma_yt_autoloader( $class_name ) {
     }
 }
 
+
+
+/**
+ * Build settings fields
+ * @return array Fields to be displayed on settings page
+ */
+$settings = array(
+    /*
+     * start of a new section
+     * */
+
+    'standard' => array(
+        'title'					=> __( 'Standard', 'jmayt_textdomain' ),
+        'description'			=> __( 'These are fairly standard form input fields.', 'jmayt_textdomain' ),
+
+        /*
+         * fields for this section section
+         * */
+        'fields'				=> array(
+            array(
+                'id' 			=> 'text_field',
+                'label'			=> __( 'Some Text' , 'jmayt_textdomain' ),
+                'description'	=> __( 'This is a standard text field.', 'jmayt_textdomain' ),
+                'type'			=> 'text',
+                'default'		=> '',
+                'placeholder'	=> __( 'Placeholder text', 'jmayt_textdomain' )
+            ),
+            array(
+                'id' 			=> 'password_field',
+                'label'			=> __( 'A Password' , 'jmayt_textdomain' ),
+                'description'	=> __( 'This is a standard password field.', 'jmayt_textdomain' ),
+                'type'			=> 'password',
+                'default'		=> '',
+                'placeholder'	=> __( 'Placeholder text', 'jmayt_textdomain' )
+            ),
+            array(
+                'id' 			=> 'secret_text_field',
+                'label'			=> __( 'Some Secret Text' , 'jmayt_textdomain' ),
+                'description'	=> __( 'This is a secret text field - any data saved here will not be displayed after the page has reloaded, but it will be saved.', 'jmayt_textdomain' ),
+                'type'			=> 'text_secret',
+                'default'		=> '',
+                'placeholder'	=> __( 'Placeholder text', 'jmayt_textdomain' )
+            ),
+            array(
+                'id' 			=> 'text_block',
+                'label'			=> __( 'A Text Block' , 'jmayt_textdomain' ),
+                'description'	=> __( 'This is a standard text area.', 'jmayt_textdomain' ),
+                'type'			=> 'textarea',
+                'default'		=> '',
+                'placeholder'	=> __( 'Placeholder text for this textarea', 'jmayt_textdomain' )
+            ),
+            array(
+                'id' 			=> 'single_checkbox',
+                'label'			=> __( 'An Option', 'jmayt_textdomain' ),
+                'description'	=> __( 'A standard checkbox - if you save this option as checked then it will store the option as \'on\', otherwise it will be an empty string.', 'jmayt_textdomain' ),
+                'type'			=> 'checkbox',
+                'default'		=> ''
+            ),
+            array(
+                'id' 			=> 'select_box',
+                'label'			=> __( 'A Select Box', 'jmayt_textdomain' ),
+                'description'	=> __( 'A standard select box.', 'jmayt_textdomain' ),
+                'type'			=> 'select',
+                'options'		=> array( 'drupal' => 'Drupal', 'joomla' => 'Joomla', 'wordpress' => 'WordPress' ),
+                'default'		=> 'wordpress'
+            ),
+            array(
+                'id' 			=> 'radio_buttons',
+                'label'			=> __( 'Some Options', 'jmayt_textdomain' ),
+                'description'	=> __( 'A standard set of radio buttons.', 'jmayt_textdomain' ),
+                'type'			=> 'radio',
+                'options'		=> array( 'superman' => 'Superman', 'batman' => 'Batman', 'ironman' => 'Iron Man' ),
+                'default'		=> 'batman'
+            ),
+            array(
+                'id' 			=> 'multiple_checkboxes',
+                'label'			=> __( 'Some Items', 'jmayt_textdomain' ),
+                'description'	=> __( 'You can select multiple items and they will be stored as an array.', 'jmayt_textdomain' ),
+                'type'			=> 'checkbox_multi',
+                'options'		=> array( 'square' => 'Square', 'circle' => 'Circle', 'rectangle' => 'Rectangle', 'triangle' => 'Triangle' ),
+                'default'		=> array( 'circle', 'triangle' )
+            )
+        )
+    ),
+    /*
+     * start of a new section
+     * */
+    'extra' => array(
+        'title'					=> __( 'Extra', 'jmayt_textdomain' ),
+        'description'			=> __( 'These are some extra input fields that maybe aren\'t as common as the others.', 'jmayt_textdomain' ),
+
+        /*
+         * fields for this section section
+         * */
+        'fields'				=> array(
+            array(
+                'id' 			=> 'number_field',
+                'label'			=> __( 'A Number' , 'jmayt_textdomain' ),
+                'description'	=> __( 'This is a standard number field - if this field contains anything other than numbers then the form will not be submitted.', 'jmayt_textdomain' ),
+                'type'			=> 'number',
+                'default'		=> '',
+                'placeholder'	=> __( '42', 'jmayt_textdomain' )
+            ),
+            array(
+                'id' 			=> 'colour_picker',
+                'label'			=> __( 'Pick a colour', 'jmayt_textdomain' ),
+                'description'	=> __( 'This uses WordPress\' built-in colour picker - the option is stored as the colour\'s hex code.', 'jmayt_textdomain' ),
+                'type'			=> 'color',
+                'default'		=> '#21759B'
+            ),
+            array(
+                'id' 			=> 'an_image',
+                'label'			=> __( 'An Image' , 'jmayt_textdomain' ),
+                'description'	=> __( 'This will upload an image to your media library and store the attachment ID in the option field. Once you have uploaded an imge the thumbnail will display above these buttons.', 'jmayt_textdomain' ),
+                'type'			=> 'image',
+                'default'		=> '',
+                'placeholder'	=> ''
+            ),
+            array(
+                'id' 			=> 'multi_select_box',
+                'label'			=> __( 'A Multi-Select Box', 'jmayt_textdomain' ),
+                'description'	=> __( 'A standard multi-select box - the saved data is stored as an array.', 'jmayt_textdomain' ),
+                'type'			=> 'select_multi',
+                'options'		=> array( 'linux' => 'Linux', 'mac' => 'Mac', 'windows' => 'Windows' ),
+                'default'		=> array( 'linux' )
+            )
+        )
+    )
+);
+
+
+
 if( is_admin() )
-    $jma_settings_page = new JMAYtSettings();
+    $jma_settings_page = new JMAYtSettings('jmayt', 'YouTube w/ Meta', $settings);
 
 function yt_styles(){
     $active_sh_codes = yt_detect_shortcode();
