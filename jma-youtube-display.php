@@ -57,125 +57,106 @@ function jma_yt_autoloader( $class_name ) {
  * Build settings fields
  * @return array Fields to be displayed on settings page
  */
+$col_array = array( 0 => 'inherit', 1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6);
 $settings = array(
     /*
      * start of a new section
      * */
 
-    'standard' => array(
-        'title'					=> __( 'Standard', 'jmayt_textdomain' ),
-        'description'			=> __( 'These are fairly standard form input fields.', 'jmayt_textdomain' ),
+    'setup' => array(
+        'title'					=> __( 'Setup', 'jmayt_textdomain' ),
+        'description'			=> __( 'Setup options.', 'jmayt_textdomain' ),
 
         /*
          * fields for this section section
          * */
         'fields'				=> array(
             array(
-                'id' 			=> 'text_field',
-                'label'			=> __( 'Some Text' , 'jmayt_textdomain' ),
-                'description'	=> __( 'This is a standard text field.', 'jmayt_textdomain' ),
+                'id' 			=> 'api',
+                'label'			=> __( 'YouTube Api value' , 'jmayt_textdomain' ),
+                'description'	=> __( 'Api credentials for youtube <a harf="https://console.developers.google.com/apis/dashboard">here</a>.', 'jmayt_textdomain' ),
                 'type'			=> 'text',
-                'default'		=> '',
-                'placeholder'	=> __( 'Placeholder text', 'jmayt_textdomain' )
-            ),
-            array(
-                'id' 			=> 'password_field',
-                'label'			=> __( 'A Password' , 'jmayt_textdomain' ),
-                'description'	=> __( 'This is a standard password field.', 'jmayt_textdomain' ),
-                'type'			=> 'password',
-                'default'		=> '',
-                'placeholder'	=> __( 'Placeholder text', 'jmayt_textdomain' )
-            ),
-            array(
-                'id' 			=> 'secret_text_field',
-                'label'			=> __( 'Some Secret Text' , 'jmayt_textdomain' ),
-                'description'	=> __( 'This is a secret text field - any data saved here will not be displayed after the page has reloaded, but it will be saved.', 'jmayt_textdomain' ),
-                'type'			=> 'text_secret',
-                'default'		=> '',
-                'placeholder'	=> __( 'Placeholder text', 'jmayt_textdomain' )
-            ),
-            array(
-                'id' 			=> 'text_block',
-                'label'			=> __( 'A Text Block' , 'jmayt_textdomain' ),
-                'description'	=> __( 'This is a standard text area.', 'jmayt_textdomain' ),
-                'type'			=> 'textarea',
-                'default'		=> '',
-                'placeholder'	=> __( 'Placeholder text for this textarea', 'jmayt_textdomain' )
-            ),
-            array(
-                'id' 			=> 'single_checkbox',
-                'label'			=> __( 'An Option', 'jmayt_textdomain' ),
-                'description'	=> __( 'A standard checkbox - if you save this option as checked then it will store the option as \'on\', otherwise it will be an empty string.', 'jmayt_textdomain' ),
-                'type'			=> 'checkbox',
                 'default'		=> ''
             ),
             array(
-                'id' 			=> 'select_box',
-                'label'			=> __( 'A Select Box', 'jmayt_textdomain' ),
-                'description'	=> __( 'A standard select box.', 'jmayt_textdomain' ),
-                'type'			=> 'select',
-                'options'		=> array( 'drupal' => 'Drupal', 'joomla' => 'Joomla', 'wordpress' => 'WordPress' ),
-                'default'		=> 'wordpress'
+                'id' 			=> 'cache',
+                'label'			=> __( 'Cache Time' , 'jmayt_textdomain' ),
+                'description'	=> __( 'Frequency of checks back to YouTube for info. Larger number for quicker page loads and to avoid hitting YouTube Api limits (3600 = 1 hr or 0 for testing only).', 'jmayt_textdomain' ),
+                'type'			=> 'number',
+                'default'		=> '3600'
             ),
             array(
-                'id' 			=> 'radio_buttons',
-                'label'			=> __( 'Some Options', 'jmayt_textdomain' ),
-                'description'	=> __( 'A standard set of radio buttons.', 'jmayt_textdomain' ),
+                'id' 			=> 'dev',
+                'label'			=> __( 'Dev Mode', 'jmayt_textdomain' ),
+                'description'	=> __( 'Dev may allow plugin to function on Windows localhost (Production in production for security)', 'jmayt_textdomain' ),
                 'type'			=> 'radio',
-                'options'		=> array( 'superman' => 'Superman', 'batman' => 'Batman', 'ironman' => 'Iron Man' ),
-                'default'		=> 'batman'
+                'options'		=> array( 'prod' => 'Production' , 'dev' => 'Dev'),
+                'default'		=> 'prod'
             ),
             array(
-                'id' 			=> 'multiple_checkboxes',
-                'label'			=> __( 'Some Items', 'jmayt_textdomain' ),
-                'description'	=> __( 'You can select multiple items and they will be stored as an array.', 'jmayt_textdomain' ),
-                'type'			=> 'checkbox_multi',
-                'options'		=> array( 'square' => 'Square', 'circle' => 'Circle', 'rectangle' => 'Rectangle', 'triangle' => 'Triangle' ),
-                'default'		=> array( 'circle', 'triangle' )
-            )
+                'id' 			=> 'bootstrap',
+                'label'			=> __( 'Bootstrap', 'jmayt_textdomain' ),
+                'description'	=> __( 'Bootstrap will add bootstrap through the plugin. If your theme includes full standard Bootstrap you should be able to save a little load time by clicking none', 'jmayt_textdomain' ),
+                'type'			=> 'radio',
+                'options'		=> array( 'bs' => 'Bootstrap', 'none' => 'None' ),
+                'default'		=> 'bs'
+            ),
         )
     ),
     /*
      * start of a new section
      * */
-    'extra' => array(
-        'title'					=> __( 'Extra', 'jmayt_textdomain' ),
-        'description'			=> __( 'These are some extra input fields that maybe aren\'t as common as the others.', 'jmayt_textdomain' ),
+    'display' => array(
+        'title'					=> __( 'Display Options', 'jmayt_textdomain' ),
+        'description'			=> __( 'These are some default display settings (they can be overridden with shortcode)', 'jmayt_textdomain' ),
 
         /*
          * fields for this section section
          * */
         'fields'				=> array(
             array(
-                'id' 			=> 'number_field',
-                'label'			=> __( 'A Number' , 'jmayt_textdomain' ),
-                'description'	=> __( 'This is a standard number field - if this field contains anything other than numbers then the form will not be submitted.', 'jmayt_textdomain' ),
-                'type'			=> 'number',
-                'default'		=> '',
-                'placeholder'	=> __( '42', 'jmayt_textdomain' )
-            ),
-            array(
-                'id' 			=> 'colour_picker',
-                'label'			=> __( 'Pick a colour', 'jmayt_textdomain' ),
-                'description'	=> __( 'This uses WordPress\' built-in colour picker - the option is stored as the colour\'s hex code.', 'jmayt_textdomain' ),
+                'id' 			=> 'button_font',
+                'label'			=> __( 'Font color for expansion buttons on grids (button_font)', 'jmayt_textdomain' ),
                 'type'			=> 'color',
                 'default'		=> '#21759B'
             ),
             array(
-                'id' 			=> 'an_image',
-                'label'			=> __( 'An Image' , 'jmayt_textdomain' ),
-                'description'	=> __( 'This will upload an image to your media library and store the attachment ID in the option field. Once you have uploaded an imge the thumbnail will display above these buttons.', 'jmayt_textdomain' ),
-                'type'			=> 'image',
-                'default'		=> '',
-                'placeholder'	=> ''
+                'id' 			=> 'button_bg',
+                'label'			=> __( 'Background color for expansion buttons on grids (button_bg)', 'jmayt_textdomain' ),
+                'type'			=> 'color',
+                'default'		=> '#cbe0e9'
             ),
             array(
-                'id' 			=> 'multi_select_box',
-                'label'			=> __( 'A Multi-Select Box', 'jmayt_textdomain' ),
-                'description'	=> __( 'A standard multi-select box - the saved data is stored as an array.', 'jmayt_textdomain' ),
-                'type'			=> 'select_multi',
-                'options'		=> array( 'linux' => 'Linux', 'mac' => 'Mac', 'windows' => 'Windows' ),
-                'default'		=> array( 'linux' )
+                'id' 			=> 'lg_cols',
+                'label'			=> __( 'Large device columns (lg_cols)', 'jmayt_textdomain' ),
+                'description'	=> __( 'For window width 1200+ px (inherit uses value from setting below).', 'jmayt_textdomain' ),
+                'type'			=> 'select',
+                'options'		=> $col_array,
+                'default'		=> '0'
+            ),
+            array(
+                'id' 			=> 'md_cols',
+                'label'			=> __( 'Medium device columns (md_cols)', 'jmayt_textdomain' ),
+                'description'	=> __( 'For window width 992+ px (inherit uses value from setting below).', 'jmayt_textdomain' ),
+                'type'			=> 'select',
+                'options'		=> $col_array,
+                'default'		=> '0'
+            ),
+            array(
+                'id' 			=> 'sm_cols',
+                'label'			=> __( 'Small device columns (sm_cols)', 'jmayt_textdomain' ),
+                'description'	=> __( 'For window width 768+ px (inherit uses value from setting below).', 'jmayt_textdomain' ),
+                'type'			=> 'select',
+                'options'		=> $col_array,
+                'default'		=> '3'
+            ),
+            array(
+                'id' 			=> 'xs_cols',
+                'label'			=> __( 'Extra small device columns (xs_cols)', 'jmayt_textdomain' ),
+                'description'	=> __( 'For window width -768 px.', 'jmayt_textdomain' ),
+                'type'			=> 'select',
+                'options'		=> $col_array,
+                'default'		=> '2'
             )
         )
     )

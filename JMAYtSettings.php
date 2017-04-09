@@ -9,6 +9,8 @@ class JMAYtSettings {
     private $assets_url;
     private $settings_base;
     private $settings;
+    private $db_option;
+    private $page_title;
 
     public function __construct($base = 'jma_plugin', $title = 'Cool Plugin', $settings = array()) {
         $this->file =  __FILE__ ;
@@ -138,10 +140,11 @@ class JMAYtSettings {
         $field = $args['field'];
 
         $html = '';
-;       $option_array_name = $field['id'];
+        $option = null;
+        $option_array_name = $field['id'];
         $option_name = $this->db_option . '[' . $field['id'] . ']';
         $option_array = get_option( $this->db_option );
-        if(is_array($option_array))
+        if(is_array($option_array) )
             $option = $option_array[$option_array_name];
 
         $data = '';
