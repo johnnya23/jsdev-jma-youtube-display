@@ -40,8 +40,8 @@ add_action( 'wp', 'yt_detect_shortcode' );
 
 
 
-$api_array = get_option( 'jma_yt_settings');
-$api_code = $api_array['api_number'];
+$options_array = get_option('jmayt_options_array');
+$api_code = $options_array['api'];
 spl_autoload_register( 'jma_yt_autoloader' );
 function jma_yt_autoloader( $class_name ) {
     if ( false !== strpos( $class_name, 'JMAYt' ) ) {
@@ -74,7 +74,7 @@ $settings = array(
             array(
                 'id' 			=> 'api',
                 'label'			=> __( 'YouTube Api value' , 'jmayt_textdomain' ),
-                'description'	=> __( 'Api credentials for youtube <a harf="https://console.developers.google.com/apis/dashboard">here</a>.', 'jmayt_textdomain' ),
+                'description'	=> __( 'Api credentials for youtube <a target="_blank" href="https://console.developers.google.com/apis/dashboard">here</a>.', 'jmayt_textdomain' ),
                 'type'			=> 'text',
                 'default'		=> ''
             ),
@@ -90,16 +90,16 @@ $settings = array(
                 'label'			=> __( 'Dev Mode', 'jmayt_textdomain' ),
                 'description'	=> __( 'Dev may allow plugin to function on Windows localhost (Production in production for security)', 'jmayt_textdomain' ),
                 'type'			=> 'radio',
-                'options'		=> array( 'prod' => 'Production' , 'dev' => 'Dev'),
-                'default'		=> 'prod'
+                'options'		=> array( 0 => 'Production' , 1 => 'Dev'),
+                'default'		=> 0
             ),
             array(
                 'id' 			=> 'bootstrap',
                 'label'			=> __( 'Bootstrap', 'jmayt_textdomain' ),
-                'description'	=> __( 'Bootstrap will add bootstrap through the plugin. If your theme includes full standard Bootstrap you should be able to save a little load time by clicking none', 'jmayt_textdomain' ),
+                'description'	=> __( 'Bootstrap will add bootstrap through the plugin. If your theme includes full standard Bootstrap you should be able to save a little load time by clicking none. THIS ALSO IS NECESSARY FOR 5 COLUMN DISPLAY', 'jmayt_textdomain' ),
                 'type'			=> 'radio',
-                'options'		=> array( 'bs' => 'Bootstrap', 'none' => 'None' ),
-                'default'		=> 'bs'
+                'options'		=> array( 1 => 'Bootstrap', 0 => 'None' ),
+                'default'		=> 1
             ),
         )
     ),
@@ -168,15 +168,27 @@ if( is_admin() )
     $jma_settings_page = new JMAYtSettings('jmayt', 'YouTube w/ Meta', $settings);
 
 function yt_styles(){
+    global $options_array;
     $active_sh_codes = yt_detect_shortcode();
-    if(in_array('yt_grid', $active_sh_codes))
+    if($options_array['bootstrap'] && in_array('yt_grid', $active_sh_codes))
         $bootstrap = '.col-lg-020,.col-lg-1,.col-lg-2,.col-lg-3,.col-lg-4,.col-lg-6,.col-md-020,.col-md-1,.col-md-2,.col-md-3,.col-md-4,.col-md-6,.col-sm-020,.col-sm-1,.col-sm-2,.col-sm-3,.col-sm-4,.col-sm-6,.col-xs-020,.col-xs-1,.col-xs-2,.col-xs-3,.col-xs-4,.col-xs-6{position:relative;min-height:1px;padding-left:15px;padding-right:15px}.col-xs-020,.col-xs-1,.col-xs-2,.col-xs-3,.col-xs-4,.col-xs-6{float:left}.col-xs-6{width:50%}.col-xs-4{width:33.33333333%}.col-xs-020{width:20%}.col-xs-3{width:25%}.col-xs-2{width:16.66666667%}.col-xs-1{width:8.33333333%}@media (min-width:768px){.col-sm-020,.col-sm-1,.col-sm-2,.col-sm-3,.col-sm-4,.col-sm-6{float:left}.col-sm-6{width:50%}.col-sm-4{width:33.33333333%}.col-sm-3{width:25%}.col-sm-020{width:20%}.col-sm-2{width:16.66666667%}.col-sm-1{width:8.33333333%}}@media (min-width:992px){.col-md-020,.col-md-1,.col-md-2,.col-md-3,.col-md-4,.col-md-6{float:left}.col-md-6{width:50%}.col-md-4{width:33.33333333%}.col-md-3{width:25%}.col-md-020{width:20%}.col-md-2{width:16.66666667%}.col-md-1{width:8.33333333%}}@media (min-width:1200px){.col-lg-020,.col-lg-1,.col-lg-2,.col-lg-3,.col-lg-4,.col-lg-6{float:left}.col-lg-6{width:50%}.col-lg-4{width:33.33333333%}.col-lg-3{width:25%}.col-lg-020{width:20%}.col-lg-2{width:16.66666667%}.col-lg-1{width:8.33333333%}}';
     else
         $bootstrap = '';
     echo '<style type= "text/css">';
     echo $bootstrap;
-    echo '.yt-item {margin-bottom: 20px}
-
+    echo '
+.clearfix:before, 
+.clearfix:after {
+	content: " "; 
+	display: table; 
+} 
+.clearfix:after { 
+	clear: both; 
+}
+.yt-item {
+    box-sizing: border-box;
+    margin-bottom: 20px
+}
 .yt-list-wrap {
     margin-left: -15px; 
     margin-right: -15px;
@@ -200,19 +212,11 @@ function yt_styles(){
 	 height: 100%;
 }
 
-@media(min-width: 535px){
+
     .xs-break {
         clear: both
     }
-} 
-@media(min-width: 767px){
-    .has-sm .xs-break {
-        clear: none
-    }
-    .yt-list-wrap .sm-break {
-        clear: both
-    }
-}
+
 @media(min-width: 767px){
     .has-sm .xs-break {
         clear: none
@@ -251,13 +255,19 @@ function jma_sanitize_array($inputs){
 }
 
 function jma_yt_grid($atts){
-    global $api_code;
+    global $options_array;
+    $api_code = $options_array['api'];
     $atts = jma_sanitize_array($atts);
 
     $you_tube_list = new JMAYtList($atts['yt_list_id'], $api_code);
     //form array of column atts and set defaults
-    $responsive_cols = array(  'sm' => 3, 'xs' => 2);
-    $has_break = ' has-sm has-xs';
+    foreach($options_array as $i => $option){
+        if((strpos($i, '_cols') !== false) && $option){
+            $i = str_replace('_cols', '', $i);
+            $has_break .= ' has-' . $i;
+            $responsive_cols[$i] = $option;
+        }
+    }
     $count = 0;
     foreach($atts as $index => $att){
         if (strpos($index, '_cols') !== false) {
@@ -268,8 +278,8 @@ function jma_yt_grid($atts){
             }
             $count++;
             $index = str_replace('_cols', '', $index);
+            $has_break .= ' has-' . $index;
             $responsive_cols[$index] = $att;
-            $has_break .= ' has-' . "{$index}";
         }
     }
     ob_start();

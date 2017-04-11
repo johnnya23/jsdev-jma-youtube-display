@@ -18,6 +18,7 @@ class JMAYtList extends JMAYtVideo {
     }
 
     public function markup($res_cols = array()){
+        global $options_array;
         $col_class = '';
         $trans_id = 'jmaytlist' . $post_id;
         foreach($res_cols as $break => $res_col){
@@ -26,7 +27,7 @@ class JMAYtList extends JMAYtVideo {
 
         $trans_id .= $this->id;
         $return = get_transient( $trans_id );
-        if(false === $return) {
+        if(false === $return || !$options_array['cache']) {//if cache at 0
             $yt_api_array = JMAYtList::yt_loop($this->id);
             $yt_loop_items = $yt_api_array['items'];
             $count = count($yt_loop_items);
@@ -64,7 +65,7 @@ class JMAYtList extends JMAYtVideo {
                     $return .= '</div><!--col-->';
                     $i++;
                 }
-                set_transient( $trans_id, $return, HOUR_IN_SECONDS );
+                set_transient( $trans_id, $return, $options_array['cache'] );
             }
         }
         return $return;

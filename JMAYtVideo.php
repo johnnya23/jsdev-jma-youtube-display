@@ -9,10 +9,11 @@ class JMAYtVideo {
 
     }
     protected function curl($url){
+        global $options_array;
         $curl = curl_init($url);
 
         $whitelist = array('127.0.0.1', "::1");
-        if(in_array($_SERVER['REMOTE_ADDR'], $whitelist)){
+        if($options_array['dev'] && in_array($_SERVER['REMOTE_ADDR'], $whitelist)){
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);//for localhost
             curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);//for localhost
         }
@@ -90,11 +91,12 @@ class JMAYtVideo {
     }
 
     public function markup(){
+        global $options_array;
         $trans_id = 'jmaytvideo' . $this->id;
         $return = get_transient( $trans_id );
-        if(false === $return) {
+        if(false === $return || !$options_array['cache']) {//if cache at 0
             $return = JMAYtVideo::single_html($this->id);
-            set_transient( $trans_id, $return, HOUR_IN_SECONDS );
+            set_transient( $trans_id, $return, $options_array['cache'] );
         }
         return $return;
     }
