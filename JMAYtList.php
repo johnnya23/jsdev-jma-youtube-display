@@ -4,7 +4,7 @@ class JMAYtList extends JMAYtVideo {
     /*
      * function jma_get_yt_loop()
      * returns the youotube api array for a list
-     * using $yt_list_id and  $API_CODE
+     * using $yt_list_id and  $this->api
      * */
     function yt_loop($yt_list_id){
         $return = array();
