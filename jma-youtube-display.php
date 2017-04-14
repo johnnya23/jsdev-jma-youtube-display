@@ -162,7 +162,7 @@ $settings = array(
      * start of a new section
      * */
     'display' => array(
-        'title'					=> __( 'Display Options', 'jmayt_textdomain' ),
+        'title'					=> __( 'Grid Display Options', 'jmayt_textdomain' ),
         'description'			=> __( 'These are some default display settings (they can be overridden with shortcode)', 'jmayt_textdomain' ),
 
         /*
@@ -170,7 +170,38 @@ $settings = array(
          * */
         'fields'				=> array(
             array(
+                'id' 			=> 'item_font',
+                'label'			=> __( 'Font color for grid item titles - blank your theme\'s title color (item_font)', 'jmayt_textdomain' ),
+                'type'			=> 'color',
+                'default'		=> 0
+            ),
+            array(
+                'id' 			=> 'item_bg',
+                'label'			=> __( 'Background color for grid items - blank for no bg (item_bg)', 'jmayt_textdomain' ),
+                'type'			=> 'color',
+                'default'		=> 0
+            ),
+            array(
+                'id' 			=> 'item_border',
+                'label'			=> __( 'Border color for grid items - blank for no border (item_border)', 'jmayt_textdomain' ),
+                'type'			=> 'color',
+                'default'		=> 0
+            ),
+            array(
+                'id' 			=> 'item_gutter',
+                'label'			=> __( 'Horizontal distance in px between grid items - best results even number between 0 and 30 (item_gutter)', 'jmayt_textdomain' ),
+                'type'			=> 'number',
+                'default'		=> '30'
+            ),
+            array(
+                'id' 			=> 'item_spacing',
+                'label'			=> __( 'Vertical distance in px between grid items (item_spacing)', 'jmayt_textdomain' ),
+                'type'			=> 'number',
+                'default'		=> '15'
+            ),
+            array(
                 'id' 			=> 'button_font',
+                'class'         => 'picker',
                 'label'			=> __( 'Font color for expansion buttons on grids (button_font)', 'jmayt_textdomain' ),
                 'type'			=> 'color',
                 'default'		=> '#21759B'
@@ -187,7 +218,7 @@ $settings = array(
                 'description'	=> __( 'For window width 1200+ px (inherit uses value from setting below).', 'jmayt_textdomain' ),
                 'type'			=> 'select',
                 'options'		=> $col_array,
-                'default'		=> '0'
+                'default'		=> 0
             ),
             array(
                 'id' 			=> 'md_cols',
@@ -195,7 +226,7 @@ $settings = array(
                 'description'	=> __( 'For window width 992+ px (inherit uses value from setting below).', 'jmayt_textdomain' ),
                 'type'			=> 'select',
                 'options'		=> $col_array,
-                'default'		=> '0'
+                'default'		=> 0
             ),
             array(
                 'id' 			=> 'sm_cols',

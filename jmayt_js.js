@@ -31,7 +31,7 @@ jQuery(document).ready(function($){
                 });
             }else{
                 $this.html('&#xe140;');
-                $this.animate({'font-size': 16});
+                $this.animate({'font-size': 'inherit'});
                 $parent.animate({
                     'top': $pos_top + 'px',
                     'left': $pos_left + 'px',

@@ -235,8 +235,10 @@ class JMAYtSettings {
                 break;
 
             case 'color':
+                $color_value = esc_html( $data )?esc_html( $data ):0;
                 ?><div class="color-picker" style="position:relative;">
-                <input type="text" name="<?php esc_attr_e( $option_name ); ?>" class="color" value="<?php esc_attr_e( $data ); ?>" />
+                <input type="text" name="<?php esc_attr_e( $option_name ); ?>" class="color" value="<?php echo
+                $color_value ?>" />
                 <div style="position:absolute;background:#FFF;z-index:99;border-radius:100%;" class="colorpicker"></div>
                 </div>
                 <?php
