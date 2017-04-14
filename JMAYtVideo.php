@@ -79,13 +79,17 @@ class JMAYtVideo {
         return $return;
     }
 
-    protected function single_html($id){
+    protected function single_html($id, $grid = false){
         $snippet = JMAYtVideo::video_snippet($id);
         $meta_array = JMAYtVideo::map_meta($snippet, $id);
-        $return = '<div class="responsive-wrap" itemprop="video" itemscope itemtype="http://schema.org/VideoObject">';
+        $return .= '<div class="yt-video-wrap">';
+        $return .= '<div class="responsive-wrap" itemprop="video" itemscope itemtype="http://schema.org/VideoObject">';
+        if($grid)
+            $return .= '<button class="yt-btn">&#xe140;</button>';
         $return .= JMAYtVideo::jma_youtube_schema_html($meta_array);
         $return .=  '<iframe src="https://www.youtube.com/embed/' . $id . '?rel=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe>';
         $return .= '</div><!--responsive-wrap-->';
+        $return .= '</div><!--yt-video-wrap-->';
         $return .= '<h3>' . $meta_array['name'] . '</h3>';
         return $return;
     }

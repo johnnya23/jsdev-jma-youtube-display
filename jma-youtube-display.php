@@ -252,6 +252,10 @@ function yt_styles(){
 	 width: 100%;
 	 height: 100%;
 }
+.yt-btn {
+    
+}
+
 
 
     .xs-break {
