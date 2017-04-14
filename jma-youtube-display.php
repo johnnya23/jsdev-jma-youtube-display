@@ -21,10 +21,30 @@ function jma_yt_quicktags() {
 }
 add_action('admin_print_footer_scripts','jma_yt_quicktags');
 
+function jmayt_scripts() {
+    wp_register_script( 'bootstrap-js', '//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js', array('jquery'), NULL, true );
+    wp_register_style( 'bootstrap-css', '//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', false, NULL,
+        'all' );
+
+    wp_enqueue_script( 'bootstrap-js' );
+    wp_enqueue_style( 'bootstrap-css' );
+    wp_enqueue_script( 'jmayt_js', plugins_url('/jmayt_js.js', __FILE__), array( 'jquery' ) );
+}
+
+
+
+function jma_yt_template_redirect(){
+    if(jma_yt_detect_shortcode(array('yt_grid'))){
+        add_action('wp_head', 'yt_styles');
+        add_action( 'wp_enqueue_scripts', 'jmayt_scripts' );
+    }
+}
+add_action('template_redirect', 'jma_yt_template_redirect');
+
+
 /**
  * Detect shortcodes in the global $post.
  */
-
 if(!function_exists('jma_yt_detect_shortcode')){
     function jma_yt_detect_shortcode( $needle = '', $post_item = 0 ){
 
@@ -100,6 +120,7 @@ function jma_yt_autoloader( $class_name ) {
  * @return array Fields to be displayed on settings page
  */
 $col_array = array( 0 => 'inherit', 1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6);
+$xs_col = array(  1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6);
 $settings = array(
     /*
      * start of a new section
@@ -130,19 +151,11 @@ $settings = array(
             array(
                 'id' 			=> 'dev',
                 'label'			=> __( 'Dev Mode', 'jmayt_textdomain' ),
-                'description'	=> __( 'Dev may allow plugin to function on Windows localhost (Production in production for security)', 'jmayt_textdomain' ),
+                'description'	=> __( 'Dev may allow plugin to function on Windows localhost (Use Production in production for security)', 'jmayt_textdomain' ),
                 'type'			=> 'radio',
                 'options'		=> array( 0 => 'Production' , 1 => 'Dev'),
                 'default'		=> 0
-            ),
-            array(
-                'id' 			=> 'bootstrap',
-                'label'			=> __( 'Bootstrap', 'jmayt_textdomain' ),
-                'description'	=> __( 'Bootstrap will add bootstrap through the plugin. If your theme includes full standard Bootstrap you should be able to save a little load time by clicking none. THIS ALSO IS NECESSARY FOR 5 COLUMN DISPLAY', 'jmayt_textdomain' ),
-                'type'			=> 'radio',
-                'options'		=> array( 1 => 'Bootstrap', 0 => 'None' ),
-                'default'		=> 1
-            ),
+            )
         )
     ),
     /*
@@ -197,7 +210,7 @@ $settings = array(
                 'label'			=> __( 'Extra small device columns (xs_cols)', 'jmayt_textdomain' ),
                 'description'	=> __( 'For window width -768 px.', 'jmayt_textdomain' ),
                 'type'			=> 'select',
-                'options'		=> $col_array,
+                'options'		=> $xs_col,
                 'default'		=> '2'
             )
         )
@@ -211,13 +224,9 @@ if( is_admin() )
 
 function yt_styles(){
     global $options_array;
-    if($options_array['bootstrap'] )
-        $bootstrap = '.col-lg-020,.col-lg-1,.col-lg-2,.col-lg-3,.col-lg-4,.col-lg-6,.col-md-020,.col-md-1,.col-md-2,.col-md-3,.col-md-4,.col-md-6,.col-sm-020,.col-sm-1,.col-sm-2,.col-sm-3,.col-sm-4,.col-sm-6,.col-xs-020,.col-xs-1,.col-xs-2,.col-xs-3,.col-xs-4,.col-xs-6{position:relative;min-height:1px;padding-left:15px;padding-right:15px}.col-xs-020,.col-xs-1,.col-xs-2,.col-xs-3,.col-xs-4,.col-xs-6{float:left}.col-xs-6{width:50%}.col-xs-4{width:33.33333333%}.col-xs-020{width:20%}.col-xs-3{width:25%}.col-xs-2{width:16.66666667%}.col-xs-1{width:8.33333333%}@media (min-width:768px){.col-sm-020,.col-sm-1,.col-sm-2,.col-sm-3,.col-sm-4,.col-sm-6{float:left}.col-sm-6{width:50%}.col-sm-4{width:33.33333333%}.col-sm-3{width:25%}.col-sm-020{width:20%}.col-sm-2{width:16.66666667%}.col-sm-1{width:8.33333333%}}@media (min-width:992px){.col-md-020,.col-md-1,.col-md-2,.col-md-3,.col-md-4,.col-md-6{float:left}.col-md-6{width:50%}.col-md-4{width:33.33333333%}.col-md-3{width:25%}.col-md-020{width:20%}.col-md-2{width:16.66666667%}.col-md-1{width:8.33333333%}}@media (min-width:1200px){.col-lg-020,.col-lg-1,.col-lg-2,.col-lg-3,.col-lg-4,.col-lg-6{float:left}.col-lg-6{width:50%}.col-lg-4{width:33.33333333%}.col-lg-3{width:25%}.col-lg-020{width:20%}.col-lg-2{width:16.66666667%}.col-lg-1{width:8.33333333%}}';
-    else
-        $bootstrap = '';
     echo '<style type= "text/css">';
-    echo $bootstrap;
     echo '
+.col-md-020{position:relative;min-height:1px;padding-left:15px;padding-right:15px}.col-xs-020{float:left}.col-xs-020{width:20%}@media (min-width:768px){.col-sm-020{float:left}.col-sm-020{width:20%}}@media (min-width:992px){.col-md-020{float:left}.col-md-020{width:20%}}@media (min-width:1200px){.col-lg-020{float:left}.col-lg-020{width:20%}}
 .clearfix:before, 
 .clearfix:after {
 	content: " "; 
@@ -226,47 +235,59 @@ function yt_styles(){
 .clearfix:after { 
 	clear: both; 
 }
-.yt-item {
+.jmayt-item-wrap {
     box-sizing: border-box;
     margin-bottom: 20px
 }
-.yt-list-wrap {
+.jmayt-list-wrap {
     margin-left: -15px; 
     margin-right: -15px;
     clear: both;
 }
-.yt-item .responsive-wrap {
+.jmayt-item-wrap .responsive-wrap {
 	 position: relative;
 	 padding-bottom: 56.25%;
 	 height: 0;
 	 padding-top: 0;
 	 overflow: hidden;
 }
-
-.yt-item .responsive-wrap iframe,  
-.yt-item .responsive-wrap object,  
-.yt-item .responsive-wrap embed {
+.jmayt-item-wrap .responsive-wrap iframe {
 	 position: absolute;
 	 top: 0;
 	 left: 0;
 	 width: 100%;
 	 height: 100%;
 }
-.yt-btn {
+.jmayt-video-wrap {
+    background: rgba(0,0,0,0.8);
+}
+.jmayt-btn, button:focus {
+    position: absolute;
+    z-index: 10;
+    top: 0;
+    left: 0;
+    padding: 7px 10px;
+    font-size: 20px;
+    font-family: \'Glyphicons Halflings\';
+    color: ' . $options_array['button_font'] . ';
+    background: ' . $options_array['button_bg'] . ';
+    border: solid 1px ' . $options_array['button_font'] . ';
+    -webkit-transition: all .2s; /* Safari */
+    transition: all .2s;
     
 }
-
-
-
-    .xs-break {
-        clear: both
-    }
-
+.jmayt-btn:hover {
+    color: ' . $options_array['button_bg'] . ';
+    background: ' . $options_array['button_font'] . ';
+}
+.xs-break {
+    clear: both
+}
 @media(min-width: 767px){
     .has-sm .xs-break {
         clear: none
     }
-    .yt-list-wrap .sm-break {
+    .jmayt-list-wrap .sm-break {
         clear: both
     }
 }
@@ -274,7 +295,7 @@ function yt_styles(){
     .has-md .sm-break, .has-md .xs-break {
         clear: none
     }
-    .yt-list-wrap .md-break {
+    .jmayt-list-wrap .md-break {
         clear: both
     }
 }
@@ -282,19 +303,13 @@ function yt_styles(){
     .has-lg .md-break, .has-lg .sm-break, .has-lg .xs-break {
         clear: none
     }
-    .yt-list-wrap .lg-break {
+    .jmayt-list-wrap .lg-break {
         clear: both
     }
 }
 }
 </style>';
 }
-
-function jma_yt_template_redirect(){
-    if(jma_yt_detect_shortcode(array('yt_grid')))
-        add_action('wp_head', 'yt_styles');
-}
-add_action('template_redirect', 'jma_yt_template_redirect');
 
 function jma_sanitize_array($inputs){
     foreach($inputs as $i => $input){
@@ -334,7 +349,7 @@ function jma_yt_grid($atts){
         }
     }
     ob_start();
-    $attributes = array('id' => $atts['id'], 'class' => $atts['class'] . $has_break . ' yt-list-wrap clearfix', 'style' =>  $atts['style']);
+    $attributes = array('id' => $atts['id'], 'class' => $atts['class'] . $has_break . ' jmayt-list-wrap clearfix', 'style' =>  $atts['style']);
     echo '<div ';
     foreach ($attributes as $name => $attribute) {//build opening div ala html shortcode
         if ($attribute) {// check to make sure the attribute exists
