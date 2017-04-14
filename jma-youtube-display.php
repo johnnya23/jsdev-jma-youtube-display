@@ -24,19 +24,61 @@ add_action('admin_print_footer_scripts','jma_yt_quicktags');
 /**
  * Detect shortcodes in the global $post.
  */
-function yt_detect_shortcode() {
-    global $post;
-    $shortcodes = array('yt_grid', 'yt_video', 'yt_wrap');
-    $pattern = get_shortcode_regex($shortcodes);
 
-    if (   preg_match_all( '/'. $pattern .'/s', $post->post_content, $matches )
-        && array_key_exists( 2, $matches )
-        && count($matches[2]) ) {
-        add_action('wp_head', 'yt_styles');
+if(!function_exists('jma_yt_detect_shortcode')){
+    function jma_yt_detect_shortcode( $needle = '', $post_item = 0 ){
+
+        if($post_item){
+            if(is_object($post_item))
+                $post = $post_item;
+            else
+                $post = get_post($post_item);
+        }else{
+            global $post;
+        }
+        if(is_array($needle))
+            $pattern = get_shortcode_regex($needle);
+        else
+            $pattern = get_shortcode_regex();
+
+        preg_match_all( '/'. $pattern .'/s', $post->post_content, $matches );
+
+
+        if(//if shortcode(s) to be searched for were passed and not found $return false
+
+            array_key_exists( 2, $matches ) &&
+            count( $matches[2] )
+
+        ){
+            if(!is_array($needle)){
+                $post_sh_codes = $matches[2];
+                $good_indexes = array();
+                foreach ($post_sh_codes as $i => $post_sh_code){
+                    if (strpos($post_sh_code, $needle) !== false)
+                        $good_indexes[] = $i;
+                }
+                if(!count($good_indexes)){
+                    $return = false;
+                }else{
+                    $count = count($matches);
+                    for ($x = 0; $x < $count; $x++){
+                        $sub_count = count($matches[$x]);
+                        for ($y = 0; $y < $sub_count; $y++)
+                            if(!in_array($y, $good_indexes))
+                                unset($matches[$x][$y]);
+                    }
+                    $return = $matches;
+                }
+            }else{
+                $return = $matches;
+            }
+        }else{
+            $return = false;
+        }
+
+        return $return;
     }
-    return $matches[2];
 }
-add_action( 'wp', 'yt_detect_shortcode' );
 
 
 
@@ -169,8 +211,7 @@ if( is_admin() )
 
 function yt_styles(){
     global $options_array;
-    $active_sh_codes = yt_detect_shortcode();
-    if($options_array['bootstrap'] && in_array('yt_grid', $active_sh_codes))
+    if($options_array['bootstrap'] )
         $bootstrap = '.col-lg-020,.col-lg-1,.col-lg-2,.col-lg-3,.col-lg-4,.col-lg-6,.col-md-020,.col-md-1,.col-md-2,.col-md-3,.col-md-4,.col-md-6,.col-sm-020,.col-sm-1,.col-sm-2,.col-sm-3,.col-sm-4,.col-sm-6,.col-xs-020,.col-xs-1,.col-xs-2,.col-xs-3,.col-xs-4,.col-xs-6{position:relative;min-height:1px;padding-left:15px;padding-right:15px}.col-xs-020,.col-xs-1,.col-xs-2,.col-xs-3,.col-xs-4,.col-xs-6{float:left}.col-xs-6{width:50%}.col-xs-4{width:33.33333333%}.col-xs-020{width:20%}.col-xs-3{width:25%}.col-xs-2{width:16.66666667%}.col-xs-1{width:8.33333333%}@media (min-width:768px){.col-sm-020,.col-sm-1,.col-sm-2,.col-sm-3,.col-sm-4,.col-sm-6{float:left}.col-sm-6{width:50%}.col-sm-4{width:33.33333333%}.col-sm-3{width:25%}.col-sm-020{width:20%}.col-sm-2{width:16.66666667%}.col-sm-1{width:8.33333333%}}@media (min-width:992px){.col-md-020,.col-md-1,.col-md-2,.col-md-3,.col-md-4,.col-md-6{float:left}.col-md-6{width:50%}.col-md-4{width:33.33333333%}.col-md-3{width:25%}.col-md-020{width:20%}.col-md-2{width:16.66666667%}.col-md-1{width:8.33333333%}}@media (min-width:1200px){.col-lg-020,.col-lg-1,.col-lg-2,.col-lg-3,.col-lg-4,.col-lg-6{float:left}.col-lg-6{width:50%}.col-lg-4{width:33.33333333%}.col-lg-3{width:25%}.col-lg-020{width:20%}.col-lg-2{width:16.66666667%}.col-lg-1{width:8.33333333%}}';
     else
         $bootstrap = '';
@@ -244,6 +285,12 @@ function yt_styles(){
 }
 </style>';
 }
+
+function jma_yt_template_redirect(){
+    if(jma_yt_detect_shortcode(array('yt_grid')))
+        add_action('wp_head', 'yt_styles');
+}
+add_action('template_redirect', 'jma_yt_template_redirect');
 
 function jma_sanitize_array($inputs){
     foreach($inputs as $i => $input){
