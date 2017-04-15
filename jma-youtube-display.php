@@ -31,12 +31,16 @@ function jmayt_scripts() {
     wp_enqueue_script( 'jmayt_js', plugins_url('/jmayt_js.js', __FILE__), array( 'jquery' ) );
 }
 
-
+function jmayt_add_classes($classes) {
+    $classes[] = 'jmaty-cs';
+    return $classes;
+}
 
 function jma_yt_template_redirect(){
-    if(jma_yt_detect_shortcode(array('yt_grid'))){
+    if(jma_yt_detect_shortcode(array('yt_grid', 'yt_video', 'yt_video_wrap'))){
         add_action('wp_head', 'yt_styles');
         add_action( 'wp_enqueue_scripts', 'jmayt_scripts' );
+        add_filter('body_class','jmayt_add_classes');
     }
 }
 add_action('template_redirect', 'jma_yt_template_redirect');
@@ -351,13 +355,22 @@ function yt_styles(){
             array('border', 'solid 2px ' . $options_array['item_border']),
         );
     }
-    $font_size = $options_array['item_font_size']? array('font-size', $options_array['item_font_size'] . 'px'):array();
+    $font_size = $lg_font_size = $options_array['item_font_size'];
+    if($font_size)
+        $font_size = ceil($font_size*0.7);
+    $font_size_str = $options_array['item_font_size']? array('font-size', $font_size . 'px')
+        :array();
+    $lg_font_size_str = $options_array['item_font_size']? array('font-size', $lg_font_size . 'px')
+        :array();
     $jmayt_styles[70] =  array('.jmayt-item h3' ,
         array('padding', '5px'),
         array('margin', ' 0'),
         array('color', $options_array['item_font_color']),
         array('text-align', $options_array['item_font_alignment']),
-        $font_size
+        $font_size_str
+    );
+    $jmayt_styles[75] =  array('.jmayt-item h3:first-line' ,
+        $lg_font_size_str
     );
     $jmayt_styles[80] =  array('.jmayt-btn, .jmayt-btn:focus' ,
         array('position', 'absolute'),
@@ -385,6 +398,9 @@ function yt_styles(){
     $jmayt_css = jmayt_build_css($jmayt_values);
     echo '<style type= "text/css">';
     echo '
+.jmaty-cs * {
+    transform: none!important;
+}
 .col-xs-020{float:left}.col-xs-020{width:20%}@media (min-width:768px){.col-sm-020{float:left}.col-sm-020{width:20%}}@media (min-width:992px){.col-md-020{float:left}.col-md-020{width:20%}}@media (min-width:1200px){.col-lg-020{float:left}.col-lg-020{width:20%}}
 .jmayt-video-wrap .responsive-wrap {
 	 position: relative;
@@ -408,7 +424,7 @@ function yt_styles(){
 }
 .jmayt-list-wrap .jmayt-text-wrap h3 {
     position: absolute; top: 50%;
-    transform: translate(0, -50%);
+    transform: translate(0, -50%)!important;
     width: 100%;
 }
 .xs-break {

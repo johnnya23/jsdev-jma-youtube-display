@@ -31,8 +31,8 @@ jQuery(document).ready(function($){
                 }).animate({
                     'top': 0,
                     'left': 0,
-                    'width': $(window).width(),
-                    'height': $(window).height(),
+                    'width': $(window).width() + 'px',
+                    'height': ($(window).height()+200) + 'px',
                     'padding-left': '10%',
                     'padding-right': '10%',
                     'padding-top': '60px'
