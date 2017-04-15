@@ -79,9 +79,10 @@ class JMAYtVideo {
         return $return;
     }
 
-    protected function single_html($id, $grid = false){
+    protected function single_html($id, $grid = true){
         $snippet = JMAYtVideo::video_snippet($id);
         $meta_array = JMAYtVideo::map_meta($snippet, $id);
+        $return .= '<div class="jmayt-item">';
         $return .= '<div class="jmayt-video-wrap">';
         $return .= '<div class="responsive-wrap" itemprop="video" itemscope itemtype="http://schema.org/VideoObject">';
         if($grid)
@@ -91,6 +92,7 @@ class JMAYtVideo {
         $return .= '</div><!--responsive-wrap-->';
         $return .= '</div><!--yt-video-wrap-->';
         $return .= '<h3>' . $meta_array['name'] . '</h3>';
+        $return .= '</div><!--yt-item-->';
         return $return;
     }
 

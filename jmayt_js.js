@@ -1,17 +1,17 @@
 jQuery(document).ready(function($){
-    $('.jmayt-list-wrap').each(function(){
-        $this = $(this);
-        $this.find('.jmayt-btn').click(function(){
+    $('.jmayt-btn').each(function(){
+        $(this).click(function(){
             $this = $(this);
-            $parent = $this.parents('.jmayt-video-wrap');
+            $parent = $this.closest('.jmayt-video-wrap');
             $wrapper = $this.closest('.jmayt-item');
+            $wrapper.css('min-height', $wrapper.height() + 'px');
             $parent_width = $wrapper.innerWidth();
             $pos = $wrapper.offset();
             $pos_top = $pos.top - $(window).scrollTop() + parseInt($wrapper.css('padding-top'));
             $pos_left = $pos.left + parseInt($wrapper.css('padding-left'));
             if($parent.css('z-index') != 9999){
                 $this.html('&#xe097;');
-                $this.animate({'font-size': 23});
+                $this.animate({'font-size': '23px'});
                 $parent.css({
                     'position': 'fixed',
                     'z-index':  9999,

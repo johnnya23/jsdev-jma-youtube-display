@@ -216,10 +216,23 @@ $settings = array(
          * */
         'fields'				=> array(
             array(
-                'id' 			=> 'item_font',
-                'label'			=> __( 'Font color for grid item titles - blank your theme\'s title color (item_font)', 'jmayt_textdomain' ),
+                'id' 			=> 'item_font_color',
+                'label'			=> __( 'Font color for grid item titles - blank your theme\'s title color (item_font_color)', 'jmayt_textdomain' ),
                 'type'			=> 'color',
                 'default'		=> 0
+            ),
+            array(
+                'id' 			=> 'item_font_size',
+                'label'			=> __( 'Font size for grid item titles - 0 your theme\'s title size (item_font_size)', 'jmayt_textdomain' ),
+                'type'			=> 'number',
+                'default'		=> 0
+            ),
+            array(
+                'id' 			=> 'item_font_alignment',
+                'label'			=> __( 'Font alignment for grid item titles (item_font_alignment)', 'jmayt_textdomain' ),
+                'type'			=> 'radio',
+                'options'		=> array( 'left' => 'left' , 'center' => 'center', 'right' => 'right'),
+                'default'		=> 'left'
             ),
             array(
                 'id' 			=> 'item_bg',
@@ -328,20 +341,24 @@ function yt_styles(){
             array('padding-right', '5px'),
         );
         if ($options_array['item_bg']) {
-            $jmayt_styles[60] = array('.jmayt-item-wrap',
+            $jmayt_styles[60] = array('.jmayt-item',
                 array('background', $options_array['item_bg']),
             );
-        }else{
-            $jmayt_styles[40] = array('.jmayt-item-wrap',
+        }
+        if ($options_array['item_border']){
+            $jmayt_styles[40] = array('.jmayt-item',
                 array('border', 'solid 2px ' . $options_array['item_border']),
             );
         }
     }
+    $font_size = $options_array['item_font_size']? array('font-size', $options_array['item_font_size'] . 'px'):array();
     $jmayt_styles[70] =  array('.jmayt-item h3' ,
         array('padding-top', '5px'),
         array('padding-bottom', '5px'),
         array('margin', ' 0'),
-        array('color', $options_array['item_font']),
+        array('color', $options_array['item_font_color']),
+        array('text-align', $options_array['item_font_alignment']),
+        $font_size
     );
     $jmayt_styles[80] =  array('.jmayt-btn, .jmayt-btn:focus' ,
         array('position', 'absolute'),
