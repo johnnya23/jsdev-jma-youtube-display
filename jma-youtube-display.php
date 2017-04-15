@@ -387,14 +387,14 @@ function yt_styles(){
     echo '<style type= "text/css">';
     echo '
 .col-xs-020{float:left}.col-xs-020{width:20%}@media (min-width:768px){.col-sm-020{float:left}.col-sm-020{width:20%}}@media (min-width:992px){.col-md-020{float:left}.col-md-020{width:20%}}@media (min-width:1200px){.col-lg-020{float:left}.col-lg-020{width:20%}}
-.jmayt-item-wrap .responsive-wrap {
+.jmayt-video-wrap .responsive-wrap {
 	 position: relative;
 	 padding-bottom: 56.25%;
 	 height: 0;
 	 padding-top: 0;
 	 overflow: hidden;
 }
-.jmayt-item-wrap .responsive-wrap iframe {
+.jmayt-video-wrap .responsive-wrap iframe {
 	 position: absolute;
 	 top: 0;
 	 left: 0;
