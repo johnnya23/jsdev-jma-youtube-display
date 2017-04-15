@@ -4,8 +4,8 @@ jQuery(document).ready(function($){
         $this.find('.jmayt-btn').click(function(){
             $this = $(this);
             $parent = $this.parents('.jmayt-video-wrap');
-            $wrapper = $this.closest('.col');
-            $parent_width = $wrapper.width();
+            $wrapper = $this.closest('.jmayt-item');
+            $parent_width = $wrapper.innerWidth();
             $pos = $wrapper.offset();
             $pos_top = $pos.top - $(window).scrollTop() + parseInt($wrapper.css('padding-top'));
             $pos_left = $pos.left + parseInt($wrapper.css('padding-left'));
@@ -31,7 +31,7 @@ jQuery(document).ready(function($){
                 });
             }else{
                 $this.html('&#xe140;');
-                $this.animate({'font-size': 'inherit'});
+                $this.animate({'font-size': '18px'});
                 $parent.animate({
                     'top': $pos_top + 'px',
                     'left': $pos_left + 'px',

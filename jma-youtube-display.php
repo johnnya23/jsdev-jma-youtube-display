@@ -100,7 +100,53 @@ if(!function_exists('jma_yt_detect_shortcode')){
     }
 }
 
+//helper function for styles-builder.php
+function jmayt_output($inputs) {
+    $output = array();
+    foreach($inputs as $input){
+        $numArgs = count($input);
+        if($numArgs < 2)
+            return;	//bounces input if no property => value pairs are present
+        $pairs = array();
+        for($i = 1; $i < $numArgs; $i++){
+            $x = $input[$i];
+            $pairs[] = array(
+                'property' => $x[0],
+                'value' => $x[1]
+            );
+        }
+        $add = array($input[0] => $pairs);
+        $output = array_merge_recursive($output, $add);
+    }
+    return $output;
+}
 
+//helper function for dynamic-styles-builder.php
+// media queries in format max(or min)-$width@$selector, .....
+// so we explode around @, then around - (first checking to see if @ symbol is present)
+function jmayt_build_css($css_values) {
+    $return = ' {}';
+    foreach($css_values as  $k => $css_value) {
+        $has_media_query = (strpos ( $k , '@' ));
+        if($has_media_query){
+            $exploded = explode('@', $k);
+            $media_query_array = explode('-', $exploded[0]);
+            $k = $exploded[1];
+
+            $return .= '@media (' . $media_query_array[0] . '-width:' . $media_query_array[1] . "px) {\n";
+        }
+        $return .= $k . "{\n";
+        foreach($css_value as $value){
+            if($value['value'])
+                $return .= $value['property'] . ': ' . $value['value'] . ";\n";
+        }
+        $return .= "}\n";
+        if($has_media_query){
+            $return .= "}\n";
+        }
+    }
+    return $return;
+}
 
 $options_array = get_option('jmayt_options_array');
 $api_code = $options_array['api'];
@@ -255,26 +301,75 @@ if( is_admin() )
 
 function yt_styles(){
     global $options_array;
+    $item_gutter = $options_array['item_gutter'] % 2 == 0? $options_array['item_gutter']/2: ($options_array['item_gutter']-1)/2;
+    // FORMAT FOR INPUT
+// $dynamic_styles[] = array($selector, array($property, $value)[,array($property, $value)...])
+
+//in format above format media queries  i.e. max-768@$selector, ...
+// $dynamic_styles[] = array(max(or min)-$width@$selector, array($property, $value)[,array($property, $value)...])
+    $jmayt_styles[10] =  array('.yt-list-item' ,
+        array('position', 'relative'),
+        array('min-height', '1px'),
+        array('padding-left', $item_gutter . 'px'),
+        array('padding-right', $item_gutter . 'px'),
+    );
+    $jmayt_styles[20] =  array('.jmayt-list-wrap' ,
+        array('clear', 'both'),
+        array('margin-left', -$item_gutter . 'px'),
+        array('margin-right', -$item_gutter . 'px'),
+    );
+    $jmayt_styles[30] =  array('.jmayt-item-wrap' ,
+        array('box-sizing', 'border-box'),
+        array('margin-bottom', $options_array['item_spacing'] . 'px'),
+    );
+    if($options_array['item_border'] || $options_array['item_bg']) {
+        $jmayt_styles[50] = array('.jmayt-item h3',
+            array('padding-left', '5px'),
+            array('padding-right', '5px'),
+        );
+        if ($options_array['item_bg']) {
+            $jmayt_styles[60] = array('.jmayt-item-wrap',
+                array('background', $options_array['item_bg']),
+            );
+        }else{
+            $jmayt_styles[40] = array('.jmayt-item-wrap',
+                array('border', 'solid 2px ' . $options_array['item_border']),
+            );
+        }
+    }
+    $jmayt_styles[70] =  array('.jmayt-item h3' ,
+        array('padding-top', '5px'),
+        array('padding-bottom', '5px'),
+        array('margin', ' 0'),
+        array('color', $options_array['item_font']),
+    );
+    $jmayt_styles[80] =  array('.jmayt-btn, .jmayt-btn:focus' ,
+        array('position', 'absolute'),
+        array('z-index', '10'),
+        array('top', ' 0'),
+        array('left', ' 0'),
+        array('padding', '7px 10px'),
+        array('font-size', '18px'),
+        array('font-family', 'Glyphicons Halflings'),
+        array('color', $options_array['button_font']),
+        array('background', $options_array['button_bg']),
+        array('border', 'solid 1px ' . $options_array['button_font']),
+        array('-webkit-transition', 'all .2s'),
+        array('transition', 'all .2s'),
+    );
+    $jmayt_styles[90] =  array('.jmayt-btn:hover' ,
+        array('color', $options_array['button_bg']),
+        array('background', $options_array['button_font']),
+    );
+
+    $jmayt_values =  jmayt_output($jmayt_styles);
+    /* create html output from  $jma_css_values */
+
+
+    $jmayt_css = jmayt_build_css($jmayt_values);
     echo '<style type= "text/css">';
     echo '
-.col-md-020{position:relative;min-height:1px;padding-left:15px;padding-right:15px}.col-xs-020{float:left}.col-xs-020{width:20%}@media (min-width:768px){.col-sm-020{float:left}.col-sm-020{width:20%}}@media (min-width:992px){.col-md-020{float:left}.col-md-020{width:20%}}@media (min-width:1200px){.col-lg-020{float:left}.col-lg-020{width:20%}}
-.clearfix:before, 
-.clearfix:after {
-	content: " "; 
-	display: table; 
-} 
-.clearfix:after { 
-	clear: both; 
-}
-.jmayt-item-wrap {
-    box-sizing: border-box;
-    margin-bottom: 20px
-}
-.jmayt-list-wrap {
-    margin-left: -15px; 
-    margin-right: -15px;
-    clear: both;
-}
+.col-xs-020{float:left}.col-xs-020{width:20%}@media (min-width:768px){.col-sm-020{float:left}.col-sm-020{width:20%}}@media (min-width:992px){.col-md-020{float:left}.col-md-020{width:20%}}@media (min-width:1200px){.col-lg-020{float:left}.col-lg-020{width:20%}}
 .jmayt-item-wrap .responsive-wrap {
 	 position: relative;
 	 padding-bottom: 56.25%;
@@ -291,25 +386,6 @@ function yt_styles(){
 }
 .jmayt-video-wrap {
     background: rgba(0,0,0,0.8);
-}
-.jmayt-btn, button:focus {
-    position: absolute;
-    z-index: 10;
-    top: 0;
-    left: 0;
-    padding: 7px 10px;
-    font-size: 20px;
-    font-family: \'Glyphicons Halflings\';
-    color: ' . $options_array['button_font'] . ';
-    background: ' . $options_array['button_bg'] . ';
-    border: solid 1px ' . $options_array['button_font'] . ';
-    -webkit-transition: all .2s; /* Safari */
-    transition: all .2s;
-    
-}
-.jmayt-btn:hover {
-    color: ' . $options_array['button_bg'] . ';
-    background: ' . $options_array['button_font'] . ';
 }
 .xs-break {
     clear: both
@@ -338,8 +414,7 @@ function yt_styles(){
         clear: both
     }
 }
-}
-</style>';
+}' . $jmayt_css . '</style>';
 }
 
 function jma_sanitize_array($inputs){
