@@ -1,4 +1,12 @@
 jQuery(document).ready(function($){
+    $('.jmayt-list-wrap').each(function(){
+        $this = $(this);
+        var $title_max = Math.max.apply(null, $this.find('h3').map(function ()
+        {
+            return $(this).outerHeight();
+        }).get());
+        $this.find('.jmayt-text-wrap').css('min-height', $title_max + 'px');
+    });
     $('.jmayt-btn').each(function(){
         $(this).click(function(){
             $this = $(this);

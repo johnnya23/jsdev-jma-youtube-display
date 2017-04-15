@@ -235,6 +235,12 @@ $settings = array(
                 'default'		=> 'left'
             ),
             array(
+                'id' 			=> 'item_font_char',
+                'label'			=> __( 'The maximun number of characters for grid item titles - 0 for whole title (item_font_char)', 'jmayt_textdomain' ),
+                'type'			=> 'number',
+                'default'		=> 0
+            ),
+            array(
                 'id' 			=> 'item_bg',
                 'label'			=> __( 'Background color for grid items - blank for no bg (item_bg)', 'jmayt_textdomain' ),
                 'type'			=> 'color',
@@ -335,26 +341,19 @@ function yt_styles(){
         array('box-sizing', 'border-box'),
         array('margin-bottom', $options_array['item_spacing'] . 'px'),
     );
-    if($options_array['item_border'] || $options_array['item_bg']) {
-        $jmayt_styles[50] = array('.jmayt-item h3',
-            array('padding-left', '5px'),
-            array('padding-right', '5px'),
+    if ($options_array['item_bg']) {
+        $jmayt_styles[60] = array('.jmayt-item',
+            array('background', $options_array['item_bg']),
         );
-        if ($options_array['item_bg']) {
-            $jmayt_styles[60] = array('.jmayt-item',
-                array('background', $options_array['item_bg']),
-            );
-        }
-        if ($options_array['item_border']){
-            $jmayt_styles[40] = array('.jmayt-item',
-                array('border', 'solid 2px ' . $options_array['item_border']),
-            );
-        }
+    }
+    if ($options_array['item_border']){
+        $jmayt_styles[40] = array('.jmayt-item',
+            array('border', 'solid 2px ' . $options_array['item_border']),
+        );
     }
     $font_size = $options_array['item_font_size']? array('font-size', $options_array['item_font_size'] . 'px'):array();
     $jmayt_styles[70] =  array('.jmayt-item h3' ,
-        array('padding-top', '5px'),
-        array('padding-bottom', '5px'),
+        array('padding', '5px'),
         array('margin', ' 0'),
         array('color', $options_array['item_font_color']),
         array('text-align', $options_array['item_font_alignment']),
@@ -403,6 +402,14 @@ function yt_styles(){
 }
 .jmayt-video-wrap {
     background: rgba(0,0,0,0.8);
+}
+.jmayt-text-wrap {
+    position: relative;
+}
+.jmayt-list-wrap .jmayt-text-wrap h3 {
+    position: absolute; top: 50%;
+    transform: translate(0, -50%);
+    width: 100%;
 }
 .xs-break {
     clear: both

@@ -80,8 +80,16 @@ class JMAYtVideo {
     }
 
     protected function single_html($id, $grid = true){
+        global $options_array;
         $snippet = JMAYtVideo::video_snippet($id);
         $meta_array = JMAYtVideo::map_meta($snippet, $id);
+        $h3_title = $meta_array['name'];
+        $elipsis = '';
+        if ( $options_array['item_font_char'] && (strlen($meta_array['name']) > $options_array['item_font_char'])){
+            $h3_title = wordwrap($meta_array['name'], $options_array['item_font_char']);
+            $h3_title = substr($h3_title, 0, strpos($h3_title, "\n"));
+            $elipsis = '&nbsp;...';
+        }
         $return .= '<div class="jmayt-item">';
         $return .= '<div class="jmayt-video-wrap">';
         $return .= '<div class="responsive-wrap" itemprop="video" itemscope itemtype="http://schema.org/VideoObject">';
@@ -91,7 +99,9 @@ class JMAYtVideo {
         $return .=  '<iframe src="https://www.youtube.com/embed/' . $id . '?rel=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe>';
         $return .= '</div><!--responsive-wrap-->';
         $return .= '</div><!--yt-video-wrap-->';
-        $return .= '<h3>' . $meta_array['name'] . '</h3>';
+        $return .= '<div class="jmayt-text-wrap">';
+        $return .= '<h3>' . $h3_title . $elipsis . '</h3>';
+        $return .= '</div><!--jmayt-text-wrap-->';
         $return .= '</div><!--yt-item-->';
         return $return;
     }
