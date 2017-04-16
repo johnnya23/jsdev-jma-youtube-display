@@ -40,7 +40,7 @@ function jmayt(){
             'top': -($pos_top - $scroll) + 'px',
             'left': -$pos_left + 'px',
             'width': jQuery(window).width() + 'px',
-            'height': (jQuery(window).height()) + 'px',
+            'height': screen.availHeight + 'px',
             'padding-top': '40px'
         });
     }
@@ -86,7 +86,7 @@ function jmayt(){
                 'top': -($pos_top - $scroll) + 'px',
                 'left': -$pos_left + 'px',
                 'width': jQuery(window).width() + 'px',
-                'height': jQuery(window).height() + 'px',
+                'height': screen.availHeight + 'px',
             })
         });
     }
