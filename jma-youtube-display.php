@@ -415,14 +415,25 @@ function yt_styles(){
 }
 .jmayt-video-wrap {
     background: rgba(0,0,0,0.8);
+    padding-bottom: 56.25%;
+    position: relative;
 }
 .jmayt-text-wrap, .yt-item {
     position: relative;
 }
+.jmayt-video-wrap .responsive-wrap,
 .jmayt-list-wrap .jmayt-text-wrap h3 {
-    position: absolute; top: 50%;
-    transform: translate(0, -50%);
+    position: absolute; 
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     width: 100%;
+}
+.jmayt-fixed {
+    position: absolute;
+    z-index: 9999;
+    top: 0;
+    left: 0;
 }
 .xs-break {
     clear: both
