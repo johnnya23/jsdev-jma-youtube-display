@@ -421,12 +421,18 @@ function yt_styles(){
 .jmayt-text-wrap, .yt-item {
     position: relative;
 }
-.jmayt-video-wrap .responsive-wrap,
 .jmayt-list-wrap .jmayt-text-wrap h3 {
     position: absolute; 
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    width: 100%;
+}
+.jmayt-video-wrap .responsive-wrap {
+    position: absolute; 
+    top: 33%;
+    left: 50%;
+    transform: translate(-50%, -33%);
     width: 100%;
 }
 .jmayt-fixed {

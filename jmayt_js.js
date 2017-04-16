@@ -24,6 +24,7 @@ function jmayt(){
         $parent_width = $parent.innerWidth();
         $button = $this.find('.jmayt-btn');
         $responsive = $this.find('.responsive-wrap');
+        $screenheight = screen.availHeight;
 
         $parent.css('min-height', $parent.height() + 'px');
         $button.html('&#xe097;');
@@ -40,7 +41,7 @@ function jmayt(){
             'top': -($pos_top - $scroll) + 'px',
             'left': -$pos_left + 'px',
             'width': jQuery(window).width() + 'px',
-            'height': screen.availHeight + 'px',
+            'height': (jQuery(window).height()+100) + 'px',
             'padding-top': '40px'
         });
     }
@@ -86,7 +87,7 @@ function jmayt(){
                 'top': -($pos_top - $scroll) + 'px',
                 'left': -$pos_left + 'px',
                 'width': jQuery(window).width() + 'px',
-                'height': screen.availHeight + 'px',
+                'height': (jQuery(window).height()+100) + 'px',
             })
         });
     }
