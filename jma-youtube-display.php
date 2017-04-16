@@ -398,9 +398,6 @@ function yt_styles(){
     $jmayt_css = jmayt_build_css($jmayt_values);
     echo '<style type= "text/css">';
     echo '
-.jmaty-cs * {
-    transform: none!important;
-}
 .col-xs-020{float:left}.col-xs-020{width:20%}@media (min-width:768px){.col-sm-020{float:left}.col-sm-020{width:20%}}@media (min-width:992px){.col-md-020{float:left}.col-md-020{width:20%}}@media (min-width:1200px){.col-lg-020{float:left}.col-lg-020{width:20%}}
 .jmayt-video-wrap .responsive-wrap {
 	 position: relative;
@@ -419,12 +416,12 @@ function yt_styles(){
 .jmayt-video-wrap {
     background: rgba(0,0,0,0.8);
 }
-.jmayt-text-wrap {
+.jmayt-text-wrap, .yt-item {
     position: relative;
 }
 .jmayt-list-wrap .jmayt-text-wrap h3 {
     position: absolute; top: 50%;
-    transform: translate(0, -50%)!important;
+    transform: translate(0, -50%);
     width: 100%;
 }
 .xs-break {
