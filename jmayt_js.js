@@ -10,7 +10,7 @@ function jmayt(){
         }).get());
         $this.find('.jmayt-text-wrap').css('min-height', $title_max + 'px');
     });
-    jQuery('.jmayt-btn').each(function(){
+    jQuery('.jmayt-btn').each(function(){ 
         jQuery(this).toggle(mouseIn, mouseOut);
     });
 
