@@ -5,22 +5,22 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 class JMAYtSettings {
     private $dir;
     private $file;
-    private $assets_dir;
     private $assets_url;
     private $settings_base;
     private $settings;
     private $db_option;
     private $page_title;
+    private $text_domain;
 
-    public function __construct($base = 'jma_plugin', $title = 'Cool Plugin', $settings = array()) {
+    public function __construct($base = 'jma_plugin', $title = 'Cool Plugin', $settings = array(), $text_domain = '') {
         $this->file =  __FILE__ ;
         $this->dir = dirname( $this->file );
-        $this->assets_dir = trailingslashit( $this->dir );
         $this->assets_url = esc_url( trailingslashit( plugins_url( '/', $this->file ) ) );
         $this->settings_base = $base . '_';
         $this->db_option = $this->settings_base . 'options_array';
         $this->page_title = $title;
         $this->settings = $settings;
+        $this->text_domain = $text_domain? $text_domain: $this->text_domain;
 
         // Initialise settings
         add_action( 'admin_init', array( $this, 'init' ) );
@@ -48,7 +48,7 @@ class JMAYtSettings {
      * @return void
      */
     public function add_menu_item() {
-        $page = add_options_page( __( $this->page_title, $this->settings_base . 'textdomain' ) , __( $this->page_title, $this->settings_base . 'textdomain' ) , 'manage_options' , $this->settings_base . 'settings' ,  array( $this, 'settings_page' ) );
+        $page = add_options_page( __( $this->page_title, $this->text_domain ) , __( $this->page_title, $this->text_domain ) , 'manage_options' , $this->settings_base . 'settings' ,  array( $this, 'settings_page' ) );
         add_action( 'admin_print_styles-' . $page, array( $this, 'settings_assets' ) );
     }
 
@@ -77,7 +77,7 @@ class JMAYtSettings {
      * @return array 		Modified links
      */
     public function add_settings_link( $links ) {
-        $settings_link = '<a href="options-general.php?page=' . $this->settings_base . 'settings">' . __( 'Settings', $this->settings_base . 'textdomain' ) . '</a>';
+        $settings_link = '<a href="options-general.php?page=' . $this->settings_base . 'settings">' . __( 'Settings', $this->text_domain ) . '</a>';
         array_push( $links, $settings_link );
         return $links;
     }
@@ -229,8 +229,8 @@ class JMAYtSettings {
                     $image_thumb = wp_get_attachment_thumb_url( $data );
                 }
                 $html .= '<img id="' . $option_array_name . '_preview" class="image_preview" src="' . $image_thumb . '" /><br/>' . "\n";
-                $html .= '<input id="' . $option_array_name . '_button" type="button" data-uploader_title="' . __( 'Upload an image' , $this->settings_base . 'textdomain' ) . '" data-uploader_button_text="' . __( 'Use image' , $this->settings_base . 'textdomain' ) . '" class="image_upload_button button" value="'. __( 'Upload new image' , $this->settings_base . 'textdomain' ) . '" />' . "\n";
-                $html .= '<input id="' . $option_array_name . '_delete" type="button" class="image_delete_button button" value="'. __( 'Remove image' , $this->settings_base . 'textdomain' ) . '" />' . "\n";
+                $html .= '<input id="' . $option_array_name . '_button" type="button" data-uploader_title="' . __( 'Upload an image' , $this->text_domain ) . '" data-uploader_button_text="' . __( 'Use image' , $this->text_domain ) . '" class="image_upload_button button" value="'. __( 'Upload new image' , $this->text_domain ) . '" />' . "\n";
+                $html .= '<input id="' . $option_array_name . '_delete" type="button" class="image_delete_button button" value="'. __( 'Remove image' , $this->text_domain ) . '" />' . "\n";
                 $html .= '<input id="' . $option_array_name . '" class="image_data_field" type="hidden" name="' . $option_name . '" value="' . $data . '"/><br/>' . "\n";
                 break;
 
@@ -282,7 +282,7 @@ class JMAYtSettings {
 
         // Build page HTML
         $html = '<div class="wrap" id="' . $this->settings_base . 'settings">' . "\n";
-        $html .= '<h2>' . __( $this->page_title . ' Settings' , $this->settings_base . 'textdomain' ) . '</h2>' . "\n";
+        $html .= '<h2>' . __( $this->page_title . ' Settings' , $this->text_domain ) . '</h2>' . "\n";
         $html .= '<form method="post" action="options.php" enctype="multipart/form-data">' . "\n";
 
         $html .= '<div class="clear"></div>' . "\n";
@@ -294,7 +294,7 @@ class JMAYtSettings {
         $html .= ob_get_clean();
 
         $html .= '<p class="submit">' . "\n";
-        $html .= '<input name="Submit" type="submit" class="button-primary" value="' . esc_attr( __( 'Save Settings' , $this->settings_base . 'textdomain' ) ) . '" />' . "\n";
+        $html .= '<input name="Submit" type="submit" class="button-primary" value="' . esc_attr( __( 'Save Settings' , $this->text_domain ) ) . '" />' . "\n";
         $html .= '</p>' . "\n";
         $html .= '</form>' . "\n";
         $html .= '</div>' . "\n";
