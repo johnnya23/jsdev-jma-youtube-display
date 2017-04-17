@@ -45,12 +45,6 @@ function jmayt(){
     }
 
     function mouseOut() {
-        $this = jQuery(this);
-        $parent = $this.parent('.jmayt-item');
-        $parent_width = $parent.innerWidth();
-        $button = $this.find('.jmayt-btn');
-        $responsive = $this.find('.responsive-wrap');
-
         $parent.css('min-height', '');
         $button.html('&#xe140;');
         $button.css({'font-size': ''});
