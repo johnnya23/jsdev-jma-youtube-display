@@ -40,7 +40,7 @@ function jmayt(){
             'top': -($pos_top - $scroll) + 'px',
             'left': -$pos_left + 'px',
             'width': jQuery(window).width() + 'px',
-            'height': (jQuery(window).height()+100) + 'px',
+            'height': window.innerHeight + 'px',
         });
     }
 
@@ -84,7 +84,7 @@ function jmayt(){
                 'top': -($pos_top - $scroll) + 'px',
                 'left': -$pos_left + 'px',
                 'width': jQuery(window).width() + 'px',
-                'height': (jQuery(window).height()+100) + 'px',
+                'height': window.innerHeight + 'px',
             })
         });
     }
