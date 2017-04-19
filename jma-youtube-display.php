@@ -32,7 +32,7 @@ function jmayt_scripts() {
 }
 
 function jmayt_add_classes($classes) {
-    $classes[] = 'jmaty-cs';
+    $classes[] = 'jmaty-css';
     return $classes;
 }
 
@@ -62,6 +62,8 @@ if(!function_exists('jma_yt_detect_shortcode')){
         }
         if(is_array($needle))
             $pattern = get_shortcode_regex($needle);
+        elseif(is_string($needle))
+            $pattern = get_shortcode_regex(array($needle));
         else
             $pattern = get_shortcode_regex();
 
@@ -72,30 +74,8 @@ if(!function_exists('jma_yt_detect_shortcode')){
 
             array_key_exists( 2, $matches ) &&
             count( $matches[2] )
-
         ){
-            if(!is_array($needle)){
-                $post_sh_codes = $matches[2];
-                $good_indexes = array();
-                foreach ($post_sh_codes as $i => $post_sh_code){
-                    if (strpos($post_sh_code, $needle) !== false)
-                        $good_indexes[] = $i;
-                }
-                if(!count($good_indexes)){
-                    $return = false;
-                }else{
-                    $count = count($matches);
-                    for ($x = 0; $x < $count; $x++){
-                        $sub_count = count($matches[$x]);
-                        for ($y = 0; $y < $sub_count; $y++)
-                            if(!in_array($y, $good_indexes))
-                                unset($matches[$x][$y]);
-                    }
-                    $return = $matches;
-                }
-            }else{
                 $return = $matches;
-            }
         }else{
             $return = false;
         }
@@ -330,19 +310,19 @@ function yt_styles(){
 
 //in format above format media queries  i.e. max-768@$selector, ...
 // $dynamic_styles[] = array(max(or min)-$width@$selector, array($property, $value)[,array($property, $value)...])
-    $jmayt_styles[10] =  array('.yt-list-item' ,
-        array('position', 'relative'),
-        array('min-height', '1px'),
-        array('padding-left', $item_gutter . 'px'),
-        array('padding-right', $item_gutter . 'px'),
-    );
-    $jmayt_styles[20] =  array('.jmayt-list-wrap' ,
+    $jmayt_styles[10] =  array('.jmayt-list-wrap' ,
         array('clear', 'both'),
         array('margin-left', -$item_gutter . 'px'),
         array('margin-right', -$item_gutter . 'px'),
     );
-    $jmayt_styles[30] =  array('.jmayt-item-wrap' ,
+    $jmayt_styles[20] =  array('.jmayt-item-wrap' ,
+        array('position', 'relative'),
         array('box-sizing', 'border-box'),
+    );
+    $jmayt_styles[30] =  array('.jmayt-list-item.col' ,
+        array('min-height', '1px'),
+        array('padding-left', $item_gutter . 'px'),
+        array('padding-right', $item_gutter . 'px'),
         array('margin-bottom', $options_array['item_spacing'] . 'px'),
     );
     if ($options_array['item_bg']) {
@@ -351,7 +331,7 @@ function yt_styles(){
         );
     }
     if ($options_array['item_border']){
-        $jmayt_styles[40] = array('.jmayt-item',
+        $jmayt_styles[40] = array('.jmayt-item-wrap',
             array('border', 'solid 2px ' . $options_array['item_border']),
         );
     }
@@ -399,14 +379,9 @@ function yt_styles(){
     echo '<style type= "text/css">';
     echo '
 .col-xs-020{float:left}.col-xs-020{width:20%}@media (min-width:768px){.col-sm-020{float:left}.col-sm-020{width:20%}}@media (min-width:992px){.col-md-020{float:left}.col-md-020{width:20%}}@media (min-width:1200px){.col-lg-020{float:left}.col-lg-020{width:20%}}
-.jmayt-video-wrap .responsive-wrap {
-	 position: relative;
-	 padding-bottom: 56.25%;
-	 height: 0;
-	 padding-top: 0;
-	 overflow: hidden;
+.jmayt-video-wrap .jma-responsive-wrap {
 }
-.jmayt-video-wrap .responsive-wrap iframe {
+.jmayt-video-wrap .jma-responsive-wrap iframe {
 	 position: absolute;
 	 top: 0;
 	 left: 0;
@@ -418,7 +393,7 @@ function yt_styles(){
     padding-bottom: 56.25%;
     position: relative;
 }
-.jmayt-text-wrap, .yt-item {
+.jmayt-text-wrap {
     position: relative;
 }
 .jmayt-list-wrap .jmayt-text-wrap h3 {
@@ -428,12 +403,15 @@ function yt_styles(){
     transform: translate(-50%, -50%);
     width: 100%;
 }
-.jmayt-video-wrap .responsive-wrap {
+.jmayt-video-wrap .jma-responsive-wrap {
+	padding-bottom: 56.25%;
+	overflow: hidden;
     position: absolute; 
-    top: 33%;
+    top: 50%;
     left: 50%;
-    transform: translate(-50%, -33%);
+    transform: translate(-50%, -50%);
     width: 100%;
+	overflow: hidden;
 }
 .jmayt-fixed {
     position: absolute;
@@ -526,34 +504,7 @@ function jma_yt_grid($atts){
 }
 add_shortcode('yt_grid','jma_yt_grid');
 
-/**
- * @param $atts
- * @param null $content
- * @return mixed
- */
-function jma_yt_video($atts){
-    global $api_code;
-    $atts = jma_sanitize_array($atts);
-    ob_start();
-    $html_attributes = array('id', 'class', 'style');
-    $video_id = $atts['video_id'];
-    $yt_video = new JMAYtVideo($video_id, $api_code);
-    echo '<div ';
-    foreach($atts as $name => $attribute){
-        if($attribute && in_array($name, $html_attributes)){// check to make sure the attribute exists
-            if($name == 'class')
-                $attribute .= ' yt-item';
-            echo $name . '="' . $attribute . '" ';
-        }
-    }
-    echo '>';
-    echo $yt_video->markup();
-    echo '</div>';
-    $x = ob_get_contents();
-    ob_end_clean();
-    return str_replace("\r\n", '', $x);
-}
-add_shortcode('yt_video','jma_yt_video');
+
 
 /**
  * get YouTube video ID from URL
@@ -574,24 +525,48 @@ function youtube_id_from_url($url) {
  * @param null $content
  * @return mixed
  */
-function jma_yt_video_wrap($atts, $content = null){
+function jma_yt_video_wrap_html($atts, $video_id){
     global $api_code;
     $atts = jma_sanitize_array($atts);
-    ob_start();
     $html_attributes = array('id', 'class', 'style');
-    $video_id = youtube_id_from_url($content);
     $yt_video = new JMAYtVideo(sanitize_text_field($video_id), $api_code);
     echo '<div ';
     foreach($atts as $name => $attribute){
         if($attribute && in_array($name, $html_attributes)){// check to make sure the attribute exists
             if($name == 'class')
-                $attribute .= ' yt-item';
+                $attribute .= ' jmayt-item-wrap';
             echo $name . '="' . $attribute . '" ';
         }
     }
     echo '>';
     echo $yt_video->markup();
-    echo '</div>';
+    echo '</div><!--jmayt-item-wrap-->';
+}
+
+/**
+ * @param $atts
+ * @param null $content
+ * @return mixed
+ */
+function jma_yt_video($atts){
+    $video_id = $atts['video_id'];
+    ob_start();
+    jma_yt_video_wrap_html($atts, $video_id);
+    $x = ob_get_contents();
+    ob_end_clean();
+    return str_replace("\r\n", '', $x);
+}
+add_shortcode('yt_video','jma_yt_video');
+
+/**
+ * @param $atts
+ * @param null $content
+ * @return mixed
+ */
+function jma_yt_video_wrap($atts, $content = null){
+    $video_id = youtube_id_from_url($content);
+    ob_start();
+    jma_yt_video_wrap_html($atts, $video_id);
     $x = ob_get_contents();
     ob_end_clean();
     return str_replace("\r\n", '', $x);
