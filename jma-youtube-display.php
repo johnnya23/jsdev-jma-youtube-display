@@ -22,13 +22,12 @@ function jma_yt_quicktags() {
 add_action('admin_print_footer_scripts','jma_yt_quicktags');
 
 function jmayt_scripts() {
-    wp_register_script( 'bootstrap-js', '//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js', array('jquery'), NULL, true );
-    wp_register_style( 'bootstrap-css', '//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', false, NULL,
-        'all' );
 
-    wp_enqueue_script( 'bootstrap-js' );
-    wp_enqueue_style( 'bootstrap-css' );
+    wp_enqueue_style( 'jmayt_bootstrap_css', plugins_url('/jmayt_bootstrap.css', __FILE__) );
     wp_enqueue_script( 'jmayt_js', plugins_url('/jmayt_js.js', __FILE__), array( 'jquery' ) );
+    $custom_css = yt_styles();
+    wp_add_inline_style( 'jmayt_bootstrap_css', $custom_css );
+
 }
 
 function jmayt_add_classes($classes) {
@@ -38,7 +37,6 @@ function jmayt_add_classes($classes) {
 
 function jma_yt_template_redirect(){
     if(jma_yt_detect_shortcode(array('yt_grid', 'yt_video', 'yt_video_wrap'))){
-        add_action('wp_head', 'yt_styles');
         add_action( 'wp_enqueue_scripts', 'jmayt_scripts' );
         add_filter('body_class','jmayt_add_classes');
     }
@@ -75,7 +73,7 @@ if(!function_exists('jma_yt_detect_shortcode')){
             array_key_exists( 2, $matches ) &&
             count( $matches[2] )
         ){
-                $return = $matches;
+            $return = $matches;
         }else{
             $return = false;
         }
@@ -306,10 +304,10 @@ function yt_styles(){
     global $options_array;
     $item_gutter = $options_array['item_gutter'] % 2 == 0? $options_array['item_gutter']/2: ($options_array['item_gutter']-1)/2;
     // FORMAT FOR INPUT
-// $dynamic_styles[] = array($selector, array($property, $value)[,array($property, $value)...])
+// $jmayt_styles[] = array($selector, array($property, $value)[,array($property, $value)...])
 
 //in format above format media queries  i.e. max-768@$selector, ...
-// $dynamic_styles[] = array(max(or min)-$width@$selector, array($property, $value)[,array($property, $value)...])
+// $jmayt_styles[] = array(max(or min)-$width@$selector, array($property, $value)[,array($property, $value)...])
     $jmayt_styles[10] =  array('.jmayt-list-wrap' ,
         array('clear', 'both'),
         array('margin-left', -$item_gutter . 'px'),
@@ -326,12 +324,12 @@ function yt_styles(){
         array('margin-bottom', $options_array['item_spacing'] . 'px'),
     );
     if ($options_array['item_bg']) {
-        $jmayt_styles[60] = array('.jmayt-item',
+        $jmayt_styles[40] = array('.jmayt-item',
             array('background', $options_array['item_bg']),
         );
     }
     if ($options_array['item_border']){
-        $jmayt_styles[40] = array('.jmayt-item-wrap',
+        $jmayt_styles[50] = array('.jmayt-item-wrap',
             array('border', 'solid 2px ' . $options_array['item_border']),
         );
     }
@@ -342,14 +340,14 @@ function yt_styles(){
         :array();
     $lg_font_size_str = $options_array['item_font_size']? array('font-size', $lg_font_size . 'px')
         :array();
-    $jmayt_styles[70] =  array('.jmayt-item h3' ,
+    $jmayt_styles[60] =  array('.jmayt-item h3' ,
         array('padding', '5px'),
         array('margin', ' 0'),
         array('color', $options_array['item_font_color']),
         array('text-align', $options_array['item_font_alignment']),
         $font_size_str
     );
-    $jmayt_styles[75] =  array('.jmayt-item h3:first-line' ,
+    $jmayt_styles[70] =  array('.jmayt-item h3:first-line' ,
         $lg_font_size_str
     );
     $jmayt_styles[80] =  array('.jmayt-btn, .jmayt-btn:focus' ,
@@ -376,11 +374,8 @@ function yt_styles(){
 
 
     $jmayt_css = jmayt_build_css($jmayt_values);
-    echo '<style type= "text/css">';
-    echo '
-.col-xs-020{float:left}.col-xs-020{width:20%}@media (min-width:768px){.col-sm-020{float:left}.col-sm-020{width:20%}}@media (min-width:992px){.col-md-020{float:left}.col-md-020{width:20%}}@media (min-width:1200px){.col-lg-020{float:left}.col-lg-020{width:20%}}
-.jmayt-video-wrap .jma-responsive-wrap {
-}
+    $css = '
+.col-xs-020{float:left;width:20%}@media (min-width:768px){.col-sm-020{float:left;width:20%}}@media (min-width:992px){.col-md-020{float:left;width:20%}}@media (min-width:1200px){.col-lg-020{float:left;width:20%}}
 .jmayt-video-wrap .jma-responsive-wrap iframe {
 	 position: absolute;
 	 top: 0;
@@ -419,7 +414,7 @@ function yt_styles(){
     top: 0;
     left: 0;
 }
-.xs-break {
+.jmayt-list-wrap .xs-break {
     clear: both
 }
 @media(min-width: 767px){
@@ -446,7 +441,8 @@ function yt_styles(){
         clear: both
     }
 }
-}' . $jmayt_css . '</style>';
+}' . $jmayt_css;
+    return $css;
 }
 
 function jma_sanitize_array($inputs){
