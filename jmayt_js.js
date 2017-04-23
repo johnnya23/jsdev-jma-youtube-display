@@ -41,7 +41,8 @@ function jmayt(){
         $this.addClass('jmayt-fixed');
         $this.css({
             'width': ($parent_width) + 'px',
-            'height': ($parent_width)/1.7778 + 'px'
+            'height': ($parent_width)/1.7778 + 'px',
+            'padding-bottom': 0
         }).animate({//then we increase it's size while positioning it at the top left of the window
             'top': -($pos_top - $scroll) + 'px',
             'left': -$pos_left + 'px',
@@ -51,7 +52,6 @@ function jmayt(){
     }
 
     function hide_lightbox() {
-        $parent.css('min-height', '');
         $button.html('&#xe140;');
         $button.css({'font-size': ''});
         $this.animate({
@@ -62,14 +62,21 @@ function jmayt(){
         },400, 'swing', function(){
             jQuery(this).css({
                 'height': '',
-                'width': ''
+                'width': '',
+                'padding-bottom': ''
             });
             jQuery(this).removeClass('jmayt-fixed');
         });
-        $responsive.animate({
-            'width': '100%',
-            'padding-bottom': '56.25%'
+        setTimeout(function() {
+            $responsive.animate({
+                'width': '100%',
+                'padding-bottom': '56.25%'
+            }, 200);
+        }, 300);
+        setTimeout(function() {
+            $parent.css('min-height', '');
         }, 500);
+
     }
 
     function hold_fixed(){

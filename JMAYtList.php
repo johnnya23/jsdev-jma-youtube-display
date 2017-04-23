@@ -20,12 +20,12 @@ class JMAYtList extends JMAYtVideo {
     public function markup($res_cols = array()){
         global $options_array;
         $col_class = '';
-        $trans_id = 'jmaytlist' . $post_id;
+        $trans_id = 'jmaytlist' . $post_id . $trans_atts_id;
         foreach($res_cols as $break => $res_col){
             $trans_id .= $break . $res_col;
         }
 
-        $trans_id .= $this->id;
+        $trans_id .= $this->id . $this->trans_atts_id;
         $return = get_transient( $trans_id );
         if(false === $return || !$options_array['cache']) {//if cache at 0
             $yt_api_array = JMAYtList::yt_loop($this->id);
@@ -60,12 +60,10 @@ class JMAYtList extends JMAYtVideo {
                     }
                     $yt_snippet = $yt_loop_item['snippet'];
                     $yt_id = $yt_snippet['resourceId']['videoId'];
-                    $return .= '<div class="jmayt-list-item col' . $col_class . $br_cl .'">';
-                    $return .= '<div class="jmayt-item-wrap">';
+                    $return .= '<div class="jmayt-list-item col' . $col_class . $br_cl .'"' . $this->col_space . '>';
                     //$return .= '<div class="jmayt-item">';
                     $return .= JMAYtList::single_html($yt_id, true);
                     //$return .= '</div><!--yt-item-->';
-                    $return .= '</div><!--yt-item-wrap-->';
                     $return .= '</div><!--col-->';
                     $i++;
                 }

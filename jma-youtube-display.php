@@ -8,6 +8,11 @@ Author URI: http://cleansupersites.com
 License: GPL2
 */
 
+/*
+ * function jma_yt_quicktags
+ * add shortcode tags to text toolbar
+ *
+ * */
 function jma_yt_quicktags() {
 
     if (wp_script_is('quicktags')){ ?>
@@ -45,7 +50,12 @@ add_action('template_redirect', 'jma_yt_template_redirect');
 
 
 /**
- * Detect shortcodes in the global $post.
+ * function jma_yt_detect_shortcode Detect shortcodes in a post object,
+ *  from a post id or from global $post.
+ * @param string or array $needle - the shortcode(s) to search for
+ * use array for multiple values
+ * @param int or object $post_item - the post to search (defaults to current)
+ * @return boolean $return
  */
 if(!function_exists('jma_yt_detect_shortcode')){
     function jma_yt_detect_shortcode( $needle = '', $post_item = 0 ){
@@ -82,7 +92,7 @@ if(!function_exists('jma_yt_detect_shortcode')){
     }
 }
 
-//helper function for styles-builder.php
+//helper function for yt_styles()
 function jmayt_output($inputs) {
     $output = array();
     foreach($inputs as $input){
@@ -103,7 +113,7 @@ function jmayt_output($inputs) {
     return $output;
 }
 
-//helper function for dynamic-styles-builder.php
+//helper function for yt_styles()
 // media queries in format max(or min)-$width@$selector, .....
 // so we explode around @, then around - (first checking to see if @ symbol is present)
 function jmayt_build_css($css_values) {
@@ -132,6 +142,7 @@ function jmayt_build_css($css_values) {
 
 $options_array = get_option('jmayt_options_array');
 $api_code = $options_array['api'];
+
 spl_autoload_register( 'jma_yt_autoloader' );
 function jma_yt_autoloader( $class_name ) {
     if ( false !== strpos( $class_name, 'JMAYt' ) ) {
@@ -300,9 +311,13 @@ $settings = array(
 if( is_admin() )
     $jma_settings_page = new JMAYtSettings('jmayt', 'YouTube w/ Meta', $settings);
 
+/**
+ * function yt_styles add the plugin specific styles
+ * @return $css the css string
+ */
 function yt_styles(){
     global $options_array;
-    $item_gutter = $options_array['item_gutter'] % 2 == 0? $options_array['item_gutter']/2: ($options_array['item_gutter']-1)/2;
+    $item_gutter = floor($options_array['item_gutter']/2);
     // FORMAT FOR INPUT
 // $jmayt_styles[] = array($selector, array($property, $value)[,array($property, $value)...])
 
@@ -323,14 +338,13 @@ function yt_styles(){
         array('padding-right', $item_gutter . 'px'),
         array('margin-bottom', $options_array['item_spacing'] . 'px'),
     );
-    if ($options_array['item_bg']) {
-        $jmayt_styles[40] = array('.jmayt-item',
-            array('background', $options_array['item_bg']),
-        );
-    }
-    if ($options_array['item_border']){
+    if ($options_array['item_border'] || $options_array['item_bg']){
+        $border_array = $options_array['item_border']? array('border', 'solid 2px ' . $options_array['item_border']):
+            array();
+        $bg_array = $options_array['item_bg']? array('background', $options_array['item_bg']): array();
         $jmayt_styles[50] = array('.jmayt-item-wrap',
-            array('border', 'solid 2px ' . $options_array['item_border']),
+            $border_array,
+            $bg_array
         );
     }
     $font_size = $lg_font_size = $options_array['item_font_size'];
@@ -392,11 +406,12 @@ function yt_styles(){
     position: relative;
 }
 .jmayt-list-wrap .jmayt-text-wrap h3 {
+    padding: 5px;
     position: absolute; 
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 100%;
+    width: 90%;
 }
 .jmayt-video-wrap .jma-responsive-wrap {
 	padding-bottom: 56.25%;
@@ -454,6 +469,11 @@ function jma_sanitize_array($inputs){
     return $output;
 }
 
+/**
+ * function jma_yt_grid shortcode for the grid
+ * @param array $atts - the shortcode attributes
+ * @return the shortcode string
+ */
 function jma_yt_grid($atts){
     global $options_array;
     $api_code = $options_array['api'];
@@ -469,6 +489,7 @@ function jma_yt_grid($atts){
         }
     }
     $count = 0;
+    $gutter_style = $you_tube_list->process_display_atts($atts);
     foreach($atts as $index => $att){
         if (strpos($index, '_cols') !== false) {
             //clear defaults the first time we find a _cols attribute
@@ -483,7 +504,11 @@ function jma_yt_grid($atts){
         }
     }
     ob_start();
-    $attributes = array('id' => $atts['id'], 'class' => $atts['class'] . $has_break . ' jmayt-list-wrap clearfix', 'style' =>  $atts['style']);
+    $attributes = array(
+        'id' => $atts['id'],
+        'class' => $atts['class'] . $has_break . ' jmayt-list-wrap clearfix',
+        'style' =>  $atts['style'] . $gutter_style
+    );
     echo '<div ';
     foreach ($attributes as $name => $attribute) {//build opening div ala html shortcode
         if ($attribute) {// check to make sure the attribute exists
@@ -517,20 +542,22 @@ function youtube_id_from_url($url) {
 }
 
 /**
- * @param $atts
- * @param null $content
- * @return mixed
+ * function jma_yt_video_wrap_html shortcode for the grid
+ * @param array $atts - the shortcode attributes
+ * @param string $video_id - the video id (either previously extracted from $atts or from content
+ * (depending on whether its the wrap shortcode)
+ * @return the shortcode string
  */
 function jma_yt_video_wrap_html($atts, $video_id){
     global $api_code;
     $atts = jma_sanitize_array($atts);
+    $atts['style'] = $atts['style']? $atts['style'] . ';clear:both;': $atts['style'] = 'clear:both;';
     $html_attributes = array('id', 'class', 'style');
     $yt_video = new JMAYtVideo(sanitize_text_field($video_id), $api_code);
+    $yt_video->process_display_atts($atts);
     echo '<div ';
     foreach($atts as $name => $attribute){
         if($attribute && in_array($name, $html_attributes)){// check to make sure the attribute exists
-            if($name == 'class')
-                $attribute .= ' jmayt-item-wrap';
             echo $name . '="' . $attribute . '" ';
         }
     }
@@ -541,7 +568,7 @@ function jma_yt_video_wrap_html($atts, $video_id){
 
 /**
  * @param $atts
- * @param null $content
+ * @uses jma_yt_video_wrap_html
  * @return mixed
  */
 function jma_yt_video($atts){
@@ -557,6 +584,7 @@ add_shortcode('yt_video','jma_yt_video');
 /**
  * @param $atts
  * @param null $content
+ * @uses jma_yt_video_wrap_html
  * @return mixed
  */
 function jma_yt_video_wrap($atts, $content = null){
