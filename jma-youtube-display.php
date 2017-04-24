@@ -18,7 +18,7 @@ function jma_yt_quicktags() {
     if (wp_script_is('quicktags')){ ?>
         <script language="javascript" type="text/javascript">
             QTags.addButton( 'JMA_yt_wrap', 'yt_wrap', '[yt_video_wrap width="100%" alignment="none"]', '[/yt_video_wrap]' );
-            QTags.addButton( 'JMA_yt_video', 'yt_video', '[yt_video video_id="yt_video_id"]' );
+            QTags.addButton( 'JMA_yt_video', 'yt_video', '[yt_video video_id="yt_video_id" width="100%" alignment="none"]' );
 
             QTags.addButton( 'JMA_yt_grid', 'yt_grid', '[yt_grid yt_list_id="yt_list_id"]' );
         </script>

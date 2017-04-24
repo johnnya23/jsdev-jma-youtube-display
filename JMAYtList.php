@@ -17,6 +17,15 @@ class JMAYtList extends JMAYtVideo {
         return $return;
     }
 
+    /*
+     * function markup() creates transient id, checks for transient - if needed and sets up the column div
+     * and gets the video items array using JMAYtList::yt_loop($this->id) calls single_html() as it
+     * loops through the $yt_loop_items
+     * @uses $this->id, $this->trans_atts_id, $this->col_space (from JMAYtVideo::process_display_atts()
+     * @global $options_array - for cache period
+     * returns $return - video list html
+     *
+    * */
     public function markup($res_cols = array()){
         global $options_array;
         $col_class = '';

@@ -36,9 +36,9 @@ class JMAYtVideo {
     }
 
     /*
-     * function meta_snippet()
+     * function video_snippet()
      * @param string $id  a video id
-     * @param string $api the api key for the youtube site
+     * @uses string $this->api the api key for the youtube site
      * @return array the snippet array for an individual video
      *
      * */
@@ -58,9 +58,9 @@ class JMAYtVideo {
 
     /*
  * function map_meta()
- * $id string a video id (only for embed url)
- * $snippet the snippet array from youtube api
- * returns schema values mapped to schema properties in the $yt_meta_array_items array
+ * @param $id string a video id (only for embed url)
+ * @param $snippet the snippet array from youtube api
+ * @return $yt_meta_array_items array schema values mapped to schema properties
  *
  * */
     private function map_meta($snippet, $id){//map youtude array to schema proprties
@@ -73,6 +73,15 @@ class JMAYtVideo {
         return $yt_meta_array_items;
     }
 
+    /*
+     * function process_display_atts() processes relavent attributes (if present) into object properties
+     * for use by single_html() and markup()
+     * @param array $atts shortcode attributes to be processed
+     *
+     * @return array $return ('gutter', 'display') attribute - value pairs to be returned
+     * to shortcode function
+     *
+     * */
     public function process_display_atts($atts){
         $this->col_space =
         $this->box_string =
@@ -81,17 +90,22 @@ class JMAYtVideo {
         $this->trans_atts_id =
         $this->item_font_char = '';
         $return = array();
+        //the relavent atributes to check for values
         $display_att_list = array( 'item_font_color', 'item_font_size', 'item_font_alignment', 'item_font_char', 'item_bg', 'item_border', 'item_gutter','item_spacing','button_font','button_bg', 'width', 'alignment' );
+        //produce $display_atts with relavent values (if any)
         foreach($atts as $index => $att){
             if ( in_array( $index, $display_att_list ) ) {
                 $trans_atts_id .= $index . $att;
                 $display_atts[$index] = $att;
             }
         }
+        //check for values and process producing style strings for each
         if(count($display_atts)){
             extract($display_atts);
             $this->trans_atts_id = $trans_atts_id;
+            //number of characters in h3
             if($item_font_char) $this->item_font_char = $item_font_char;
+            //box gutter and vertical spacing
             if($item_gutter || $item_spacing){
                 if($item_gutter){
                     $item_gutter = floor($item_gutter/2);
@@ -104,6 +118,7 @@ class JMAYtVideo {
                 $col_space = sprintf($format, $spacing, $gutter);
                 $this->col_space = $col_space;
             }
+            //single box width and alignment
             if($width || $alignment){
                 $return['display'] = $width? 'width:' . $width . ';': '';
                 if($alignment == 'right' || $alignment == 'left') {
@@ -113,6 +128,7 @@ class JMAYtVideo {
                     $return['display'] .= 'margin-' . $op . ':20px;';
                 }
             }
+            //single or list box border and bg
             if($item_bg || $item_border){
                 $bg = $item_bg? 'background-color:' . $item_bg . ';':'';
                 $border = $item_border? 'border:solid 2px ' . $item_border . '':'';
@@ -120,6 +136,7 @@ class JMAYtVideo {
                 $box_string = sprintf($format, $bg, $border);
                 $this->box_string = $box_string;
             }
+            //expansion button font color and bg
             if($button_font || $button_bg){
                 $color = $button_font? 'color:' . $button_font . ';':'';
                 $bg = $button_bg? 'background-color:' . $button_bg . ';':'';
@@ -127,6 +144,7 @@ class JMAYtVideo {
                 $button_string = sprintf($format, $bg, $color);
                 $this->button_string = $button_string;
             }
+            //h3 color size and align
             if($item_font_color || $item_font_size || $item_font_alignment){
                 $color = $item_font_color? 'color:' . $item_font_color . ';':'';
                 $size = $item_font_size? 'font-size:' . $item_font_size . 'px;':'';
@@ -140,9 +158,9 @@ class JMAYtVideo {
     }
 
     /*
- * function jma_youtube_schema_html()
- * returns schema html from $yt_meta_array_items array (see above)
- *
+     * function jma_youtube_schema_html()
+     * returns schema html from $yt_meta_array_items array (see above)
+     *
  * */
     function jma_youtube_schema_html($yt_meta_array_items){
 
@@ -151,6 +169,13 @@ class JMAYtVideo {
         return $return;
     }
 
+    /*
+     * function single_html()
+     * @param string $id - the video id
+     * @uses $this->box_string $this->h3_string from process_display_atts()
+     * returns video box html
+     *
+    * */
     protected function single_html($id){
         global $options_array;
         $snippet = JMAYtVideo::video_snippet($id);
@@ -179,6 +204,13 @@ class JMAYtVideo {
         return $return;
     }
 
+    /*
+     * function markup() creates transient id, checks fortransient and calls single_html()
+     * if needed
+     * @global $options_array - for cache period
+     * returns video html
+     *
+    * */
     public function markup(){
         global $options_array;
         $trans_id = 'jmaytvideo' . $this->id . $this->trans_atts_id;
