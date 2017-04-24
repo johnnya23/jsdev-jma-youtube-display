@@ -79,9 +79,9 @@ class JMAYtVideo {
         $this->button_string =
         $this->h3_string =
         $this->trans_atts_id =
-        $this->item_font_char =
-        $return = '';
-        $display_att_list = array( 'item_font_color', 'item_font_size', 'item_font_alignment', 'item_font_char', 'item_bg', 'item_border', 'item_gutter','item_spacing','button_font','button_bg' );
+        $this->item_font_char = '';
+        $return = array();
+        $display_att_list = array( 'item_font_color', 'item_font_size', 'item_font_alignment', 'item_font_char', 'item_bg', 'item_border', 'item_gutter','item_spacing','button_font','button_bg', 'width', 'alignment' );
         foreach($atts as $index => $att){
             if ( in_array( $index, $display_att_list ) ) {
                 $trans_atts_id .= $index . $att;
@@ -95,7 +95,7 @@ class JMAYtVideo {
             if($item_gutter || $item_spacing){
                 if($item_gutter){
                     $item_gutter = floor($item_gutter/2);
-                    $return = 'margin-left:-' . $item_gutter . 'px;margin-right:-' . $item_gutter . 'px';
+                    $return['gutter'] = 'margin-left:-' . $item_gutter . 'px;margin-right:-' . $item_gutter . 'px;';
                 }
 
                 $gutter = $item_gutter? 'padding-left:' . $item_gutter . 'px;padding-right:' . $item_gutter . 'px;':'';
@@ -103,6 +103,15 @@ class JMAYtVideo {
                 $format = ' style="%s%s" ';
                 $col_space = sprintf($format, $spacing, $gutter);
                 $this->col_space = $col_space;
+            }
+            if($width || $alignment){
+                $return['display'] = $width? 'width:' . $width . ';': '';
+                if($alignment == 'right' || $alignment == 'left') {
+                    $return['display'] .= 'float:' . $alignment . ';';
+                    $return['display'] .= 'margin-top: 5px;';
+                    $op = $alignment == 'left'? 'right':'left';
+                    $return['display'] .= 'margin-' . $op . ':20px;';
+                }
             }
             if($item_bg || $item_border){
                 $bg = $item_bg? 'background-color:' . $item_bg . ';':'';

@@ -17,7 +17,7 @@ function jma_yt_quicktags() {
 
     if (wp_script_is('quicktags')){ ?>
         <script language="javascript" type="text/javascript">
-            QTags.addButton( 'JMA_yt_wrap', 'yt_wrap', '[yt_video_wrap class="alignright" style="width: 300px; max-width: 50%"]', '[/yt_video_wrap]' );
+            QTags.addButton( 'JMA_yt_wrap', 'yt_wrap', '[yt_video_wrap width="100%" alignment="none"]', '[/yt_video_wrap]' );
             QTags.addButton( 'JMA_yt_video', 'yt_video', '[yt_video video_id="yt_video_id"]' );
 
             QTags.addButton( 'JMA_yt_grid', 'yt_grid', '[yt_grid yt_list_id="yt_list_id"]' );
@@ -390,6 +390,14 @@ function yt_styles(){
     $jmayt_css = jmayt_build_css($jmayt_values);
     $css = '
 .col-xs-020{float:left;width:20%}@media (min-width:768px){.col-sm-020{float:left;width:20%}}@media (min-width:992px){.col-md-020{float:left;width:20%}}@media (min-width:1200px){.col-lg-020{float:left;width:20%}}
+.clearfix:before, .clearfix:after {
+    zoom:1;
+    display: table;
+    content: "";
+}
+.clearfix:after {
+    clear: both
+}
 .jmayt-video-wrap .jma-responsive-wrap iframe {
 	 position: absolute;
 	 top: 0;
@@ -405,12 +413,18 @@ function yt_styles(){
 .jmayt-text-wrap {
     position: relative;
 }
+.jmayt-list-wrap, .jmayt-single-item {
+    margin-bottom: 20px
+}
 .jmayt-list-wrap .jmayt-text-wrap h3 {
     padding: 5px;
     position: absolute; 
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    width: 90%;
+}
+.jmayt-item-wrap .jmayt-text-wrap h3 {
     width: 90%;
 }
 .jmayt-video-wrap .jma-responsive-wrap {
@@ -421,7 +435,6 @@ function yt_styles(){
     left: 50%;
     transform: translate(-50%, -50%);
     width: 100%;
-	overflow: hidden;
 }
 .jmayt-fixed {
     position: absolute;
@@ -489,7 +502,7 @@ function jma_yt_grid($atts){
         }
     }
     $count = 0;
-    $gutter_style = $you_tube_list->process_display_atts($atts);
+    $style = $you_tube_list->process_display_atts($atts);
     foreach($atts as $index => $att){
         if (strpos($index, '_cols') !== false) {
             //clear defaults the first time we find a _cols attribute
@@ -507,7 +520,7 @@ function jma_yt_grid($atts){
     $attributes = array(
         'id' => $atts['id'],
         'class' => $atts['class'] . $has_break . ' jmayt-list-wrap clearfix',
-        'style' =>  $atts['style'] . $gutter_style
+        'style' => $style['gutter'] . $style['display'] . $atts['style']
     );
     echo '<div ';
     foreach ($attributes as $name => $attribute) {//build opening div ala html shortcode
@@ -551,12 +564,16 @@ function youtube_id_from_url($url) {
 function jma_yt_video_wrap_html($atts, $video_id){
     global $api_code;
     $atts = jma_sanitize_array($atts);
-    $atts['style'] = $atts['style']? $atts['style'] . ';clear:both;': $atts['style'] = 'clear:both;';
     $html_attributes = array('id', 'class', 'style');
     $yt_video = new JMAYtVideo(sanitize_text_field($video_id), $api_code);
-    $yt_video->process_display_atts($atts);
+    $style = $yt_video->process_display_atts($atts);
+    $attributes = array(
+        'id' => $atts['id'],
+        'class' => $atts['class'] . ' jmayt-single-item clearfix',
+        'style' => $style['display'] . $atts['style']
+    );
     echo '<div ';
-    foreach($atts as $name => $attribute){
+    foreach($attributes as $name => $attribute){
         if($attribute && in_array($name, $html_attributes)){// check to make sure the attribute exists
             echo $name . '="' . $attribute . '" ';
         }
