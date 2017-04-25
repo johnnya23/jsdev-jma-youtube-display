@@ -7,7 +7,7 @@ class JMAYtVideo {
     var $button_string;
     var $h3_string;
     var $trans_atts_id;
-    var $item_font_char;
+    var $item_font_length;
 
     public function __construct($id_code, $api_code){
         $this->api = $api_code;
@@ -87,11 +87,11 @@ class JMAYtVideo {
         $this->box_string =
         $this->button_string =
         $this->h3_string =
-        $this->trans_atts_id =
-        $this->item_font_char = '';
+        $this->trans_atts_id = '';
+        $this->item_font_length = 0;
         $return = array();
         //the relavent atributes to check for values
-        $display_att_list = array( 'item_font_color', 'item_font_size', 'item_font_alignment', 'item_font_char', 'item_bg', 'item_border', 'item_gutter','item_spacing','button_font','button_bg', 'width', 'alignment' );
+        $display_att_list = array( 'item_font_color', 'item_font_size', 'item_font_alignment', 'item_font_length', 'item_bg', 'item_border', 'item_gutter','item_spacing','button_font','button_bg', 'width', 'alignment' );
         //produce $display_atts with relavent values (if any)
         foreach($atts as $index => $att){
             if ( in_array( $index, $display_att_list ) ) {
@@ -104,7 +104,7 @@ class JMAYtVideo {
             extract($display_atts);
             $this->trans_atts_id = $trans_atts_id;
             //number of characters in h3
-            if($item_font_char) $this->item_font_char = $item_font_char;
+            if($item_font_length) $this->item_font_length = $item_font_length;
             //box gutter and vertical spacing
             if($item_gutter || $item_spacing){
                 if($item_gutter){
@@ -182,8 +182,15 @@ class JMAYtVideo {
         $meta_array = JMAYtVideo::map_meta($snippet, $id);
         $h3_title = $meta_array['name'];
         $elipsis = '';
-        if ( $options_array['item_font_char'] && (strlen($meta_array['name']) > $options_array['item_font_char'])){
-            $h3_title = wordwrap($meta_array['name'], $options_array['item_font_char']);
+        if(!$this->item_font_length  && $options_array['item_font_length']){
+            $length = $options_array['item_font_length'];
+        }elseif($this->item_font_length){
+            $length = $this->item_font_length;
+        }else{
+            $length = 0;
+        }
+        if($length && (strlen($meta_array['name']) > $length)){
+            $h3_title = wordwrap($meta_array['name'], $length);
             $h3_title = substr($h3_title, 0, strpos($h3_title, "\n"));
             $elipsis = '&nbsp;...';
         }

@@ -228,8 +228,8 @@ $settings = array(
                 'default'		=> 'left'
             ),
             array(
-                'id' 			=> 'item_font_char',
-                'label'			=> __( 'The maximun number of characters for grid item titles - 0 for whole title (item_font_char)', 'jmayt_textdomain' ),
+                'id' 			=> 'item_font_length',
+                'label'			=> __( 'The maximun number of characters for grid item titles - 0 for whole title (item_font_length)', 'jmayt_textdomain' ),
                 'type'			=> 'number',
                 'default'		=> 0
             ),
@@ -422,9 +422,6 @@ function yt_styles(){
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 90%;
-}
-.jmayt-item-wrap .jmayt-text-wrap h3 {
     width: 90%;
 }
 .jmayt-video-wrap .jma-responsive-wrap {
