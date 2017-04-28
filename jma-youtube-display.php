@@ -176,7 +176,7 @@ $settings = array(
             array(
                 'id' 			=> 'api',
                 'label'			=> __( 'YouTube Api value' , 'jmayt_textdomain' ),
-                'description'	=> __( 'Api credentials for youtube <a target="_blank" href="https://console.developers.google.com/apis/dashboard">here</a>.', 'jmayt_textdomain' ),
+                'description'	=> __( 'Api credentials for youtube <a target="_blank" href="https://console.developers.google.com/projectselector/apis/dashboard?organizationId=0">here</a>.', 'jmayt_textdomain' ),
                 'type'			=> 'text',
                 'default'		=> ''
             ),
@@ -201,7 +201,7 @@ $settings = array(
      * start of a new section
      * */
     'display' => array(
-        'title'					=> __( 'Grid Display Options', 'jmayt_textdomain' ),
+        'title'					=> __( 'YouTube Display Options', 'jmayt_textdomain' ),
         'description'			=> __( 'These are some default display settings (they can be overridden with shortcode)', 'jmayt_textdomain' ),
 
         /*
@@ -210,63 +210,63 @@ $settings = array(
         'fields'				=> array(
             array(
                 'id' 			=> 'item_font_color',
-                'label'			=> __( 'Font color for grid item titles - blank your theme\'s title color (item_font_color)', 'jmayt_textdomain' ),
+                'label'			=> __( 'Font color for YouTube item titles - blank your theme\'s title color (item_font_color)', 'jmayt_textdomain' ),
                 'type'			=> 'color',
                 'default'		=> 0
             ),
             array(
                 'id' 			=> 'item_font_size',
-                'label'			=> __( 'Font size for grid item titles - 0 your theme\'s title size (item_font_size)', 'jmayt_textdomain' ),
+                'label'			=> __( 'Font size for YouTube item titles - 0 your theme\'s title size (item_font_size)', 'jmayt_textdomain' ),
                 'type'			=> 'number',
                 'default'		=> 0
             ),
             array(
                 'id' 			=> 'item_font_alignment',
-                'label'			=> __( 'Font alignment for grid item titles (item_font_alignment)', 'jmayt_textdomain' ),
+                'label'			=> __( 'Font alignment for YouTube item titles (item_font_alignment)', 'jmayt_textdomain' ),
                 'type'			=> 'radio',
                 'options'		=> array( 'left' => 'left' , 'center' => 'center', 'right' => 'right'),
                 'default'		=> 'left'
             ),
             array(
                 'id' 			=> 'item_font_length',
-                'label'			=> __( 'The maximun number of characters for grid item titles - 0 for whole title (item_font_length)', 'jmayt_textdomain' ),
+                'label'			=> __( 'The maximun number of characters for YouTube item titles - 0 for whole title (item_font_length)', 'jmayt_textdomain' ),
                 'type'			=> 'number',
                 'default'		=> 0
             ),
             array(
                 'id' 			=> 'item_bg',
-                'label'			=> __( 'Background color for grid items - blank for no bg (item_bg)', 'jmayt_textdomain' ),
+                'label'			=> __( 'Background color for YouTube items - blank for no bg (item_bg)', 'jmayt_textdomain' ),
                 'type'			=> 'color',
                 'default'		=> 0
             ),
             array(
                 'id' 			=> 'item_border',
-                'label'			=> __( 'Border color for grid items - blank for no border (item_border)', 'jmayt_textdomain' ),
+                'label'			=> __( 'Border color for YouTube items - blank for no border (item_border)', 'jmayt_textdomain' ),
                 'type'			=> 'color',
                 'default'		=> 0
             ),
             array(
                 'id' 			=> 'item_gutter',
-                'label'			=> __( 'Horizontal distance in px between grid items - best results even number between 0 and 30 (item_gutter)', 'jmayt_textdomain' ),
+                'label'			=> __( 'Horizontal distance in px between YouTube grid items - best results even number between 0 and 30 (item_gutter)', 'jmayt_textdomain' ),
                 'type'			=> 'number',
                 'default'		=> '30'
             ),
             array(
                 'id' 			=> 'item_spacing',
-                'label'			=> __( 'Vertical distance in px between grid items (item_spacing)', 'jmayt_textdomain' ),
+                'label'			=> __( 'Vertical distance in px between YouTube grid items (item_spacing)', 'jmayt_textdomain' ),
                 'type'			=> 'number',
                 'default'		=> '15'
             ),
             array(
                 'id' 			=> 'button_font',
                 'class'         => 'picker',
-                'label'			=> __( 'Font color for expansion buttons on grids (button_font)', 'jmayt_textdomain' ),
+                'label'			=> __( 'Arrow color for expansion buttons on YouTube items (button_font)', 'jmayt_textdomain' ),
                 'type'			=> 'color',
                 'default'		=> '#21759B'
             ),
             array(
                 'id' 			=> 'button_bg',
-                'label'			=> __( 'Background color for expansion buttons on grids (button_bg)', 'jmayt_textdomain' ),
+                'label'			=> __( 'Background color for expansion buttons on YouTube items (button_bg)', 'jmayt_textdomain' ),
                 'type'			=> 'color',
                 'default'		=> '#cbe0e9'
             ),

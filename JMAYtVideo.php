@@ -88,7 +88,7 @@ class JMAYtVideo {
         $this->button_string =
         $this->h3_string =
         $this->trans_atts_id = '';
-        $this->item_font_length = 0;
+        $this->item_font_length = -23;
         $return = array();
         //the relavent atributes to check for values
         $display_att_list = array( 'item_font_color', 'item_font_size', 'item_font_alignment', 'item_font_length', 'item_bg', 'item_border', 'item_gutter','item_spacing','button_font','button_bg', 'width', 'alignment' );
@@ -104,7 +104,7 @@ class JMAYtVideo {
             extract($display_atts);
             $this->trans_atts_id = $trans_atts_id;
             //number of characters in h3
-            if($item_font_length) $this->item_font_length = $item_font_length;
+            if(isset($item_font_length)) $this->item_font_length = $item_font_length;
             //box gutter and vertical spacing
             if($item_gutter || $item_spacing){
                 if($item_gutter){
@@ -182,9 +182,9 @@ class JMAYtVideo {
         $meta_array = JMAYtVideo::map_meta($snippet, $id);
         $h3_title = $meta_array['name'];
         $elipsis = '';
-        if(!$this->item_font_length  && $options_array['item_font_length']){
+        if($this->item_font_length == -23  && $options_array['item_font_length']){
             $length = $options_array['item_font_length'];
-        }elseif($this->item_font_length){
+        }elseif($this->item_font_length > 0){
             $length = $this->item_font_length;
         }else{
             $length = 0;

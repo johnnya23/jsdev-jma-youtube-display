@@ -20,7 +20,7 @@ class JMAYtSettings {
         $this->db_option = $this->settings_base . 'options_array';
         $this->page_title = $title;
         $this->settings = $settings;
-        $this->text_domain = $text_domain? $text_domain: $this->text_domain;
+        $this->text_domain = $text_domain? $text_domain: $this->settings_base . 'text_domain';
 
         // Initialise settings
         add_action( 'admin_init', array( $this, 'init' ) );
