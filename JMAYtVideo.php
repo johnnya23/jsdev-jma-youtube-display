@@ -29,7 +29,7 @@ class JMAYtVideo {
         $result = curl_exec($curl);
         curl_close($curl);
         $return = json_decode($result, true);
-        if(array_key_exists ('error', $return))
+        if(!$return || array_key_exists ('error', $return))
             $return = false;
 
         return $return;

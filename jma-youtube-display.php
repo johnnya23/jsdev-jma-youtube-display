@@ -35,15 +35,9 @@ function jmayt_scripts() {
 
 }
 
-function jmayt_add_classes($classes) {
-    $classes[] = 'jmaty-css';
-    return $classes;
-}
-
 function jma_yt_template_redirect(){
     if(jma_yt_detect_shortcode(array('yt_grid', 'yt_video', 'yt_video_wrap'))){
         add_action( 'wp_enqueue_scripts', 'jmayt_scripts' );
-        add_filter('body_class','jmayt_add_classes');
     }
 }
 add_action('template_redirect', 'jma_yt_template_redirect');
@@ -57,39 +51,37 @@ add_action('template_redirect', 'jma_yt_template_redirect');
  * @param int or object $post_item - the post to search (defaults to current)
  * @return boolean $return
  */
-if(!function_exists('jma_yt_detect_shortcode')){
-    function jma_yt_detect_shortcode( $needle = '', $post_item = 0 ){
+function jma_yt_detect_shortcode( $needle = '', $post_item = 0 ){
 
-        if($post_item){
-            if(is_object($post_item))
-                $post = $post_item;
-            else
-                $post = get_post($post_item);
-        }else{
-            global $post;
-        }
-        if(is_array($needle))
-            $pattern = get_shortcode_regex($needle);
-        elseif(is_string($needle))
-            $pattern = get_shortcode_regex(array($needle));
+    if($post_item){
+        if(is_object($post_item))
+            $post = $post_item;
         else
-            $pattern = get_shortcode_regex();
+            $post = get_post($post_item);
+    }else{
+        global $post;
+    }
+    if(is_array($needle))
+        $pattern = get_shortcode_regex($needle);
+    elseif(is_string($needle))
+        $pattern = get_shortcode_regex(array($needle));
+    else
+        $pattern = get_shortcode_regex();
 
-        preg_match_all( '/'. $pattern .'/s', $post->post_content, $matches );
+    preg_match_all( '/'. $pattern .'/s', $post->post_content, $matches );
 
 
-        if(//if shortcode(s) to be searched for were passed and not found $return false
+    if(//if shortcode(s) to be searched for were passed and not found $return false
 
-            array_key_exists( 2, $matches ) &&
-            count( $matches[2] )
-        ){
-            $return = $matches;
-        }else{
-            $return = false;
-        }
+        array_key_exists( 2, $matches ) &&
+        count( $matches[2] )
+    ){
+        $return = $matches;
+    }else{
+        $return = false;
+    }
 
         return $return;
-    }
 }
 
 //helper function for yt_styles()
@@ -406,7 +398,6 @@ function yt_styles(){
 	 height: 100%;
 }
 .jmayt-video-wrap {
-    background: rgba(0,0,0,0.8);
     padding-bottom: 56.25%;
     position: relative;
 }
@@ -434,6 +425,7 @@ function yt_styles(){
     width: 100%;
 }
 .jmayt-fixed {
+    background: rgba(0,0,0,0.8);
     position: absolute;
     z-index: 9999;
     top: 0;
@@ -470,7 +462,7 @@ function yt_styles(){
     return $css;
 }
 
-function jma_sanitize_array($inputs){
+function jmayt_sanitize_array($inputs){
     foreach($inputs as $i => $input){
         $i = sanitize_text_field($i);
         $input = sanitize_text_field($input);
@@ -487,10 +479,10 @@ function jma_sanitize_array($inputs){
 function jma_yt_grid($atts){
     global $options_array;
     $api_code = $options_array['api'];
-    $atts = jma_sanitize_array($atts);
+    $atts = jmayt_sanitize_array($atts);
 
     $you_tube_list = new JMAYtList($atts['yt_list_id'], $api_code);
-    //form array of column atts and set defaults
+    //processing plugin options - form array of column atts and set defaults
     foreach($options_array as $i => $option){
         if((strpos($i, '_cols') !== false) && $option){
             $i = str_replace('_cols', '', $i);
@@ -502,7 +494,7 @@ function jma_yt_grid($atts){
     $style = $you_tube_list->process_display_atts($atts);
     foreach($atts as $index => $att){
         if (strpos($index, '_cols') !== false) {
-            //clear defaults the first time we find a _cols attribute
+            //processing shortcode attributes - clear defaults the first time we find a _cols attribute
             if(!$count){
                 $responsive_cols = array();
                 $has_break = '';
@@ -543,7 +535,7 @@ add_shortcode('yt_grid','jma_yt_grid');
  * @param string $url
  * @return string YouTube video id or FALSE if none found.
  */
-function youtube_id_from_url($url) {
+function jmayt_id_from_url($url) {
     if (preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $url, $match)) {
         $id = $match[1];
         return $id;
@@ -560,8 +552,7 @@ function youtube_id_from_url($url) {
  */
 function jma_yt_video_wrap_html($atts, $video_id){
     global $api_code;
-    $atts = jma_sanitize_array($atts);
-    $html_attributes = array('id', 'class', 'style');
+    $atts = jmayt_sanitize_array($atts);
     $yt_video = new JMAYtVideo(sanitize_text_field($video_id), $api_code);
     $style = $yt_video->process_display_atts($atts);
     $attributes = array(
@@ -571,9 +562,8 @@ function jma_yt_video_wrap_html($atts, $video_id){
     );
     echo '<div ';
     foreach($attributes as $name => $attribute){
-        if($attribute && in_array($name, $html_attributes)){// check to make sure the attribute exists
-            echo $name . '="' . $attribute . '" ';
-        }
+        echo $name . '="' . $attribute . '" ';
+
     }
     echo '>';
     echo $yt_video->markup();
@@ -602,7 +592,7 @@ add_shortcode('yt_video','jma_yt_video');
  * @return mixed
  */
 function jma_yt_video_wrap($atts, $content = null){
-    $video_id = youtube_id_from_url($content);
+    $video_id = jmayt_id_from_url($content);
     ob_start();
     jma_yt_video_wrap_html($atts, $video_id);
     $x = ob_get_contents();

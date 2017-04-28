@@ -72,7 +72,7 @@ function jmayt(){
                 'width': '100%',
                 'padding-bottom': '56.25%'
             }, 200);
-        }, 300);
+        }, 100);
         setTimeout(function() {
             $parent.css('min-height', '');
         }, 500);

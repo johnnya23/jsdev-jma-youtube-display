@@ -21,6 +21,9 @@ class JMAYtList extends JMAYtVideo {
      * function markup() creates transient id, checks for transient - if needed and sets up the column div
      * and gets the video items array using JMAYtList::yt_loop($this->id) calls single_html() as it
      * loops through the $yt_loop_items
+     *
+     * @param array $res_cols will have indexes 'sm' 'lg' etc for break point
+     * and values indicating the number of cols at each breakpoint (from 1 to 6)
      * @uses $this->id, $this->trans_atts_id, $this->col_space (from JMAYtVideo::process_display_atts()
      * @global $options_array - for cache period
      * returns $return - video list html
@@ -43,18 +46,15 @@ class JMAYtList extends JMAYtVideo {
             $i = 0;
             if ($count > 0) {
                 foreach($res_cols as $break => $res_col){
+                    //if there are not enough items to fill the row we
+                    //increase the size of the items
                     $res_col = $res_col < $count? $res_col: $count;
-                    switch ($res_col) {
-                        case 1:
-                        case 2:
-                        case 3:
-                        case 4:
-                        case 6:
-                            $val = 12/$res_col;
-                            break;
-                        default:
-                            $val = '020';
-                    }
+                    //invert columns for bootstrap grid values
+                    if($res_col != 5)
+                        $val = 12/$res_col;
+                    else
+                        $val = '020';
+
                     $col_class .= ' col-' . $break . '-' . $val;
                 }
                 $return = '';
