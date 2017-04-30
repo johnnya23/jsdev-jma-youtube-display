@@ -202,7 +202,7 @@ $settings = array(
         'fields'				=> array(
             array(
                 'id' 			=> 'item_font_color',
-                'label'			=> __( 'Font color for YouTube item titles - blank your theme\'s title color (item_font_color)', 'jmayt_textdomain' ),
+                'label'			=> __( 'Font color for YouTube item titles - 0 your theme\'s title color (item_font_color)', 'jmayt_textdomain' ),
                 'type'			=> 'color',
                 'default'		=> 0
             ),
@@ -227,13 +227,13 @@ $settings = array(
             ),
             array(
                 'id' 			=> 'item_bg',
-                'label'			=> __( 'Background color for YouTube items - blank for no bg (item_bg)', 'jmayt_textdomain' ),
+                'label'			=> __( 'Background color for YouTube items - 0 for no bg (item_bg)', 'jmayt_textdomain' ),
                 'type'			=> 'color',
                 'default'		=> 0
             ),
             array(
                 'id' 			=> 'item_border',
-                'label'			=> __( 'Border color for YouTube items - blank for no border (item_border)', 'jmayt_textdomain' ),
+                'label'			=> __( 'Border color for YouTube items - 0 for no border (item_border)', 'jmayt_textdomain' ),
                 'type'			=> 'color',
                 'default'		=> 0
             ),
@@ -557,7 +557,7 @@ function jma_yt_video_wrap_html($atts, $video_id){
     $style = $yt_video->process_display_atts($atts);
     $attributes = array(
         'id' => $atts['id'],
-        'class' => $atts['class'] . ' jmayt-single-item clearfix',
+        'class' => $atts['class'] . ' jmayt-outer jmayt-single-item clearfix',
         'style' => $style['display'] . $atts['style']
     );
     echo '<div ';

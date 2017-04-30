@@ -2,16 +2,17 @@ jQuery(document).ready(jmayt);
 jQuery(document).ajaxComplete(jmayt);
 
 function jmayt(){
-    jQuery('.jmayt-list-wrap').each(function(){
-        //make all title boxes the same height as the largest box
-        $this = jQuery(this);
-        var $title_max = Math.max.apply(null, $this.find('h3').map(function ()
-        {
-            return jQuery(this).outerHeight();
-        }).get());
-        $this.find('.jmayt-text-wrap').css('min-height', $title_max + 'px');
-    });
-
+    resize = function(){
+        jQuery('.jmayt-list-wrap').each(function(){
+            //make all title boxes the same height as the largest box
+            $this = jQuery(this);
+            var $title_max = Math.max.apply(null, $this.find('h3').map(function ()
+            {
+                return jQuery(this).outerHeight();
+            }).get());
+            $this.find('.jmayt-text-wrap').css('min-height', $title_max + 'px');
+        });
+    }
     //create the toggle lightbox effect for the youtube items
     jQuery('.jmayt-video-wrap').each(function(){
         jQuery(this).toggle(show_lightbox, hide_lightbox);
@@ -99,5 +100,7 @@ function jmayt(){
         });
     }
     jQuery(window).scroll(hold_fixed);
+    jQuery(window).resize(resize);
     jQuery(window).resize(hold_fixed);
+    jQuery(window).load(resize);
 }

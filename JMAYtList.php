@@ -69,7 +69,7 @@ class JMAYtList extends JMAYtVideo {
                     }
                     $yt_snippet = $yt_loop_item['snippet'];
                     $yt_id = $yt_snippet['resourceId']['videoId'];
-                    $return .= '<div class="jmayt-list-item col' . $col_class . $br_cl .'"' . $this->col_space . '>';
+                    $return .= '<div class="jmayt-outer jmayt-list-item col' . $col_class . $br_cl .'"' . $this->col_space . '>';
                     //$return .= '<div class="jmayt-item">';
                     $return .= JMAYtList::single_html($yt_id, true);
                     //$return .= '</div><!--yt-item-->';
