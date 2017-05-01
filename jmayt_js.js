@@ -30,11 +30,11 @@ function jmayt(){
         $pos = $this.offset();
         $pos_top = $pos.top;
         $pos_left = $pos.left;
-        $parent = $this.parent('.jmayt-item');
+        $parent = $this.parents('.jmayt-item');
         $parent_width = $parent.innerWidth();
         $button = $this.find('.jmayt-btn');
         $responsive = $this.find('.jma-responsive-wrap');
-        $contents = $parent.contents();
+        $contents = $this.contents();
 
         $parent.css('min-height', $parent.height() + 'px');
         $button.html('&#xe097;');
@@ -44,9 +44,9 @@ function jmayt(){
             'padding-bottom': '45%'
         });
         //first we make it fixed and give it a size
-        $this.addClass('jmayt-fixed');
-        setTimeout(function() {
         jQuery('body').prepend($contents);
+        setTimeout(function() {
+            $this.addClass('jmayt-fixed');
         $this.css({
             'width': ($parent_width) + 'px',
             'height': ($parent_width)/1.7778 + 'px',

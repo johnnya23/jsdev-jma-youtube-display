@@ -197,12 +197,14 @@ class JMAYtVideo {
         $return .= '<div class="jmayt-item-wrap"' . $this->box_string . '>';
         $return .= '<div class="jmayt-item">';
         $return .= '<div class="jmayt-video-wrap">';
+        $return .= '<div class="jmayt-movable">';
         $return .= '<div class="jma-responsive-wrap" itemprop="video" itemscope itemtype="http://schema.org/VideoObject">';
         $return .= '<button class="jmayt-btn"' . $this->button_string . '>&#xe140;</button>';
         $return .= JMAYtVideo::jma_youtube_schema_html($meta_array);
         $return .=  '<iframe src="https://www.youtube.com/embed/' . $id . '?rel=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe>';
         $return .= '</div><!--jma-responsive-wrap-->';
-        $return .= '</div><!--yt-video-wrap-->';
+        $return .= '</div><!--jmayt-movable-->';
+        $return .= '</div><!--jmayt-video-wrap-->';
         $return .= '<div class="jmayt-text-wrap">';
         $return .= '<h3 class="jmayt-title" ' . $this->h3_string . '>' . $h3_title . $elipsis . '</h3>';
         $return .= '</div><!--jmayt-text-wrap-->';
