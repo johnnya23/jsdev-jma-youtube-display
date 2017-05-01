@@ -45,6 +45,7 @@ function jmayt(){
         });
         //first we make it fixed and give it a size
         $this.addClass('jmayt-fixed');
+        setTimeout(function() {
         jQuery('body').prepend($contents);
         $this.css({
             'width': ($parent_width) + 'px',
@@ -53,6 +54,7 @@ function jmayt(){
             'top': ($pos_top - $scroll) + 'px',
             'left': $pos_left + 'px',
         });//then we increase it's size while positioning it at the top left of the window
+        }, 10);
         setTimeout(function() {
             $this.animate({
                 'top': 0,
@@ -60,7 +62,7 @@ function jmayt(){
                 'width': jQuery(window).width() + 'px',
                 'height': window.innerHeight + 'px'
             });
-        }, 100000);
+        }, 200);
 
     }
 
