@@ -43,7 +43,7 @@ function jmayt(){
             'width': '80%',
             'padding-bottom': '45%'
         });
-        //first we make it absolute and give it a size
+        //first we make it fixed and give it a size
         $this.addClass('jmayt-fixed');
         jQuery('body').prepend($contents);
         $this.css({
@@ -52,19 +52,23 @@ function jmayt(){
             'padding-bottom': 0,
             'top': ($pos_top - $scroll) + 'px',
             'left': $pos_left + 'px',
-        }).animate({//then we increase it's size while positioning it at the top left of the window
-            'top': 0,
-            'left': 0,
-            'width': jQuery(window).width() + 'px',
-            'height': window.innerHeight + 'px'
-        });
+        });//then we increase it's size while positioning it at the top left of the window
+        setTimeout(function() {
+            $this.animate({
+                'top': 0,
+                'left': 0,
+                'width': jQuery(window).width() + 'px',
+                'height': window.innerHeight + 'px'
+            });
+        }, 100000);
+
     }
 
     function hide_lightbox() {
         $button.html('&#xe140;');
         $button.css({'font-size': ''});
         $parent.prepend($contents);
-        jQuery(this).removeClass('jmayt-fixed');
+        $this.removeClass('jmayt-fixed');
         $this.animate({
             'top': 0,
             'left': 0,
