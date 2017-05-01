@@ -131,8 +131,8 @@ function jmayt_build_css($css_values) {
     }
     return $return;
 }
-
-$options_array = get_option('jmayt_options_array');
+$jmayt_db_option = 'jmayt_options_array';
+$options_array = get_option($jmayt_db_option);
 $api_code = $options_array['api'];
 
 spl_autoload_register( 'jma_yt_autoloader' );
@@ -144,7 +144,16 @@ function jma_yt_autoloader( $class_name ) {
     }
 }
 
+function jmayt_clear_cache(){
+    global $wpdb;
 
+    $plugin_options = $wpdb->get_results( "SELECT option_name FROM $wpdb->options WHERE option_name LIKE '_transient_jmayt%' OR option_name LIKE '_transient_timeout_jmayt%'" );
+
+    foreach( $plugin_options as $option ) {
+        delete_option( $option->option_name );
+    }
+}
+add_action( 'update_option_' . $jmayt_db_option, 'jmayt_clear_cache');
 
 /**
  * Build settings fields
@@ -301,7 +310,13 @@ $settings = array(
 
 
 if( is_admin() )
-    $jma_settings_page = new JMAYtSettings('jmayt', 'YouTube w/ Meta', $settings);
+    $jma_settings_page = new JMAYtSettings(
+        array(
+            'base' => 'jmayt',
+            'title' => 'YouTube w/ Meta',
+            'db_option' => $jmayt_db_option,
+            'settings' => $settings)
+        );
 
 /**
  * function yt_styles add the plugin specific styles
@@ -315,16 +330,16 @@ function yt_styles(){
 
 //in format above format media queries  i.e. max-768@$selector, ...
 // $jmayt_styles[] = array(max(or min)-$width@$selector, array($property, $value)[,array($property, $value)...])
-    $jmayt_styles[10] =  array('.jmayt-list-wrap' ,
+    $jmayt_styles[10] =  array('div.jmayt-list-wrap' ,
         array('clear', 'both'),
         array('margin-left', -$item_gutter . 'px'),
         array('margin-right', -$item_gutter . 'px'),
     );
-    $jmayt_styles[20] =  array('.jmayt-item-wrap' ,
+    $jmayt_styles[20] =  array('div.jmayt-item-wrap' ,
         array('position', 'relative'),
         array('box-sizing', 'border-box'),
     );
-    $jmayt_styles[30] =  array('.jmayt-list-item.col' ,
+    $jmayt_styles[30] =  array('div.jmayt-list-item' ,
         array('min-height', '1px'),
         array('padding-left', $item_gutter . 'px'),
         array('padding-right', $item_gutter . 'px'),
@@ -334,7 +349,7 @@ function yt_styles(){
         $border_array = $options_array['item_border']? array('border', 'solid 2px ' . $options_array['item_border']):
             array();
         $bg_array = $options_array['item_bg']? array('background', $options_array['item_bg']): array();
-        $jmayt_styles[50] = array('.jmayt-item-wrap',
+        $jmayt_styles[50] = array('div.jmayt-item-wrap',
             $border_array,
             $bg_array
         );
@@ -346,17 +361,18 @@ function yt_styles(){
         :array();
     $lg_font_size_str = $options_array['item_font_size']? array('font-size', $lg_font_size . 'px')
         :array();
-    $jmayt_styles[60] =  array('.jmayt-item h3' ,
-        array('padding', '5px'),
+    $jmayt_styles[60] =  array('.jmayt-item h3.jmayt-title' ,
+        array('padding', '10px'),
         array('margin', ' 0'),
+        array('line-height', '120%'),
         array('color', $options_array['item_font_color']),
         array('text-align', $options_array['item_font_alignment']),
         $font_size_str
     );
-    $jmayt_styles[70] =  array('.jmayt-item h3:first-line' ,
+    $jmayt_styles[70] =  array('.jmayt-item h3.jmayt-title:first-line' ,
         $lg_font_size_str
     );
-    $jmayt_styles[80] =  array('.jmayt-btn, .jmayt-btn:focus' ,
+    $jmayt_styles[80] =  array('button.jmayt-btn, button.jmayt-btn:focus' ,
         array('position', 'absolute'),
         array('z-index', '10'),
         array('top', ' 0'),
@@ -367,10 +383,11 @@ function yt_styles(){
         array('color', $options_array['button_font']),
         array('background', $options_array['button_bg']),
         array('border', 'solid 1px ' . $options_array['button_font']),
+        array('cursor', 'pointer'),
         array('-webkit-transition', 'all .2s'),
         array('transition', 'all .2s'),
     );
-    $jmayt_styles[90] =  array('.jmayt-btn:hover' ,
+    $jmayt_styles[90] =  array('button.jmayt-btn:hover' ,
         array('color', $options_array['button_bg']),
         array('background', $options_array['button_font']),
     );
@@ -381,7 +398,12 @@ function yt_styles(){
 
     $jmayt_css = jmayt_build_css($jmayt_values);
     $css = '
-.col-xs-020{float:left;width:20%}@media (min-width:768px){.col-sm-020{float:left;width:20%}}@media (min-width:992px){.col-md-020{float:left;width:20%}}@media (min-width:1200px){.col-lg-020{float:left;width:20%}}
+.jmayt-outer * {
+-webkit-box-sizing: border-box;
+-moz-box-sizing: border-box;
+box-sizing: border-box;
+}
+.jmayt-col-xs-020{width:20%}@media (min-width:768px){.jmayt-col-sm-020{width:20%}}@media (min-width:992px){.jmayt-col-md-020{width:20%}}@media (min-width:1200px){.jmayt-col-lg-020{width:20%}}
 .clearfix:before, .clearfix:after {
     zoom:1;
     display: table;
@@ -407,13 +429,12 @@ function yt_styles(){
 .jmayt-list-wrap, .jmayt-single-item {
     margin-bottom: 20px
 }
-.jmayt-list-wrap .jmayt-text-wrap h3 {
-    padding: 5px;
+.jmayt-list-wrap .jmayt-text-wrap h3.jmayt-title {
     position: absolute; 
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 90%;
+    width: 100%;
 }
 .jmayt-video-wrap .jma-responsive-wrap {
 	padding-bottom: 56.25%;
@@ -427,7 +448,7 @@ function yt_styles(){
 .jmayt-fixed {
     background: rgba(0,0,0,0.8);
     position: absolute;
-    z-index: 9999;
+    z-index: 99999999;
     top: 0;
     left: 0;
 }

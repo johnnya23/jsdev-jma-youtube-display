@@ -12,15 +12,21 @@ class JMAYtSettings {
     private $page_title;
     private $text_domain;
 
-    public function __construct($base = 'jma_plugin', $title = 'Cool Plugin', $settings = array(), $text_domain = '') {
+    public function __construct($args) {
+        $defaults = array(
+            'base' => 'jma_plugin',
+            'title' => 'Cool Plugin',
+            'settings' => array()
+        );
+        $args = wp_parse_args( $args, $defaults );
         $this->file =  __FILE__ ;
         $this->dir = dirname( $this->file );
         $this->assets_url = esc_url( trailingslashit( plugins_url( '/', $this->file ) ) );
-        $this->settings_base = $base . '_';
-        $this->db_option = $this->settings_base . 'options_array';
+        $this->settings_base = $args['base'] . '_';
+        $this->db_option = $args['db_option']? $args['db_option']:$this->settings_base . 'options_array';
         $this->page_title = $title;
-        $this->settings = $settings;
-        $this->text_domain = $text_domain? $text_domain: $this->settings_base . 'text_domain';
+        $this->settings = $args['settings'];
+        $this->text_domain = $args['text_domain']? $args['text_domain']: $this->settings_base . 'text_domain';
 
         // Initialise settings
         add_action( 'admin_init', array( $this, 'init' ) );

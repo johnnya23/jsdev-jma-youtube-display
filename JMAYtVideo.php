@@ -204,7 +204,7 @@ class JMAYtVideo {
         $return .= '</div><!--jma-responsive-wrap-->';
         $return .= '</div><!--yt-video-wrap-->';
         $return .= '<div class="jmayt-text-wrap">';
-        $return .= '<h3' . $this->h3_string . '>' . $h3_title . $elipsis . '</h3>';
+        $return .= '<h3 class="jmayt-title" ' . $this->h3_string . '>' . $h3_title . $elipsis . '</h3>';
         $return .= '</div><!--jmayt-text-wrap-->';
         $return .= '</div><!--yt-item-->';
         $return .= '</div><!--yt-item-wrap-->';
