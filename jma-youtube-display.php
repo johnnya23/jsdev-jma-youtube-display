@@ -447,7 +447,7 @@ box-sizing: border-box;
 }
 .jmayt-fixed {
     background: rgba(0,0,0,0.8);
-    position: absolute;
+    position: fixed;
     z-index: 99999999;
     top: 0;
     left: 0;

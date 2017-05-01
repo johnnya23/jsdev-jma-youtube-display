@@ -34,6 +34,7 @@ function jmayt(){
         $parent_width = $parent.innerWidth();
         $button = $this.find('.jmayt-btn');
         $responsive = $this.find('.jma-responsive-wrap');
+        $contents = $parent.contents();
 
         $parent.css('min-height', $parent.height() + 'px');
         $button.html('&#xe097;');
@@ -44,13 +45,16 @@ function jmayt(){
         });
         //first we make it absolute and give it a size
         $this.addClass('jmayt-fixed');
+        jQuery('body').prepend($contents);
         $this.css({
             'width': ($parent_width) + 'px',
             'height': ($parent_width)/1.7778 + 'px',
-            'padding-bottom': 0
+            'padding-bottom': 0,
+            'top': ($pos_top - $scroll) + 'px',
+            'left': $pos_left + 'px',
         }).animate({//then we increase it's size while positioning it at the top left of the window
-            'top': -($pos_top - $scroll) + 'px',
-            'left': -$pos_left + 'px',
+            'top': 0,
+            'left': 0,
             'width': jQuery(window).width() + 'px',
             'height': window.innerHeight + 'px'
         });
@@ -59,18 +63,14 @@ function jmayt(){
     function hide_lightbox() {
         $button.html('&#xe140;');
         $button.css({'font-size': ''});
+        $parent.prepend($contents);
+        jQuery(this).removeClass('jmayt-fixed');
         $this.animate({
             'top': 0,
             'left': 0,
             'width': ($parent_width) + 'px',
-            'height': ($parent_width)/1.7778 + 'px'
-        },400, 'swing', function(){
-            jQuery(this).css({
-                'height': '',
-                'width': '',
-                'padding-bottom': ''
-            });
-            jQuery(this).removeClass('jmayt-fixed');
+            'height': ($parent_width)/1.7778 + 'px',
+            'padding-bottom': ''
         });
         setTimeout(function() {
             $responsive.animate({
@@ -103,6 +103,6 @@ function jmayt(){
             })
         });
     }
-    jQuery(window).scroll(hold_fixed);
-    jQuery(window).resize(hold_fixed);
+    //jQuery(window).scroll(hold_fixed);
+    //jQuery(window).resize(hold_fixed);
 }
