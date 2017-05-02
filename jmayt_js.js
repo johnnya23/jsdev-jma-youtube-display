@@ -1,4 +1,4 @@
-resize = function(){
+title_resize = function(){
     jQuery('.jmayt-list-wrap').each(function(){
         //make all title boxes the same height as the largest box
         $this = jQuery(this);
@@ -8,13 +8,20 @@ resize = function(){
         }).get());
         $this.find('.jmayt-text-wrap').css('min-height', $title_max + 'px');
     });
-}
+};
+video_resize = function(){
+    jQuery('.jmayt-fixed').css({
+        'width': jQuery(window).width() + 'px',
+        'height': window.innerHeight + 'px'
+    });
+};
 jQuery(document).ready(jmayt);
-jQuery(document).ready(resize);
+jQuery(document).ready(title_resize);
 jQuery(document).ajaxComplete(jmayt);
-jQuery(document).ajaxComplete(resize);
+jQuery(document).ajaxComplete(title_resize);
 
-jQuery(window).resize(resize);
+jQuery(window).resize(title_resize);
+jQuery(window).resize(video_resize);
 
 function jmayt(){
     //create the toggle lightbox effect for the youtube items
@@ -34,9 +41,10 @@ function jmayt(){
         $parent_width = $parent.innerWidth();
         $button = $this.find('.jmayt-btn');
         $responsive = $this.find('.jma-responsive-wrap');
-        $contents = $this.contents();
+        $holder = $this.parent();
+        $contents = $holder.contents();
 
-        $parent.css('min-height', $parent.height() + 'px');
+        $holder.css('min-height', $holder.height() + 'px');
         $button.html('&#xe097;');
         $button.animate({'font-size': '23px'});
         $responsive.animate({
@@ -45,16 +53,14 @@ function jmayt(){
         });
         //first we make it fixed and give it a size
         jQuery('body').prepend($contents);
-        setTimeout(function() {
             $this.addClass('jmayt-fixed');
-        $this.css({
-            'width': ($parent_width) + 'px',
-            'height': ($parent_width)/1.7778 + 'px',
-            'padding-bottom': 0,
-            'top': ($pos_top - $scroll) + 'px',
-            'left': $pos_left + 'px',
-        });//then we increase it's size while positioning it at the top left of the window
-        }, 10);
+            $this.css({
+                'width': ($parent_width) + 'px',
+                'height': ($parent_width)/1.7778 + 'px',
+                'padding-bottom': 0,
+                'top': ($pos_top - $scroll) + 'px',
+                'left': $pos_left + 'px',
+            });//then we increase it's size while positioning it at the top left of the window
         setTimeout(function() {
             $this.animate({
                 'top': 0,
@@ -67,48 +73,37 @@ function jmayt(){
     }
 
     function hide_lightbox() {
+        $this = jQuery(this);
         $button.html('&#xe140;');
         $button.css({'font-size': ''});
-        $parent.prepend($contents);
-        $this.removeClass('jmayt-fixed');
         $this.animate({
-            'top': 0,
-            'left': 0,
             'width': ($parent_width) + 'px',
             'height': ($parent_width)/1.7778 + 'px',
-            'padding-bottom': ''
-        });
+            'top': ($pos_top - $scroll) + 'px',
+            'left': $pos_left + 'px'
+        }, 150);
+        $responsive.animate({
+            'width': '100%',
+            'padding-bottom': '56.25%',
+            'min-height': ''
+        }, 150);
         setTimeout(function() {
-            $responsive.animate({
-                'width': '100%',
-                'padding-bottom': '56.25%'
-            }, 200);
-        }, 100);
-        setTimeout(function() {
-            $parent.css('min-height', '');
-        }, 500);
-
-    }
-
-    function hold_fixed(){
-        //using the class that is added on show_lightbox
-        jQuery('.jmayt-fixed').each(function(){
-            $this = jQuery(this);
-            //distance the use has scrolled down the window (dynamic)
-            $scroll = jQuery(document).scrollTop();
-            $parent = $this.closest('.jmayt-item');
-            //x and y coordinates of the div (static)
-            $pos = $parent.offset();
-            $pos_top = $pos.top;
-            $pos_left = $pos.left;
+            $this.removeClass('jmayt-fixed');
+            $holder.prepend($contents);
+            $holder.css('min-height', '');
             $this.css({
-                'top': -($pos_top - $scroll) + 'px',
-                'left': -$pos_left + 'px',
-                'width': jQuery(window).width() + 'px',
-                'height': window.innerHeight + 'px',
-            })
-        });
+                'width': '',
+                'height': '',
+                'top': '',
+                'left': '',
+                'padding-bottom': ''
+            });
+            $responsive.css({
+                'width': '',
+                'padding-bottom': '',
+                'min-height': ''
+            });
+        }, 160 );
+
     }
-    //jQuery(window).scroll(hold_fixed);
-    //jQuery(window).resize(hold_fixed);
 }
