@@ -17,8 +17,6 @@ video_resize = function(){
 };
 jQuery(document).ready(jmayt);
 jQuery(document).ready(title_resize);
-jQuery(document).ajaxComplete(jmayt);
-jQuery(document).ajaxComplete(title_resize);
 
 jQuery(window).resize(title_resize);
 jQuery(window).resize(video_resize);
@@ -40,17 +38,12 @@ function jmayt(){
         $parent = $this.parents('.jmayt-item');
         $parent_width = $parent.innerWidth();
         $button = $this.find('.jmayt-btn');
-        $responsive = $this.find('.jma-responsive-wrap');
         $holder = $this.parent();
         $contents = $holder.contents();
 
         $holder.css('min-height', $holder.height() + 'px');
         $button.html('&#xe097;');
         $button.animate({'font-size': '23px'});
-        $responsive.animate({
-            'width': '80%',
-            'padding-bottom': '45%'
-        });
         //first we make it fixed and give it a size
         jQuery('body').prepend($contents);
             $this.addClass('jmayt-fixed');
@@ -76,16 +69,14 @@ function jmayt(){
         $this = jQuery(this);
         $button.html('&#xe140;');
         $button.css({'font-size': ''});
+        jQuery('html, body').animate({
+            scrollTop: $holder.offset().top-$holder.height()/2
+        }, 600);
         $this.animate({
             'width': ($parent_width) + 'px',
             'height': ($parent_width)/1.7778 + 'px',
             'top': ($pos_top - $scroll) + 'px',
             'left': $pos_left + 'px'
-        }, 150);
-        $responsive.animate({
-            'width': '100%',
-            'padding-bottom': '56.25%',
-            'min-height': ''
         }, 150);
         setTimeout(function() {
             $this.removeClass('jmayt-fixed');
@@ -97,11 +88,6 @@ function jmayt(){
                 'top': '',
                 'left': '',
                 'padding-bottom': ''
-            });
-            $responsive.css({
-                'width': '',
-                'padding-bottom': '',
-                'min-height': ''
             });
         }, 160 );
 

@@ -422,6 +422,11 @@ box-sizing: border-box;
 .jmayt-video-wrap {
     padding-bottom: 56.25%;
     position: relative;
+    transition: all 0.2s;
+}
+.jmayt-video-wrap.jmayt-fixed .jma-responsive-wrap {
+    padding-bottom: 45%;
+    width: 80%;
 }
 .jmayt-text-wrap {
     position: relative;
