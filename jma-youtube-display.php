@@ -444,6 +444,7 @@ box-sizing: border-box;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 100%;
+    z-index: 1;
     transition: all 0.3s;
 }
 .jmayt-video-wrap.jmayt-fixed .jma-responsive-wrap {

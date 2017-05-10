@@ -33,6 +33,8 @@ function jmayt(){
         });
         //distance the use has scrolled down the window (dynamic)
         $scroll = jQuery(document).scrollTop();
+        //get rid of scroll
+        jQuery('body, html').css('overflow-y','hidden');
         //x and y coordinates of the div (static)
         $pos = $this.offset();
         $pos_top = $pos.top;
@@ -55,8 +57,6 @@ function jmayt(){
             'width': jQuery(window).width() + 'px',
             'height': window.innerHeight + 'px'
         });
-        //get rid of scroll
-        jQuery('body, html').css('overflow-y','hidden');
     }
 
     function hide_lightbox() {
