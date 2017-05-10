@@ -378,7 +378,7 @@ function yt_styles(){
         array('top', ' 0'),
         array('left', ' 0'),
         array('padding', '7px 10px'),
-        array('font-size', '18px'),
+        array('font-size', '24px'),
         array('font-family', 'Glyphicons Halflings'),
         array('color', $options_array['button_font']),
         array('background', $options_array['button_bg']),
@@ -444,16 +444,25 @@ box-sizing: border-box;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 100%;
+    transition: all 0.3s;
+}
+.jmayt-video-wrap.jmayt-fixed .jma-responsive-wrap {
+    padding-bottom: 45%;
+    width: 80%;
 }
 .jmayt-fixed {
     background: rgba(0,0,0,0.8);
     position: absolute;
-    z-index: 99999999;
     top: 0;
     left: 0;
 }
 .jmayt-list-wrap .xs-break {
     clear: both
+}
+@media(max-width: 767px){
+    button.jmayt-btn, button.jmayt-btn:focus {
+        font-size: 30px;
+    }
 }
 @media(min-width: 767px){
     .has-sm .xs-break {
