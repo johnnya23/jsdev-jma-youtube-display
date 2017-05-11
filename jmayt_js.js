@@ -15,21 +15,21 @@ function jmayt_video_resize(){
     });
 };
 jQuery(document).ready(jmayt_title_resize);
-jQuery(document).ready(jmayt);
+jQuery(document).ready(jmayt_toggle);
 
 jQuery(window).resize(jmayt_title_resize);
 jQuery(window).resize(jmayt_video_resize);
 
-function jmayt(){
+function jmayt_toggle(){
     //create the toggle lightbox effect for the youtube items
     jQuery('.jmayt-video-wrap').each(function(){
-        jQuery(this).toggle(show_lightbox, hide_lightbox);
+        jQuery(this).toggle(jmayt_show_lightbox, jmayt_hide_lightbox);
     });
 
-    function show_lightbox() {
+    function jmayt_show_lightbox() {
         $this = jQuery(this);
         $this.parents().each(function(){
-            jQuery(this).css('z-index', '2147483647')
+            jQuery(this).css({'z-index': '2147483647'})
         });
         //distance the use has scrolled down the window (dynamic)
         $scroll = jQuery(document).scrollTop();
@@ -59,7 +59,7 @@ function jmayt(){
         });
     }
 
-    function hide_lightbox() {
+    function jmayt_hide_lightbox() {
         $button.html('&#xe140;');
         $this.animate({
             'top': 0,

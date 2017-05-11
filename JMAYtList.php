@@ -25,12 +25,12 @@ class JMAYtList extends JMAYtVideo {
      * @param array $res_cols will have indexes 'sm' 'lg' etc for break point
      * and values indicating the number of cols at each breakpoint (from 1 to 6)
      * @uses $this->id, $this->trans_atts_id, $this->col_space (from JMAYtVideo::process_display_atts()
-     * @global $options_array - for cache period
+     * @global $jmayt_options_array - for cache period
      * returns $return - video list html
      *
     * */
     public function markup($res_cols = array()){
-        global $options_array;
+        global $jmayt_options_array;
         $col_class = '';
         $trans_id = 'jmaytlist' . $post_id . $trans_atts_id;
         foreach($res_cols as $break => $res_col){
@@ -39,7 +39,7 @@ class JMAYtList extends JMAYtVideo {
 
         $trans_id .= $this->id . $this->trans_atts_id;
         $return = get_transient( $trans_id );
-        if(false === $return || !$options_array['cache']) {//if cache at 0
+        if(false === $return || !$jmayt_options_array['cache']) {//if cache at 0
             $yt_api_array = JMAYtList::yt_loop($this->id);
             $yt_loop_items = $yt_api_array['items'];
             $count = count($yt_loop_items);
@@ -76,7 +76,7 @@ class JMAYtList extends JMAYtVideo {
                     $return .= '</div><!--col-->';
                     $i++;
                 }
-                set_transient( $trans_id, $return, $options_array['cache'] );
+                set_transient( $trans_id, $return, $jmayt_options_array['cache'] );
             }
         }
         return $return;

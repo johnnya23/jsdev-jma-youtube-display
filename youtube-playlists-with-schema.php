@@ -13,7 +13,7 @@ License: GPL2
  * add shortcode tags to text toolbar
  *
  * */
-function jma_yt_quicktags() {
+function jmayt_quicktags() {
 
     if (wp_script_is('quicktags')){ ?>
         <script language="javascript" type="text/javascript">
@@ -24,34 +24,34 @@ function jma_yt_quicktags() {
         </script>
     <?php }
 }
-add_action('admin_print_footer_scripts','jma_yt_quicktags');
+add_action('admin_print_footer_scripts','jmayt_quicktags');
 
 function jmayt_scripts() {
 
     wp_enqueue_style( 'jmayt_bootstrap_css', plugins_url('/jmayt_bootstrap.css', __FILE__) );
     wp_enqueue_script( 'jmayt_js', plugins_url('/jmayt_js.js', __FILE__), array( 'jquery' ) );
-    $custom_css = yt_styles();
+    $custom_css = jmayt_styles();
     wp_add_inline_style( 'jmayt_bootstrap_css', $custom_css );
 
 }
 
-function jma_yt_template_redirect(){
-    if(jma_yt_detect_shortcode(array('yt_grid', 'yt_video', 'yt_video_wrap'))){
+function jmayt_template_redirect(){
+    if(jmayt_detect_shortcode(array('yt_grid', 'yt_video', 'yt_video_wrap'))){
         add_action( 'wp_enqueue_scripts', 'jmayt_scripts' );
     }
 }
-add_action('template_redirect', 'jma_yt_template_redirect');
+add_action('template_redirect', 'jmayt_template_redirect');
 
 
 /**
- * function jma_yt_detect_shortcode Detect shortcodes in a post object,
+ * function jmayt_detect_shortcode Detect shortcodes in a post object,
  *  from a post id or from global $post.
  * @param string or array $needle - the shortcode(s) to search for
  * use array for multiple values
  * @param int or object $post_item - the post to search (defaults to current)
  * @return boolean $return
  */
-function jma_yt_detect_shortcode( $needle = '', $post_item = 0 ){
+function jmayt_detect_shortcode( $needle = '', $post_item = 0 ){
 
     if($post_item){
         if(is_object($post_item))
@@ -84,7 +84,7 @@ function jma_yt_detect_shortcode( $needle = '', $post_item = 0 ){
         return $return;
 }
 
-//helper function for yt_styles()
+//helper function for jmayt_styles()
 function jmayt_output($inputs) {
     $output = array();
     foreach($inputs as $input){
@@ -105,7 +105,7 @@ function jmayt_output($inputs) {
     return $output;
 }
 
-//helper function for yt_styles()
+//helper function for jmayt_styles()
 // media queries in format max(or min)-$width@$selector, .....
 // so we explode around @, then around - (first checking to see if @ symbol is present)
 function jmayt_build_css($css_values) {
@@ -132,8 +132,8 @@ function jmayt_build_css($css_values) {
     return $return;
 }
 $jmayt_db_option = 'jmayt_options_array';
-$options_array = get_option($jmayt_db_option);
-$api_code = $options_array['api'];
+$jmayt_options_array = get_option($jmayt_db_option);
+$jmayt_api_code = $jmayt_options_array['api'];
 
 spl_autoload_register( 'jma_yt_autoloader' );
 function jma_yt_autoloader( $class_name ) {
@@ -319,12 +319,12 @@ if( is_admin() )
         );
 
 /**
- * function yt_styles add the plugin specific styles
+ * function jmayt_styles add the plugin specific styles
  * @return $css the css string
  */
-function yt_styles(){
-    global $options_array;
-    $item_gutter = floor($options_array['item_gutter']/2);
+function jmayt_styles(){
+    global $jmayt_options_array;
+    $item_gutter = floor($jmayt_options_array['item_gutter']/2);
     // FORMAT FOR INPUT
 // $jmayt_styles[] = array($selector, array($property, $value)[,array($property, $value)...])
 
@@ -343,30 +343,30 @@ function yt_styles(){
         array('min-height', '1px'),
         array('padding-left', $item_gutter . 'px'),
         array('padding-right', $item_gutter . 'px'),
-        array('margin-bottom', $options_array['item_spacing'] . 'px'),
+        array('margin-bottom', $jmayt_options_array['item_spacing'] . 'px'),
     );
-    if ($options_array['item_border'] || $options_array['item_bg']){
-        $border_array = $options_array['item_border']? array('border', 'solid 2px ' . $options_array['item_border']):
+    if ($jmayt_options_array['item_border'] || $jmayt_options_array['item_bg']){
+        $border_array = $jmayt_options_array['item_border']? array('border', 'solid 2px ' . $jmayt_options_array['item_border']):
             array();
-        $bg_array = $options_array['item_bg']? array('background', $options_array['item_bg']): array();
+        $bg_array = $jmayt_options_array['item_bg']? array('background', $jmayt_options_array['item_bg']): array();
         $jmayt_styles[50] = array('div.jmayt-item-wrap',
             $border_array,
             $bg_array
         );
     }
-    $font_size = $lg_font_size = $options_array['item_font_size'];
+    $font_size = $lg_font_size = $jmayt_options_array['item_font_size'];
     if($font_size)
         $font_size = ceil($font_size*0.7);
-    $font_size_str = $options_array['item_font_size']? array('font-size', $font_size . 'px')
+    $font_size_str = $jmayt_options_array['item_font_size']? array('font-size', $font_size . 'px')
         :array();
-    $lg_font_size_str = $options_array['item_font_size']? array('font-size', $lg_font_size . 'px')
+    $lg_font_size_str = $jmayt_options_array['item_font_size']? array('font-size', $lg_font_size . 'px')
         :array();
     $jmayt_styles[60] =  array('.jmayt-item h3.jmayt-title' ,
         array('padding', '10px'),
         array('margin', ' 0'),
         array('line-height', '120%'),
-        array('color', $options_array['item_font_color']),
-        array('text-align', $options_array['item_font_alignment']),
+        array('color', $jmayt_options_array['item_font_color']),
+        array('text-align', $jmayt_options_array['item_font_alignment']),
         $font_size_str
     );
     $jmayt_styles[70] =  array('.jmayt-item h3.jmayt-title:first-line' ,
@@ -380,16 +380,16 @@ function yt_styles(){
         array('padding', '7px 10px'),
         array('font-size', '24px'),
         array('font-family', 'Glyphicons Halflings'),
-        array('color', $options_array['button_font']),
-        array('background', $options_array['button_bg']),
-        array('border', 'solid 1px ' . $options_array['button_font']),
+        array('color', $jmayt_options_array['button_font']),
+        array('background', $jmayt_options_array['button_bg']),
+        array('border', 'solid 1px ' . $jmayt_options_array['button_font']),
         array('cursor', 'pointer'),
         array('-webkit-transition', 'all .2s'),
         array('transition', 'all .2s'),
     );
     $jmayt_styles[90] =  array('button.jmayt-btn:hover' ,
-        array('color', $options_array['button_bg']),
-        array('background', $options_array['button_font']),
+        array('color', $jmayt_options_array['button_bg']),
+        array('background', $jmayt_options_array['button_font']),
     );
 
     $jmayt_values =  jmayt_output($jmayt_styles);
@@ -508,13 +508,13 @@ function jmayt_sanitize_array($inputs){
  * @return the shortcode string
  */
 function jma_yt_grid($atts){
-    global $options_array;
-    $api_code = $options_array['api'];
+    global $jmayt_options_array;
+    $jmayt_api_code = $jmayt_options_array['api'];
     $atts = jmayt_sanitize_array($atts);
 
-    $you_tube_list = new JMAYtList($atts['yt_list_id'], $api_code);
+    $you_tube_list = new JMAYtList($atts['yt_list_id'], $jmayt_api_code);
     //processing plugin options - form array of column atts and set defaults
-    foreach($options_array as $i => $option){
+    foreach($jmayt_options_array as $i => $option){
         if((strpos($i, '_cols') !== false) && $option){
             $i = str_replace('_cols', '', $i);
             $has_break .= ' has-' . $i;
@@ -582,9 +582,9 @@ function jmayt_id_from_url($url) {
  * @return the shortcode string
  */
 function jma_yt_video_wrap_html($atts, $video_id){
-    global $api_code;
+    global $jmayt_api_code;
     $atts = jmayt_sanitize_array($atts);
-    $yt_video = new JMAYtVideo(sanitize_text_field($video_id), $api_code);
+    $yt_video = new JMAYtVideo(sanitize_text_field($video_id), $jmayt_api_code);
     $style = $yt_video->process_display_atts($atts);
     $attributes = array(
         'id' => $atts['id'],

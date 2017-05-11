@@ -15,11 +15,11 @@ class JMAYtVideo {
 
     }
     protected function curl($url){
-        global $options_array;
+        global $jmayt_options_array;
         $curl = curl_init($url);
 
         $whitelist = array('127.0.0.1', "::1");
-        if($options_array['dev'] && in_array($_SERVER['REMOTE_ADDR'], $whitelist)){
+        if($jmayt_options_array['dev'] && in_array($_SERVER['REMOTE_ADDR'], $whitelist)){
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);//for localhost
             curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);//for localhost
         }
@@ -177,13 +177,13 @@ class JMAYtVideo {
      *
     * */
     protected function single_html($id){
-        global $options_array;
+        global $jmayt_options_array;
         $snippet = JMAYtVideo::video_snippet($id);
         $meta_array = JMAYtVideo::map_meta($snippet, $id);
         $h3_title = $meta_array['name'];
         $elipsis = '';
-        if($this->item_font_length == -23  && $options_array['item_font_length']){
-            $length = $options_array['item_font_length'];
+        if($this->item_font_length == -23  && $jmayt_options_array['item_font_length']){
+            $length = $jmayt_options_array['item_font_length'];
         }elseif($this->item_font_length > 0){
             $length = $this->item_font_length;
         }else{
@@ -198,7 +198,7 @@ class JMAYtVideo {
         $return .= '<div class="jmayt-item">';
         $return .= '<div class="jmayt-video-wrap">';
         $return .= '<div class="jma-responsive-wrap" itemprop="video" itemscope itemtype="http://schema.org/VideoObject">';
-        $return .= '<button class="jmayt-btn"' . $this->button_string . '>&#xe140;</button>';
+        $return .= '<button class="jmayt-btn" ' . $this->button_string . '>&#xe140;</button>';
         $return .= JMAYtVideo::jma_youtube_schema_html($meta_array);
         $return .=  '<iframe src="https://www.youtube.com/embed/' . $id . '?rel=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe>';
         $return .= '</div><!--jma-responsive-wrap-->';
@@ -214,17 +214,17 @@ class JMAYtVideo {
     /*
      * function markup() creates transient id, checks fortransient and calls single_html()
      * if needed
-     * @global $options_array - for cache period
+     * @global $jmayt_options_array - for cache period
      * returns video html
      *
     * */
     public function markup(){
-        global $options_array;
+        global $jmayt_options_array;
         $trans_id = 'jmaytvideo' . $this->id . $this->trans_atts_id;
         $return = get_transient( $trans_id );
-        if(false === $return || !$options_array['cache']) {//if cache at 0
+        if(false === $return || !$jmayt_options_array['cache']) {//if cache at 0
             $return = JMAYtVideo::single_html($this->id);
-            set_transient( $trans_id, $return, $options_array['cache'] );
+            set_transient( $trans_id, $return, $jmayt_options_array['cache'] );
         }
         return $return;
     }
