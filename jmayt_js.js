@@ -28,9 +28,6 @@ function jmayt_toggle(){
 
     function jmayt_show_lightbox() {
         $this = jQuery(this);
-        $this.parents().each(function(){
-            jQuery(this).css({'z-index': '2147483647'})
-        });
         //distance the use has scrolled down the window (dynamic)
         $scroll = jQuery(document).scrollTop();
         //get rid of scroll
@@ -45,6 +42,10 @@ function jmayt_toggle(){
 
         $parent.css('min-height', $parent.height() + 'px');
         $button.html('&#xe097;');
+        //bring this section of the page to the top
+        $this.parents().each(function(){
+            jQuery(this).css({'z-index': '2147483647'})
+        });
         //first we make it absolute and give it a size
         $this.addClass('jmayt-fixed');
         $this.css({
@@ -78,7 +79,7 @@ function jmayt_toggle(){
             $parent.css('min-height', '');
         });
         $this.parents().each(function(){
-            jQuery(this).css('z-index', '')
+            jQuery(this).css({'z-index': ''})
         });
         jQuery('body, html').css('overflow-y','');
     }
