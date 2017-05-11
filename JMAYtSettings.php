@@ -10,6 +10,7 @@ class JMAYtSettings {
     private $settings;
     private $db_option;
     private $page_title;
+    private $page_desc;
     private $text_domain;
 
     public function __construct($args) {
