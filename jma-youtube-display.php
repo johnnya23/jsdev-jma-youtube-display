@@ -422,6 +422,7 @@ box-sizing: border-box;
 .jmayt-video-wrap {
     padding-bottom: 56.25%;
     position: relative;
+    z-index: 1;
 }
 .jmayt-text-wrap {
     position: relative;
@@ -444,7 +445,6 @@ box-sizing: border-box;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 100%;
-    z-index: 1;
     transition: all 0.3s;
 }
 .jmayt-video-wrap.jmayt-fixed .jma-responsive-wrap {

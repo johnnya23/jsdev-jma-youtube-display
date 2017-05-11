@@ -24,7 +24,7 @@ class JMAYtSettings {
         $this->assets_url = esc_url( trailingslashit( plugins_url( '/', $this->file ) ) );
         $this->settings_base = $args['base'] . '_';
         $this->db_option = $args['db_option']? $args['db_option']:$this->settings_base . 'options_array';
-        $this->page_title = $title;
+        $this->page_title = $args['title'];
         $this->settings = $args['settings'];
         $this->text_domain = $args['text_domain']? $args['text_domain']: $this->settings_base . 'text_domain';
 
