@@ -28,7 +28,7 @@ function jmayt_toggle(){
 
     function jmayt_show_lightbox() {
         $this = jQuery(this);
-        //distance the use has scrolled down the window (dynamic)
+        //distance the user has scrolled down the window (dynamic)
         $scroll = jQuery(document).scrollTop();
         //get rid of scroll
         jQuery('body, html').css('overflow-y','hidden');
@@ -39,11 +39,12 @@ function jmayt_toggle(){
         $parent = $this.parent('.jmayt-item');
         $parent_width = $parent.innerWidth();
         $button = $this.find('.jmayt-btn');
+        $z_index = $this.parents('.jmayt-outer').parents().add($this);
 
         $parent.css('min-height', $parent.height() + 'px');
         $button.html('&#xe097;');
         //bring this section of the page to the top
-        $this.parents().each(function(){
+        $z_index.each(function(){
             jQuery(this).css({'z-index': '2147483647'})
         });
         //first we make it absolute and give it a size
@@ -77,12 +78,15 @@ function jmayt_toggle(){
                 'padding-bottom': ''
             });
             $parent.css('min-height', '');
-        });
-        $this.parents().each(function(){
-            jQuery(this).css({'z-index': ''})
+            $z_index.each(function(){
+                jQuery(this).css({'z-index': ''})
+            });
         });
         jQuery('body, html').css('overflow-y','');
     }
+
+
+
 
     function hold_fixed(){
         //using the class that is added on show_lightbox

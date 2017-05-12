@@ -68,13 +68,18 @@ class JMAYtList extends JMAYtVideo {
                         }
                     }
                     $yt_snippet = $yt_loop_item['snippet'];
-                    $yt_id = $yt_snippet['resourceId']['videoId'];
-                    $return .= '<div class="jmayt-outer jmayt-list-item ' . $col_class . $br_cl .'"' . $this->col_space . '>';
-                    //$return .= '<div class="jmayt-item">';
-                    $return .= JMAYtList::single_html($yt_id, true);
-                    //$return .= '</div><!--yt-item-->';
-                    $return .= '</div><!--col-->';
-                    $i++;
+                    if($yt_snippet['thumbnails']){//only show videos with thumbnails in grid
+                        $yt_id = $yt_snippet['resourceId']['videoId'];
+                        $return .= '<div class="jmayt-outer jmayt-list-item ' . $col_class . $br_cl .'"' . $this->col_space . '>';
+                        //$return .= '<div class="jmayt-item">';
+                        $return .= JMAYtList::single_html($yt_id, true);
+                        //$return .= '</div><!--yt-item-->';
+                        $return .= '</div><!--col-->';
+                        $i++;
+                    }
+
+
+
                 }
                 set_transient( $trans_id, $return, $jmayt_options_array['cache'] );
             }

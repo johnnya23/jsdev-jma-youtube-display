@@ -494,10 +494,14 @@ box-sizing: border-box;
 }
 
 function jmayt_sanitize_array($inputs){
+    if(is_array($inputs) && count($inputs)){
     foreach($inputs as $i => $input){
         $i = sanitize_text_field($i);
         $input = sanitize_text_field($input);
         $output[$i] =  $input;
+    }
+    }else{
+        $output = array();
     }
     return $output;
 }
@@ -523,10 +527,10 @@ function jma_yt_grid($atts){
     }
     $count = 0;
     $style = $you_tube_list->process_display_atts($atts);
-    foreach($atts as $index => $att){
+    foreach ($atts as $index => $att) {
         if (strpos($index, '_cols') !== false) {
             //processing shortcode attributes - clear defaults the first time we find a _cols attribute
-            if(!$count){
+            if (!$count) {
                 $responsive_cols = array();
                 $has_break = '';
             }
@@ -536,6 +540,7 @@ function jma_yt_grid($atts){
             $responsive_cols[$index] = $att;
         }
     }
+
     ob_start();
     $attributes = array(
         'id' => $atts['id'],
