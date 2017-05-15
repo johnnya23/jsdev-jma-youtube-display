@@ -167,7 +167,8 @@ class JMAYtSettings {
             case 'text':
             case 'password':
             case 'number':
-                $html .= '<input id="' . esc_attr( $field['id'] ) . '" type="' . $field['type'] . '" name="' . esc_attr( $option_name ) . '" placeholder="' . esc_attr( $field['placeholder'] ) . '" value="' . $data . '"/>' . "\n";
+                $style = esc_attr( $field['id'] ) == 'api'? ' style="width: 350px; max-width: 100%" ': '';
+                $html .= '<input id="' . esc_attr( $field['id'] ) . '"' . $style . 'type="' . $field['type'] . '" name="' . esc_attr( $option_name ) . '" placeholder="' . esc_attr( $field['placeholder'] ) . '" value="' . $data . '"/>' . "\n";
                 break;
 
             case 'text_secret':

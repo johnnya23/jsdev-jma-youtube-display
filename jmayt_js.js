@@ -8,17 +8,13 @@ function jmayt_title_resize(){
         $this.find('.jmayt-text-wrap').css('min-height', $title_max + 'px');
     });
 };
+
 function jmayt_video_resize(){
     jQuery('.jmayt-fixed').css({
         'width': jQuery(window).width() + 'px',
         'height': window.innerHeight + 'px'
     });
 };
-jQuery(document).ready(jmayt_title_resize);
-jQuery(document).ready(jmayt_toggle);
-
-jQuery(window).resize(jmayt_title_resize);
-jQuery(window).resize(jmayt_video_resize);
 
 function jmayt_toggle(){
     //create the toggle lightbox effect for the youtube items
@@ -85,9 +81,6 @@ function jmayt_toggle(){
         jQuery('body, html').css('overflow-y','');
     }
 
-
-
-
     function hold_fixed(){
         //using the class that is added on show_lightbox
         jQuery('.jmayt-fixed').each(function(){
@@ -111,3 +104,9 @@ function jmayt_toggle(){
     jQuery(window).scroll(hold_fixed);
     jQuery(window).resize(hold_fixed);
 }
+
+jQuery(document).ready(jmayt_title_resize);
+jQuery(document).ready(jmayt_toggle);
+
+jQuery(window).resize(jmayt_title_resize);
+jQuery(window).resize(jmayt_video_resize);
