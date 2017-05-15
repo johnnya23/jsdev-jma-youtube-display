@@ -81,7 +81,7 @@ function jmayt_detect_shortcode( $needle = '', $post_item = 0 ){
         $return = false;
     }
 
-        return $return;
+        return apply_filters('jmayt_detect_shortcode_result', $return);
 }
 
 //helper function for jmayt_styles()
@@ -211,7 +211,8 @@ $settings = array(
         'fields'				=> array(
             array(
                 'id' 			=> 'item_font_color',
-                'label'			=> __( 'Font color for YouTube item titles - 0 your theme\'s title color (item_font_color)', 'jmayt_textdomain' ),
+                'label'			=> __( 'Font color for YouTube item titles', 'jmayt_textdomain' ),
+                'description'	=> __( '0 your theme\'s title color (item_font_color)', 'jmayt_textdomain' ),
                 'type'			=> 'color',
                 'default'		=> 0
             ),
@@ -336,8 +337,7 @@ function jmayt_styles(){
         array('margin-right', -$item_gutter . 'px'),
     );
     $jmayt_styles[20] =  array('div.jmayt-item-wrap' ,
-        array('position', 'relative'),
-        array('box-sizing', 'border-box'),
+        array('position', 'relative')
     );
     $jmayt_styles[30] =  array('div.jmayt-list-item' ,
         array('min-height', '1px'),
@@ -398,7 +398,7 @@ function jmayt_styles(){
 
     $jmayt_css = jmayt_build_css($jmayt_values);
     $css = '
-.jmayt-outer * {
+.jmayt-outer, .jmayt-outer * {
 -webkit-box-sizing: border-box;
 -moz-box-sizing: border-box;
 box-sizing: border-box;
