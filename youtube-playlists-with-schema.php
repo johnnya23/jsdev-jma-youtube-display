@@ -81,7 +81,7 @@ function jmayt_detect_shortcode( $needle = '', $post_item = 0 ){
         $return = false;
     }
 
-        return apply_filters('jmayt_detect_shortcode_result', $return);
+    return apply_filters('jmayt_detect_shortcode_result', $return, $post, $needle);
 }
 
 //helper function for jmayt_styles()
@@ -402,6 +402,9 @@ function jmayt_styles(){
 -webkit-box-sizing: border-box;
 -moz-box-sizing: border-box;
 box-sizing: border-box;
+}
+.jmayt-outer p, .jmayt-outer br, .jmayt-list-wrap p, .jmayt-list-wrap br {
+    display: none;
 }
 .jmayt-col-xs-020{width:20%}@media (min-width:768px){.jmayt-col-sm-020{width:20%}}@media (min-width:992px){.jmayt-col-md-020{width:20%}}@media (min-width:1200px){.jmayt-col-lg-020{width:20%}}
 .clearfix:before, .clearfix:after {

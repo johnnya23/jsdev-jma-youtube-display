@@ -39,13 +39,13 @@ function jmayt_toggle(){
         $parent = $this.parent('.jmayt-item');
         $parent_width = $parent.innerWidth();
         $button = $this.find('.jmayt-btn');
-        $z_index = $this.parents('.jmayt-outer').parents().add($this);
+        $z_index = $this.parents('.jmayt-outer').parents().add($this).not(jQuery('body, html'));
 
         $parent.css('min-height', $parent.height() + 'px');
         $button.html('&#xe097;');
         //bring this section of the page to the top
         $z_index.each(function(){
-            jQuery(this).css({'z-index': '2147483647'})
+            jQuery(this).css({'z-index': '2147483647', 'overflow': 'visible'})
         });
         //first we make it absolute and give it a size
         $this.addClass('jmayt-fixed');
@@ -79,7 +79,7 @@ function jmayt_toggle(){
             });
             $parent.css('min-height', '');
             $z_index.each(function(){
-                jQuery(this).css({'z-index': ''})
+                jQuery(this).css({'z-index': '', 'overflow': ''})
             });
         });
         jQuery('body, html').css('overflow-y','');
@@ -108,5 +108,6 @@ function jmayt_toggle(){
         });
     }
     //for width change and orientation change on mobile
+    jQuery(window).scroll(hold_fixed);
     jQuery(window).resize(hold_fixed);
 }
