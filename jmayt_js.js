@@ -28,10 +28,6 @@ function jmayt_toggle(){
         $scroll = jQuery(document).scrollTop();
         //get rid of scroll
         jQuery('body, html').css('overflow-y','hidden');
-        //x and y coordinates of the div (static)
-        $pos = $this.offset();
-        $pos_top = $pos.top;
-        $pos_left = $pos.left;
         $parent = $this.parent('.jmayt-item');
         $parent_width = $parent.innerWidth();
         $button = $this.find('.jmayt-btn');
@@ -45,6 +41,10 @@ function jmayt_toggle(){
         });
         //first we make it absolute and give it a size
         $this.addClass('jmayt-fixed');
+        //x and y coordinates of the div (static)
+        $pos = $this.offset();
+        $pos_top = $pos.top;
+        $pos_left = $pos.left;
         $this.css({
             'width': ($parent_width) + 'px',
             'height': ($parent_width)/1.7778 + 'px',

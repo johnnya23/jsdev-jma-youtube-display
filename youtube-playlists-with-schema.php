@@ -218,57 +218,66 @@ $settings = array(
             ),
             array(
                 'id' 			=> 'item_font_size',
-                'label'			=> __( 'Font size for YouTube item titles - 0 your theme\'s title size (item_font_size)', 'jmayt_textdomain' ),
+                'label'			=> __( 'Font size for YouTube item titles', 'jmayt_textdomain' ),
+                'description'	=> __( '0 your theme\'s title size (item_font_size)', 'jmayt_textdomain' ),
                 'type'			=> 'number',
                 'default'		=> 0
             ),
             array(
                 'id' 			=> 'item_font_alignment',
-                'label'			=> __( 'Font alignment for YouTube item titles (item_font_alignment)', 'jmayt_textdomain' ),
+                'label'			=> __( 'Font alignment for YouTube item titles', 'jmayt_textdomain' ),
+                'description'	=> __( '(item_font_alignment)', 'jmayt_textdomain' ),
                 'type'			=> 'radio',
                 'options'		=> array( 'left' => 'left' , 'center' => 'center', 'right' => 'right'),
                 'default'		=> 'left'
             ),
             array(
                 'id' 			=> 'item_font_length',
-                'label'			=> __( 'The maximun number of characters for YouTube item titles - 0 for whole title (item_font_length)', 'jmayt_textdomain' ),
+                'label'			=> __( 'The maximun number of characters for YouTube item titles', 'jmayt_textdomain' ),
+                'description'	=> __( '0 for whole title (item_font_length)', 'jmayt_textdomain' ),
                 'type'			=> 'number',
                 'default'		=> 0
             ),
             array(
                 'id' 			=> 'item_bg',
-                'label'			=> __( 'Background color for YouTube items - 0 for no bg (item_bg)', 'jmayt_textdomain' ),
+                'label'			=> __( 'Background color for YouTube items', 'jmayt_textdomain' ),
+                'description'	=> __( '0 for no bg (item_bg)', 'jmayt_textdomain' ),
                 'type'			=> 'color',
                 'default'		=> 0
             ),
             array(
                 'id' 			=> 'item_border',
-                'label'			=> __( 'Border color for YouTube items - 0 for no border (item_border)', 'jmayt_textdomain' ),
+                'label'			=> __( 'Border color for YouTube items', 'jmayt_textdomain' ),
+                'description'	=> __( '0 for no border (item_border)', 'jmayt_textdomain' ),
                 'type'			=> 'color',
                 'default'		=> 0
             ),
             array(
                 'id' 			=> 'item_gutter',
-                'label'			=> __( 'Horizontal distance in px between YouTube grid items - best results even number between 0 and 30 (item_gutter)', 'jmayt_textdomain' ),
+                'label'			=> __( 'Grid horizontal spacing', 'jmayt_textdomain' ),
+                'description'	=> __( 'in px between YouTube grid items - best results even number between 0 and 30 (item_gutter)', 'jmayt_textdomain' ),
                 'type'			=> 'number',
                 'default'		=> '30'
             ),
             array(
                 'id' 			=> 'item_spacing',
-                'label'			=> __( 'Vertical distance in px between YouTube grid items (item_spacing)', 'jmayt_textdomain' ),
+                'label'			=> __( 'Grid vertical spacing', 'jmayt_textdomain' ),
+                'description'	=> __( 'in px between YouTube grid items (item_spacing)', 'jmayt_textdomain' ),
                 'type'			=> 'number',
                 'default'		=> '15'
             ),
             array(
                 'id' 			=> 'button_font',
                 'class'         => 'picker',
-                'label'			=> __( 'Arrow color for expansion buttons on YouTube items (button_font)', 'jmayt_textdomain' ),
+                'label'			=> __( 'Button arrow color', 'jmayt_textdomain' ),
+                'description'	=> __( 'for expansion buttons on upper left of YouTube items (button_font)', 'jmayt_textdomain' ),
                 'type'			=> 'color',
                 'default'		=> '#21759B'
             ),
             array(
                 'id' 			=> 'button_bg',
-                'label'			=> __( 'Background color for expansion buttons on YouTube items (button_bg)', 'jmayt_textdomain' ),
+                'label'			=> __( 'Button background color', 'jmayt_textdomain' ),
+                'description'	=> __( 'for expansion buttons on upper leftof YouTube items (button_bg)', 'jmayt_textdomain' ),
                 'type'			=> 'color',
                 'default'		=> '#cbe0e9'
             ),
@@ -437,6 +446,7 @@ box-sizing: border-box;
     position: absolute; 
     top: 50%;
     left: 50%;
+    -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
     width: 100%;
 }
@@ -446,6 +456,7 @@ box-sizing: border-box;
     position: absolute; 
     top: 50%;
     left: 50%;
+    -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
     width: 100%;
     transition: all 0.3s;
