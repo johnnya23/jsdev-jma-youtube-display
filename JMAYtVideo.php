@@ -28,7 +28,7 @@ class JMAYtVideo {
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         $result = curl_exec($curl);
         curl_close($curl);
-        $return = json_decode($result, true);echo '<pre>';print_r($return);echo '</pre>';
+        $return = json_decode($result, true);
         if(!$return || array_key_exists ('error', $return))
             $return = false;
 
