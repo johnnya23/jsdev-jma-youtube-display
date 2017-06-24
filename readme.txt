@@ -1,16 +1,17 @@
 === YouTube Playlists with Schema ===
 Contributors: johnnya23
-Donate link: n/a
-Tags: youtube, schema, youtube gallery, youtube playlist, youtube embed, youtube seo, youtube channel
+Tags: youtube, schema, youtube gallery, youtube playlist, youtube embed, youtube seo, youtube channel, responsive youtube
 Requires at least: 4.0
-Tested up to: 4.7.4
-Stable tag: 1.0
+Tested up to: 4.8
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Makes available shortcode for embed of single videos and grids from YouTube video playlists, which include schema.org markup as recommended by google.
+Shortcode for embed of responsive single videos and grids from YouTube video playlists, which include schema.org markup as recommended by google.
 
 == Description ==
+
+Creates styled grids in WordPress pages/post/sidebars from YouTube Playlists. Also, displays single YouTube videos from video id. All videos displayed through plugin shortcode (grids and single) include schema.org metadata markup as recommended by google.
 
 Requires YouTube Data API key &#8211; Instructions for getting the api can be found in the installation tab.
 Shortcode examples (remove the spaces immediately within the square brackets):
@@ -81,7 +82,8 @@ Note &#8211; You can use this &#8216;project&#8217; on other sites. Just come ba
 
 == Frequently Asked Questions ==
 
-What schema values does the plugin provide?
+= What schema values does the plugin provide? =
+
 meta itemprop="name" content=""
 meta itemprop="publisher" content=""
 meta itemprop="description" content=""
@@ -90,22 +92,15 @@ meta itemprop="embedURL" content=""
 meta itemprop="uploadDate" content="" 
 With content values pulled from the YouTube API.
 
-My lists and videos are showing, but the display is off. What gives?
-The plugin detects the existence of it&#8217;s shortcode in the page (post) content. If you or your theme are adding the shortcode to a meta box, the plugin will not detect the shortcode and will not call the css and jQuery necessary for proper display. You can overcome this in your child theme function.php file by filtering the detection result to include specific pages or all pages (posts).
-```
-function jma_jmayt_detect_shortcode_result($return, $post){
-    $target_ids = array(1866, 1867, 2323);//pages/post to add code to
+= My lists and videos are showing, but the display is off. What gives? =
 
-    if(in_array($post->ID, $target_ids))
-        $return = true;
-    return $return;
-}
-add_filter('jmayt_detect_shortcode_result', 'jma_jmayt_detect_shortcode_result', 10, 2);
-```
+The plugin detects the existence of it&#8217;s shortcode in the page (post) content. If you or your theme are adding the shortcode to a meta box, the plugin will not detect the shortcode and will not call the css and jQuery necessary for proper display. You can overcome this by selecting the "Universal" option in the plugin settings.
+`
 
-How can I improve the list display when using shortcode within tabs and accordions?
+= How can I improve the list display when using shortcode within tabs and accordions? =
+
 Javascript is used to determine the height of the title boxes so that all boxes are the same height. If a tab/accordion is closed on page load the a height of zero will be assigned to tiles in lists. To overcome this we need to call the javascript after the tab/accordion is clicked. Like this:
-```
+`
 function jmayt_footer(){ ?&gt;
     &lt;script type="text/javascript"&gt;
     jQuery('.jma-tabbed').find('li').click(function(){//.jam-tabbed and li will have to be changes based on your markup
@@ -123,28 +118,29 @@ function jma_template_redirect(){
         add_action('wp_footer', 'jmayt_footer');
 }
 add_action('template_redirect', 'jma_template_redirect');
-```
+`
+
+= Will the shortcode work on ajax generated pages? =
+
+It should. You need to add:
+`
+jmayt_toggle();jmayt_title_resize();
+`
+to the end of your success() function
 
 == Screenshots ==
 
-[Go Here for screenshots and live demo](https://cleansupersites.com/jma-youtube-playlists-with-schema/)
-**The settings page**
-
-![settings](https://cleansupersites.com/cleansupersites/wp-content/uploads/2017/05/settings2.jpg)
-
-**Video id**
-![video id](https://cleansupersites.com/cleansupersites/wp-content/uploads/2017/05/video-id.jpg)
-
-**List id**
-![List id](https://cleansupersites.com/cleansupersites/wp-content/uploads/2017/05/list-id.jpg)
-
-**The grid**
-![The grid](https://cleansupersites.com/cleansupersites/wp-content/uploads/2017/05/grid.jpg)
-
-**Single video**
-![Single video](https://cleansupersites.com/cleansupersites/wp-content/uploads/2017/05/single.jpg)
+1. The plugin settings page
+2. Video id - use the value after v=
+3. List id - use the value after list=
+4. The grid
+5. Single video (aligned right at 50%)
+6. Shortcut keys can be found in the text editor only
 
 == Changelog ==
 
 = 1.0 =
 * Original
+
+= 1.0.1 =
+* Add universalize script option

@@ -1,8 +1,9 @@
 <?php
 /*
-Plugin Name: YouTube Playlists with Schema
+Plugin Name: Responsive YouTube Videos and Playlists with Schema
+Plugin URI: https://cleansupersites.com/jma-youtube-playlists-with-schema/
 Description: Makes available shortcode for embed of single videos and grids from YouTube video playlists, which include schema.org markup as recommended by google.
-Version: 1.0
+Version: 1.0.1
 Author: John Antonacci
 Author URI: http://cleansupersites.com
 License: GPL2
@@ -13,6 +14,7 @@ License: GPL2
  * add shortcode tags to text toolbar
  *
  * */
+add_filter('widget_text', 'do_shortcode');
 function jmayt_quicktags() {
 
     if (wp_script_is('quicktags')){ ?>
@@ -36,7 +38,8 @@ function jmayt_scripts() {
 }
 
 function jmayt_template_redirect(){
-    if(jmayt_detect_shortcode(array('yt_grid', 'yt_video', 'yt_video_wrap'))){
+    global $jmayt_options_array;
+    if(jmayt_detect_shortcode(array('yt_grid', 'yt_video', 'yt_video_wrap')) || $jmayt_options_array['uni']){
         add_action( 'wp_enqueue_scripts', 'jmayt_scripts' );
     }
 }
@@ -187,6 +190,14 @@ $settings = array(
                 'description'	=> __( 'Frequency of checks back to YouTube for info. Larger number for quicker page loads and to avoid hitting YouTube Api limits (3600 = 1 hr or 0 for testing only).', 'jmayt_textdomain' ),
                 'type'			=> 'number',
                 'default'		=> '3600'
+            ),
+            array(
+                'id' 			=> 'uni',
+                'label'			=> __( 'Universal Mode', 'jmayt_textdomain' ),
+                'description'	=> __( 'Load plugin script on all pages - not just ones where the plugin shortcode is detected. This is necessary if shortcode is used in a sidebar (widget area) or may be necessary with some themes or page builders', 'jmayt_textdomain' ),
+                'type'			=> 'radio',
+                'options'		=> array( 0 => 'Limited' , 1 => 'Universal'),
+                'default'		=> 0
             ),
             array(
                 'id' 			=> 'dev',
