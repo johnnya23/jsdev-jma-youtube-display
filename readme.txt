@@ -3,7 +3,7 @@ Contributors: johnnya23
 Tags: youtube, schema, youtube gallery, youtube playlist, youtube embed, youtube seo, youtube channel, responsive youtube
 Requires at least: 4.0
 Tested up to: 4.8
-Stable tag: 1.0.1
+Stable tag: 1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -144,3 +144,7 @@ to the end of your success() function
 
 = 1.0.1 =
 * Add universalize script option
+
+= 1.1 =
+* Sperctrum color picker replaces farbtastic
+https://bgrins.github.io/spectrum/

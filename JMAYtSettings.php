@@ -65,16 +65,14 @@ class JMAYtSettings {
      */
     public function settings_assets() {
 
-        // We're including the farbtastic script & styles here because they're needed for the colour picker
-        // If you're not including a colour picker field then you can leave these calls out as well as the farbtastic dependency for the wpt-admin-js script below
-        wp_enqueue_style( 'farbtastic' );
-        wp_enqueue_script( 'farbtastic' );
+        wp_enqueue_style( 'spectrum_style', plugin_dir_url( __FILE__ ) . '/spectrum.css' );
+        wp_enqueue_script( 'spectrum_script', plugin_dir_url( __FILE__ ) . '/spectrum.js' );
 
         // We're including the WP media scripts here because they're needed for the image upload field
         // If you're not including an image upload then you can leave this function call out
         wp_enqueue_media();
 
-        wp_register_script( $this->settings_base . 'admin-js', $this->assets_url . 'settings.js', array( 'farbtastic', 'jquery' ), '1.0.0' );
+        wp_register_script( $this->settings_base . 'admin-js', $this->assets_url . 'settings.js', array( 'spectrum_script', 'jquery' ), '1.0.0' );
         wp_enqueue_script( $this->settings_base . 'admin-js' );
     }
 
@@ -243,11 +241,8 @@ class JMAYtSettings {
                 break;
 
             case 'color':
-                $color_value = esc_html( $data )?esc_html( $data ):0;
                 ?><div class="color-picker" style="position:relative;">
-                <input type="text" name="<?php esc_attr_e( $option_name ); ?>" class="color" value="<?php echo
-                $color_value ?>" />
-                <div style="position:absolute;background:#FFF;z-index:99;border-radius:100%;" class="colorpicker"></div>
+                <input type="text" name="<?php esc_attr_e( $option_name ); ?>" class="spectrum-picker" value="<?php echo esc_html( $data ) ?>" />
                 </div>
                 <?php
                 break;

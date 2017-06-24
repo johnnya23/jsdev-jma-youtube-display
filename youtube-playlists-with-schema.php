@@ -3,7 +3,7 @@
 Plugin Name: Responsive YouTube Videos and Playlists with Schema
 Plugin URI: https://cleansupersites.com/jma-youtube-playlists-with-schema/
 Description: Makes available shortcode for embed of single videos and grids from YouTube video playlists, which include schema.org markup as recommended by google.
-Version: 1.0.1
+Version: 1.1
 Author: John Antonacci
 Author URI: http://cleansupersites.com
 License: GPL2
@@ -223,7 +223,7 @@ $settings = array(
             array(
                 'id' 			=> 'item_font_color',
                 'label'			=> __( 'Font color for YouTube item titles', 'jmayt_textdomain' ),
-                'description'	=> __( '0 your theme\'s title color (item_font_color)', 'jmayt_textdomain' ),
+                'description'	=> __( 'Null your theme\'s title color (item_font_color)', 'jmayt_textdomain' ),
                 'type'			=> 'color',
                 'default'		=> 0
             ),
@@ -252,14 +252,14 @@ $settings = array(
             array(
                 'id' 			=> 'item_bg',
                 'label'			=> __( 'Background color for YouTube items', 'jmayt_textdomain' ),
-                'description'	=> __( '0 for no bg (item_bg)', 'jmayt_textdomain' ),
+                'description'	=> __( 'Null for no bg (item_bg)', 'jmayt_textdomain' ),
                 'type'			=> 'color',
                 'default'		=> 0
             ),
             array(
                 'id' 			=> 'item_border',
                 'label'			=> __( 'Border color for YouTube items', 'jmayt_textdomain' ),
-                'description'	=> __( '0 for no border (item_border)', 'jmayt_textdomain' ),
+                'description'	=> __( 'Null for no border (item_border)', 'jmayt_textdomain' ),
                 'type'			=> 'color',
                 'default'		=> 0
             ),
