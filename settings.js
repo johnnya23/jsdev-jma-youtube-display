@@ -8,7 +8,7 @@ jQuery(document).ready(function($) {
     });
 
 
-    /***** Uploading images *****/
+    /***** Uploading images ****
 
     var file_frame;
 
@@ -53,6 +53,6 @@ jQuery(document).ready(function($) {
         jQuery(this).closest('td').find( '.image_data_field' ).val( '' );
         jQuery( '.image_preview' ).remove();
         return false;
-    });
+    });*/
 
 });
