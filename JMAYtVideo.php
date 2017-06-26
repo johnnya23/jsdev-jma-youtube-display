@@ -179,7 +179,7 @@ class JMAYtVideo {
     * */
     protected function single_html($id, $list = false){
         global $jmayt_options_array;
-        $snippet = JMAYtVideo::video_snippet($id);
+        $snippet = JMAYtVideo::video_snippet($id);//echo '<pre>';print_r($snippet); echo '</pre>';
         $meta_array = JMAYtVideo::map_meta($snippet, $id);
         $h3_title = $meta_array['name'];
         $elipsis = '';

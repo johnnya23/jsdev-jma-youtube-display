@@ -18,7 +18,7 @@ class JMAYtOverlay {
         $store_dir = realpath(plugin_dir_path(__FILE__)) . $sep . 'overlays';
         $filename = realpath(plugin_dir_path(__FILE__)) . $sep . 'overlays' . $sep . $id . '.' . $ext;
         if(!file_exists($filename))
-            $this->fetch_image($url, $store_dir, 'absolute', $id);
+            $this->fetch_image($url, $store_dir, $id);
     }
 
     /**
@@ -35,10 +35,9 @@ class JMAYtOverlay {
      *
      * @param string $img_url The URL of the image. Should start with http or https followed by :// and end with .png or .jpeg or .jpg or .gif. Else it will not pass the validation
      * @param string $store_dir The directory where you would like to store the images.
-     * @param string $store_dir_type The path type of the directory. 'relative' for the location in relation with the executing script location or 'absolute'
      * @return string the location of the image (either relative with the current script or abosule depending on $store_dir_type)
      */
-    protected function fetch_image($img_url, $store_dir = 'images', $store_dir_type = 'relative', $filename = 'default') {
+    protected function fetch_image($img_url, $store_dir = 'images', $filename = 'default') {
         //first get the base name of the image
         $i_name = $filename;
 
@@ -58,7 +57,7 @@ class JMAYtOverlay {
             return ''; //possible error on the image URL
         }
 
-        $dir_name = (($store_dir_type == 'relative')? './' : '') . rtrim($store_dir, '/') . '/';
+        $dir_name = rtrim($store_dir, '/') . '/';
 
         //create the directory if not present
         if(!file_exists($dir_name))
