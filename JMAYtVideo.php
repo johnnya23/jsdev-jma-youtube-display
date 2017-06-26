@@ -68,6 +68,7 @@ class JMAYtVideo {
         $yt_meta_array_items['publisher'] = $snippet['channelTitle'];
         $yt_meta_array_items['description'] = $snippet['description'];
         $yt_meta_array_items['thumbnailUrl'] = $snippet['thumbnails']['default']['url'];
+        $yt_meta_array_items['standardUrl'] = $snippet['thumbnails']['standard']['url'];
         $yt_meta_array_items['embedURL'] = 'https://www.youtube.com/embed/' . $id;
         $yt_meta_array_items['uploadDate'] = $snippet['publishedAt'];
         return $yt_meta_array_items;
@@ -176,7 +177,7 @@ class JMAYtVideo {
      * returns video box html
      *
     * */
-    protected function single_html($id){
+    protected function single_html($id, $list = false){
         global $jmayt_options_array;
         $snippet = JMAYtVideo::video_snippet($id);
         $meta_array = JMAYtVideo::map_meta($snippet, $id);
@@ -200,7 +201,12 @@ class JMAYtVideo {
         $return .= '<div class="jma-responsive-wrap" itemprop="video" itemscope itemtype="http://schema.org/VideoObject">';
         $return .= '<button class="jmayt-btn" ' . $this->button_string . '>&#xe140;</button>';
         $return .= JMAYtVideo::jma_youtube_schema_html($meta_array);
-        $return .=  '<iframe src="https://www.youtube.com/embed/' . $id . '?rel=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe>';
+        if(!$list){
+            $return .=  '<iframe src="https://www.youtube.com/embed/' . $id . '?rel=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe>';
+        }else{
+            $overlay = new JMAYtOverlay($meta_array['standardUrl'], $id);
+            $return .=  '<iframe src="https://www.youtube.com/embed/' . $id . '?rel=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe>';
+        }
         $return .= '</div><!--jma-responsive-wrap-->';
         $return .= '</div><!--yt-video-wrap-->';
         $return .= '<div class="jmayt-text-wrap">';
