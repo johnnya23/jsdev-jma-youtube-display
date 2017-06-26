@@ -18,7 +18,7 @@ class JMAYtOverlay {
         $store_dir = realpath(plugin_dir_path(__FILE__)) . $sep . 'overlays';
         $filename = realpath(plugin_dir_path(__FILE__)) . $sep . 'overlays' . $sep . $id . '.' . $ext;
         if(!file_exists($filename))
-            $this->fetch_image($url, $store_dir, 'absolute', true, false, false, $id);
+            $this->fetch_image($url, $store_dir, 'absolute', $id);
     }
 
     /**
@@ -36,12 +36,9 @@ class JMAYtOverlay {
      * @param string $img_url The URL of the image. Should start with http or https followed by :// and end with .png or .jpeg or .jpg or .gif. Else it will not pass the validation
      * @param string $store_dir The directory where you would like to store the images.
      * @param string $store_dir_type The path type of the directory. 'relative' for the location in relation with the executing script location or 'absolute'
-     * @param bool $overwrite Set to true to overwrite, false to create a new image with different name
-     * @param bool|int $pref internally used to prefix the extension in case of duplicate file name. Used by the trailing recursion call
-     * @param bool $debug Set to true for enable debugging and print some useful messages.
      * @return string the location of the image (either relative with the current script or abosule depending on $store_dir_type)
      */
-    protected function fetch_image($img_url, $store_dir = 'images', $store_dir_type = 'relative', $overwrite = true, $pref = false, $debug = true, $filename) {
+    protected function fetch_image($img_url, $store_dir = 'images', $store_dir_type = 'relative', $filename = 'default') {
         //first get the base name of the image
         $i_name = $filename;
 
@@ -58,8 +55,6 @@ class JMAYtOverlay {
             $img_type = 'gif';
         }
         else {
-            if(true == $debug)
-                echo 'Invalid image URL';
             return ''; //possible error on the image URL
         }
 
@@ -70,27 +65,13 @@ class JMAYtOverlay {
             mkdir($dir_name, 0777, true);
 
         //calculate the destination image path
-        $i_dest = $dir_name . $i_name . (($pref === false)? '' : '_' . $pref) . '.' . $img_type;
-
-        //lets see if the path exists already
-        if(file_exists($i_dest)) {
-            $pref = (int) $pref;
-
-            //modify the file name, do not overwrite
-            if(false == $overwrite)
-                return fetch_image($img_url, $store_dir, $store_dir_type, $overwrite, ++$pref, $debug);
-            //delete & overwrite
-            else
-                unlink ($i_dest);
-        }
+        $i_dest = $dir_name . $i_name . '.' . $img_type;
 
         //first check if the image is fetchable
         $img_info = @getimagesize($img_url);
 
         //is it a valid image?
         if(false == $img_info || !isset($img_info[2]) || !($img_info[2] == IMAGETYPE_JPEG || $img_info[2] == IMAGETYPE_PNG || $img_info[2] == IMAGETYPE_JPEG2000 || $img_info[2] == IMAGETYPE_GIF)) {
-            if(true == $debug)
-                echo 'The image doesn\'t seem to exist in the remote server';
             return ''; //return empty string
         }
 
@@ -109,8 +90,6 @@ class JMAYtOverlay {
 
         //was the attempt successful?
         if(FALSE === $m_img) {
-            if(true == $debug)
-                echo 'Can not create image from the URL';
             return '';
         }
 
