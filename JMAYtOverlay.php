@@ -8,17 +8,30 @@
  */
 class JMAYtOverlay {
     var $url;
+    var $id;
+    var $add;
 
-    public function __construct($url, $id){//echo $url;
+    public function __construct($url, $id, $add){//echo $url;
         $this->url = $url;
-        $ex = explode('.', basename($url));
+        $this->id = $id;
+        $this->add = $add;
+    }
+
+    public function get_url(){
+        $ex = explode('.', basename($this->url));
         $ext = $ex[1];
         $sep = DIRECTORY_SEPARATOR;
-        $dirname = plugins_url($sep . 'overlays' . $sep . $id . '.' . $ext, __FILE__);
-        $store_dir = realpath(plugin_dir_path(__FILE__)) . $sep . 'overlays';
-        $filename = realpath(plugin_dir_path(__FILE__)) . $sep . 'overlays' . $sep . $id . '.' . $ext;
-        if(!file_exists($filename))
-            $this->fetch_image($url, $store_dir, $id);
+        $filename = realpath(plugin_dir_path(__FILE__)) . $sep . 'overlays' . $sep . $this->id . '.' . $ext;
+        $trans_id = 'jmaytoverlay' . $this->id;
+        $return = get_transient( $trans_id );
+        if(false === $return || !file_exists($filename)){
+            $return = plugins_url($sep . 'overlays' . $sep . $this->id . '.' . $ext, __FILE__);
+            $store_dir = realpath(plugin_dir_path(__FILE__)) . $sep . 'overlays';
+            $this->fetch_image($this->url, $store_dir, $this->id);
+            $add = false === $return? 0: $this->add;
+            set_transient( $trans_id, $return, 604800 + $add );
+        }
+        return $return;
     }
 
     /**

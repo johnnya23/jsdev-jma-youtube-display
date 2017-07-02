@@ -201,7 +201,7 @@ class JMAYtVideo {
         $return .= '<div class="jma-responsive-wrap" itemprop="video" itemscope itemtype="http://schema.org/VideoObject">';
         $return .= '<button class="jmayt-btn" ' . $this->button_string . '>&#xe140;</button>';
         $return .= JMAYtVideo::jma_youtube_schema_html($meta_array);
-        if(!$list){
+        if(!$list || !$jmayt_options_array['cache_images']){// single video or image caching off
             $return .=  '<iframe src="https://www.youtube.com/embed/' . $id . '?rel=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe>';
         }else{
             $overlay = new JMAYtOverlay($meta_array['standardUrl'], $id);
@@ -228,7 +228,7 @@ class JMAYtVideo {
         global $jmayt_options_array;
         $trans_id = 'jmaytvideo' . $this->id . $this->trans_atts_id;
         $return = get_transient( $trans_id );
-        if(false === $return || !$jmayt_options_array['cache']) {//if cache at 0
+        if(false === $return || !$jmayt_options_array['cache']) {//force reset if cache option at 0
             $return = JMAYtVideo::single_html($this->id);
             set_transient( $trans_id, $return, $jmayt_options_array['cache'] );
         }

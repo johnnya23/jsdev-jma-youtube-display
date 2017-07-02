@@ -32,7 +32,7 @@ class JMAYtList extends JMAYtVideo {
     public function markup($res_cols = array()){
         global $jmayt_options_array;
         $col_class = '';
-        $trans_id = 'jmaytlist' . $post_id . $trans_atts_id;
+        $trans_id = 'jmaytvideolist' . $post_id . $trans_atts_id;
         foreach($res_cols as $break => $res_col){
             $trans_id .= $break . $res_col;
         }
@@ -58,7 +58,7 @@ class JMAYtList extends JMAYtVideo {
                     $col_class .= ' jmayt-col-' . $break . '-' . $val;
                 }
                 $return = '';
-                foreach($yt_loop_items as $yt_loop_item){
+                foreach($yt_loop_items as $i => $yt_loop_item){
                     // add bootstrap column classses for each screen size
                     $br_cl = '';
                     foreach($res_cols as $break => $res_col){
@@ -71,8 +71,8 @@ class JMAYtList extends JMAYtVideo {
                     if($yt_snippet['thumbnails']){//only show videos with thumbnails in grid
                         $yt_id = $yt_snippet['resourceId']['videoId'];
                         $return .= '<div class="jmayt-outer jmayt-list-item ' . $col_class . $br_cl .'"' . $this->col_space . '>';
-                        //$return .= '<div class="jmayt-item">';
-                        $return .= JMAYtList::single_html($yt_id, true);
+                        $add = ((604800/$count)*$i + 1);
+                        $return .= JMAYtList::single_html($yt_id, $add);
                         //$return .= '</div><!--yt-item-->';
                         $return .= '</div><!--col-->';
                         $i++;
