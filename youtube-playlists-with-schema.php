@@ -504,11 +504,11 @@ box-sizing: border-box;
     transform: translate(-50%, -50%);
     width: 100%;
     transition: all 0.3s;
-}
+}/*
 .jmayt-video-wrap.jmayt-fixed .jma-responsive-wrap {
     padding-bottom: 45%;
     width: 80%;
-}
+}*/
 .jmayt-fixed {
     background: rgba(0,0,0,0.8);
     position: absolute;

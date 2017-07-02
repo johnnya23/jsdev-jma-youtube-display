@@ -199,7 +199,7 @@ class JMAYtVideo {
         $return .= '<div class="jmayt-item">';
         $return .= '<div class="jmayt-video-wrap">';
         $return .= '<div class="jma-responsive-wrap" itemprop="video" itemscope itemtype="http://schema.org/VideoObject">';
-        $return .= '<button class="jmayt-btn" ' . $this->button_string . '>&#xe140;</button>';
+        $return .= '<button class="jmayt-btn jmayt-sm" ' . $this->button_string . '>&#xe140;</button>';
         $return .= JMAYtVideo::jma_youtube_schema_html($meta_array);
         if(!$list || !$jmayt_options_array['cache_images']){// single video or image caching off
             $return .=  '<iframe src="' . $meta_array['embedURL'] . '?rel=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe>';

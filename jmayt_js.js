@@ -28,11 +28,11 @@ function jmayt_toggle(){
         $scroll = jQuery(document).scrollTop();
         //get rid of scroll
         jQuery('body, html').css('overflow-y','hidden');
-        $parent = $this.parent('.jmayt-item');
+        $parent = $this.parents('.jmayt-item');
         $parent_width = $parent.innerWidth();
         $button = $this;
         $fixed = $this.parents('.jmayt-video-wrap');
-        $z_index = $fixed.parents('.jmayt-outer').parents().add($fixed).not(jQuery('body, html'));
+        $z_index = $fixed.parents('.jmayt-outer').parents().add($fixed)/*.not(jQuery('body, html'))*/;
         $parent.css('min-height', $parent.height() + 'px');
         $this.html('&#xe097;');
         //bring this section of the page to the top
@@ -42,7 +42,7 @@ function jmayt_toggle(){
         //first we make it absolute and give it a size
         $fixed.addClass('jmayt-fixed');
         //x and y coordinates of the div (static)
-        $pos = $this.offset();
+        $pos = $parent.offset();
         $pos_top = $pos.top;
         $pos_left = $pos.left;
         $fixed.css({
@@ -55,6 +55,15 @@ function jmayt_toggle(){
             'width': jQuery(window).width() + 'px',
             'height': window.innerHeight + 'px'
         });
+        $ratio = 9/16;
+        $video_win = $this.parents('.jma-responsive-wrap');
+        $window = jQuery(window);//console.log($window.height()/$window.width() + 'ddd'+$ratio);
+        if(($window.height()/$window.width()) < $ratio){
+            $video_win.css({
+                'width': ((($window.height()/$window.width())/$ratio)*100) + '%',
+                'padding-bottom': (($window.height()/$window.width())*100) + '%'
+            });
+        }
     }
 
     function jmayt_hide_lightbox() {
@@ -77,6 +86,10 @@ function jmayt_toggle(){
             $z_index.each(function(){
                 jQuery(this).css({'z-index': '', 'overflow': ''})
             });
+            $video_win.css({
+                'width': '',
+                'padding-bottom': ''
+            });
         });
         jQuery('body, html').css('overflow-y','');
     }
@@ -98,6 +111,15 @@ function jmayt_toggle(){
                 'width': jQuery(window).width() + 'px',
                 'height': window.innerHeight + 'px',
             })
+            $ratio = 9/16;
+            $video_win = $this.find('.jma-responsive-wrap');
+            $window = jQuery(window);//console.log($window.height()/$window.width() + 'ddd'+$ratio);
+            if(($window.height()/$window.width()) < $ratio){
+                $video_win.css({
+                    'width': ((($window.height()/$window.width())/$ratio)*100) + '%',
+                    'padding-bottom': (($window.height()/$window.width())*100) + '%'
+                });
+            }
         });
     }
     //for width change and orientation change on mobile
