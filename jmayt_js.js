@@ -18,7 +18,7 @@ function jmayt_video_resize(){
 
 function jmayt_toggle(){
     //create the toggle lightbox effect for the youtube items
-    jQuery('.jmayt-video-wrap').each(function(){
+    jQuery('.jmayt-fixed, .jmayt-btn').each(function(){
         jQuery(this).toggle(jmayt_show_lightbox, jmayt_hide_lightbox);
     });
 
@@ -30,22 +30,22 @@ function jmayt_toggle(){
         jQuery('body, html').css('overflow-y','hidden');
         $parent = $this.parent('.jmayt-item');
         $parent_width = $parent.innerWidth();
-        $button = $this.find('.jmayt-btn');
-        $z_index = $this.parents('.jmayt-outer').parents().add($this).not(jQuery('body, html'));
-
+        $button = $this;
+        $fixed = $this.parents('.jmayt-video-wrap');
+        $z_index = $fixed.parents('.jmayt-outer').parents().add($fixed).not(jQuery('body, html'));
         $parent.css('min-height', $parent.height() + 'px');
-        $button.html('&#xe097;');
+        $this.html('&#xe097;');
         //bring this section of the page to the top
         $z_index.each(function(){
             jQuery(this).css({'z-index': '2147483647', 'overflow': 'visible'})
         });
         //first we make it absolute and give it a size
-        $this.addClass('jmayt-fixed');
+        $fixed.addClass('jmayt-fixed');
         //x and y coordinates of the div (static)
         $pos = $this.offset();
         $pos_top = $pos.top;
         $pos_left = $pos.left;
-        $this.css({
+        $fixed.css({
             'width': ($parent_width) + 'px',
             'height': ($parent_width)/1.7778 + 'px',
             'padding-bottom': 0
@@ -58,15 +58,15 @@ function jmayt_toggle(){
     }
 
     function jmayt_hide_lightbox() {
-        $button.html('&#xe140;');
-        $this.animate({
+        $this.html('&#xe140;');
+        $fixed.animate({
             'top': 0,
             'left': 0,
             'width': ($parent_width) + 'px',
             'height': ($parent_width)/1.7778 + 'px'
         }, 300, 'swing',function(){
-            $this.removeClass('jmayt-fixed');
-            $this.css({
+            $fixed.removeClass('jmayt-fixed');
+            $fixed.css({
                 'top': '',
                 'left': '',
                 'height': '',
@@ -105,7 +105,19 @@ function jmayt_toggle(){
     jQuery(window).resize(hold_fixed);
 }
 
+function jmayt_play_video(){
+    jQuery('.jmayt-overlay-button').bind('click', function(e){
+        e.preventDefault();
+        $this = jQuery(this);
+        videoUrl = $this.data('embedurl');
+        $iframe = $this.next();
+        $iframe.attr("src", videoUrl);
+        $iframe.css({'display': 'block'});
+    });
+}
+
 jQuery(document).ready(jmayt_title_resize);
+jQuery(document).ready(jmayt_play_video);
 jQuery(document).ready(jmayt_toggle);
 
 jQuery(window).resize(jmayt_title_resize);

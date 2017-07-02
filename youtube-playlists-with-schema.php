@@ -146,17 +146,22 @@ function jma_yt_autoloader( $class_name ) {
         require_once $classes_dir . DIRECTORY_SEPARATOR . $class_file;
     }
 }
-//jmayt_on_deactivation_dc
+
 function jmayt_clear_cache(){
     global $wpdb;
     global $jmayt_db_option;
     $jmayt_options_array = get_option($jmayt_db_option);
+    $plugin_options = $wpdb->get_results( "SELECT option_name FROM $wpdb->options WHERE option_name LIKE '_transient_jmaytvideo%' OR option_name LIKE '_transient_timeout_jmaytvideo%'" );
+    foreach( $plugin_options as $option ) {
+        delete_option( $option->option_name );
+    }
     if($jmayt_options_array['cache_images']){
         jmayt_on_activation_wc();
     }else{
-        $plugin_options = $wpdb->get_results( "SELECT option_name FROM $wpdb->options WHERE option_name LIKE '_transient_jmaytvideo%' OR option_name LIKE '_transient_timeout_jmaytvideo%'" );
-        foreach( $plugin_options as $option ) {
-            delete_option( $option->option_name );
+        $files = glob(realpath(plugin_dir_path(__FILE__)) . DIRECTORY_SEPARATOR . 'overlays' . DIRECTORY_SEPARATOR . '*'); // get all file names
+        foreach($files as $file){ // iterate files
+            if(is_file($file))
+                unlink($file); // delete file
         }
         jmayt_on_deactivation_dc();
     }
