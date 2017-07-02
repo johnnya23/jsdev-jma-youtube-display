@@ -202,10 +202,12 @@ class JMAYtVideo {
         $return .= '<button class="jmayt-btn" ' . $this->button_string . '>&#xe140;</button>';
         $return .= JMAYtVideo::jma_youtube_schema_html($meta_array);
         if(!$list || !$jmayt_options_array['cache_images']){// single video or image caching off
-            $return .=  '<iframe src="https://www.youtube.com/embed/' . $id . '?rel=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe>';
+            $return .=  '<iframe src="' . $meta_array['embedURL'] . '?rel=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe>';
         }else{
-            $overlay = new JMAYtOverlay($meta_array['standardUrl'], $id);
-            $return .=  '<iframe src="https://www.youtube.com/embed/' . $id . '?rel=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe>';
+            $overlay = new JMAYtOverlay($meta_array['standardUrl'], $id, $list);
+            $image_url = $overlay->get_url();
+            $return .= '<button class="jmayt-overlay-button" data-embedurl="' . $meta_array['embedURL'] . '?rel=0&autoplay=1"><img src="' . $image_url . '"/></button>';
+            $return .=  '<iframe class="jmayt-hidden-iframe" src="" frameborder="0" allowfullscreen></iframe>';
         }
         $return .= '</div><!--jma-responsive-wrap-->';
         $return .= '</div><!--yt-video-wrap-->';

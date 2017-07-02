@@ -83,7 +83,7 @@ function jmayt_detect_shortcode( $needle = '', $post_item = 0 ){
     }else{
         $return = false;
     }
-
+    
     return apply_filters('jmayt_detect_shortcode_result', $return, $post, $needle);
 }
 
@@ -146,14 +146,19 @@ function jma_yt_autoloader( $class_name ) {
         require_once $classes_dir . DIRECTORY_SEPARATOR . $class_file;
     }
 }
-
+//jmayt_on_deactivation_dc
 function jmayt_clear_cache(){
     global $wpdb;
-
-    $plugin_options = $wpdb->get_results( "SELECT option_name FROM $wpdb->options WHERE option_name LIKE '_transient_jmayt%' OR option_name LIKE '_transient_timeout_jmayt%'" );
-
-    foreach( $plugin_options as $option ) {
-        delete_option( $option->option_name );
+    global $jmayt_db_option;
+    $jmayt_options_array = get_option($jmayt_db_option);
+    if($jmayt_options_array['cache_images']){
+        jmayt_on_activation_wc();
+    }else{
+        $plugin_options = $wpdb->get_results( "SELECT option_name FROM $wpdb->options WHERE option_name LIKE '_transient_jmaytvideo%' OR option_name LIKE '_transient_timeout_jmaytvideo%'" );
+        foreach( $plugin_options as $option ) {
+            delete_option( $option->option_name );
+        }
+        jmayt_on_deactivation_dc();
     }
 }
 add_action( 'update_option_' . $jmayt_db_option, 'jmayt_clear_cache');
@@ -205,6 +210,14 @@ $settings = array(
                 'description'	=> __( 'Dev may allow plugin to function on Windows localhost (Use Production in production for security)', 'jmayt_textdomain' ),
                 'type'			=> 'radio',
                 'options'		=> array( 0 => 'Production' , 1 => 'Dev'),
+                'default'		=> 0
+            ),
+            array(
+                'id' 			=> 'cache_images',
+                'label'			=> __( 'Cache Images for lists', 'jmayt_textdomain' ),
+                'description'	=> __( 'cache', 'jmayt_textdomain' ),
+                'type'			=> 'radio',
+                'options'		=> array( 0 => 'Don\'t cache', 1 => 'Cache images'),
                 'default'		=> 0
             )
         )
@@ -343,45 +356,46 @@ if( is_admin() )
  * function jmayt_styles add the plugin specific styles
  * @return $css the css string
  */
-function jmayt_styles(){
+function jmayt_styles()
+{
     global $jmayt_options_array;
-    $item_gutter = floor($jmayt_options_array['item_gutter']/2);
+    $item_gutter = floor($jmayt_options_array['item_gutter'] / 2);
     // FORMAT FOR INPUT
 // $jmayt_styles[] = array($selector, array($property, $value)[,array($property, $value)...])
 
 //in format above format media queries  i.e. max-768@$selector, ...
 // $jmayt_styles[] = array(max(or min)-$width@$selector, array($property, $value)[,array($property, $value)...])
-    $jmayt_styles[10] =  array('div.jmayt-list-wrap' ,
+    $jmayt_styles[10] = array('div.jmayt-list-wrap',
         array('clear', 'both'),
         array('margin-left', -$item_gutter . 'px'),
         array('margin-right', -$item_gutter . 'px'),
     );
-    $jmayt_styles[20] =  array('div.jmayt-item-wrap' ,
+    $jmayt_styles[20] = array('div.jmayt-item-wrap',
         array('position', 'relative')
     );
-    $jmayt_styles[30] =  array('div.jmayt-list-item' ,
+    $jmayt_styles[30] = array('div.jmayt-list-item',
         array('min-height', '1px'),
         array('padding-left', $item_gutter . 'px'),
         array('padding-right', $item_gutter . 'px'),
         array('margin-bottom', $jmayt_options_array['item_spacing'] . 'px'),
     );
-    if ($jmayt_options_array['item_border'] || $jmayt_options_array['item_bg']){
-        $border_array = $jmayt_options_array['item_border']? array('border', 'solid 2px ' . $jmayt_options_array['item_border']):
+    if ($jmayt_options_array['item_border'] || $jmayt_options_array['item_bg']) {
+        $border_array = $jmayt_options_array['item_border'] ? array('border', 'solid 2px ' . $jmayt_options_array['item_border']) :
             array();
-        $bg_array = $jmayt_options_array['item_bg']? array('background', $jmayt_options_array['item_bg']): array();
+        $bg_array = $jmayt_options_array['item_bg'] ? array('background', $jmayt_options_array['item_bg']) : array();
         $jmayt_styles[50] = array('div.jmayt-item-wrap',
             $border_array,
             $bg_array
         );
     }
     $font_size = $lg_font_size = $jmayt_options_array['item_font_size'];
-    if($font_size)
-        $font_size = ceil($font_size*0.7);
-    $font_size_str = $jmayt_options_array['item_font_size']? array('font-size', $font_size . 'px')
-        :array();
-    $lg_font_size_str = $jmayt_options_array['item_font_size']? array('font-size', $lg_font_size . 'px')
-        :array();
-    $jmayt_styles[60] =  array('.jmayt-item h3.jmayt-title' ,
+    if ($font_size)
+        $font_size = ceil($font_size * 0.7);
+    $font_size_str = $jmayt_options_array['item_font_size'] ? array('font-size', $font_size . 'px')
+        : array();
+    $lg_font_size_str = $jmayt_options_array['item_font_size'] ? array('font-size', $lg_font_size . 'px')
+        : array();
+    $jmayt_styles[60] = array('.jmayt-item h3.jmayt-title',
         array('padding', '10px'),
         array('margin', ' 0'),
         array('line-height', '120%'),
@@ -389,10 +403,10 @@ function jmayt_styles(){
         array('text-align', $jmayt_options_array['item_font_alignment']),
         $font_size_str
     );
-    $jmayt_styles[70] =  array('.jmayt-item h3.jmayt-title:first-line' ,
+    $jmayt_styles[70] = array('.jmayt-item h3.jmayt-title:first-line',
         $lg_font_size_str
     );
-    $jmayt_styles[80] =  array('button.jmayt-btn, button.jmayt-btn:focus' ,
+    $jmayt_styles[80] = array('button.jmayt-btn, button.jmayt-btn:focus',
         array('position', 'absolute'),
         array('z-index', '10'),
         array('top', ' 0'),
@@ -407,12 +421,12 @@ function jmayt_styles(){
         array('-webkit-transition', 'all .2s'),
         array('transition', 'all .2s'),
     );
-    $jmayt_styles[90] =  array('button.jmayt-btn:hover' ,
+    $jmayt_styles[90] = array('button.jmayt-btn:hover',
         array('color', $jmayt_options_array['button_bg']),
         array('background', $jmayt_options_array['button_font']),
     );
 
-    $jmayt_values =  jmayt_output($jmayt_styles);
+    $jmayt_values = jmayt_output($jmayt_styles);
     /* create html output from  $jma_css_values */
 
 
@@ -435,12 +449,26 @@ box-sizing: border-box;
 .clearfix:after {
     clear: both
 }
-.jmayt-video-wrap .jma-responsive-wrap iframe {
-	 position: absolute;
-	 top: 0;
-	 left: 0;
-	 width: 100%;
-	 height: 100%;
+.jmayt-video-wrap .jma-responsive-wrap iframe,
+.jmayt-video-wrap .jma-responsive-wrap .jmayt-overlay-button{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+.jmayt-video-wrap .jma-responsive-wrap .jmayt-overlay-button {
+    display: block;
+    padding: 0;
+	top: -16.66%;
+	height: 133.33%;
+	border-width: 0;
+}
+.jmayt-video-wrap .jma-responsive-wrap .jmayt-overlay-button img {
+    width: 100%;
+}
+.jmayt-hidden-iframe {
+    display: none;
 }
 .jmayt-video-wrap {
     padding-bottom: 56.25%;
@@ -661,3 +689,42 @@ function jma_yt_video_wrap($atts, $content = null){
     return str_replace("\r\n", '', $x);
 }
 add_shortcode('yt_video_wrap','jma_yt_video_wrap');
+
+
+
+function jmayt_on_activation_wc(){
+
+    $jmayttxt = "
+	# WP Maximum Execution Time Exceeded
+	<IfModule mod_php5.c>
+		php_value max_execution_time 300
+	</IfModule>";
+
+    $htaccess = get_home_path().'.htaccess';
+    $contents = @file_get_contents($htaccess);
+    if(!strpos($htaccess,$jmayttxt))
+        file_put_contents($htaccess,$contents.$jmayttxt);
+}
+
+
+
+/* On deactivation delete code (dc) from htaccess file */
+
+function jmayt_on_deactivation_dc(){
+
+    $jmayttxt = "
+	# WP Maximum Execution Time Exceeded
+	<IfModule mod_php5.c>
+		php_value max_execution_time 300
+	</IfModule>";
+
+    $htaccess = get_home_path().'.htaccess';
+    $contents = @file_get_contents($htaccess);
+    file_put_contents($htaccess,str_replace($jmayttxt,'',$contents));
+
+}
+
+
+//register_activation_hook(   __FILE__, 'jmayt_on_activation_wc' );
+
+register_deactivation_hook( __FILE__, 'jmayt_on_deactivation_dc' );
