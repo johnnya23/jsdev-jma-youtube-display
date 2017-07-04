@@ -41,6 +41,8 @@ class JMAYtList extends JMAYtVideo {
         $return = get_transient( $trans_id );
         if(false === $return || !$jmayt_options_array['cache']) {//if cache at 0
             $yt_api_array = JMAYtList::yt_loop($this->id);
+            if(is_string($yt_api_array))
+                return JMAYtVideo::error_handler($yt_api_array);
             $yt_loop_items = $yt_api_array['items'];
             $count = count($yt_loop_items);
             $i = 0;

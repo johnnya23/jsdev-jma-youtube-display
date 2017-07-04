@@ -1,11 +1,11 @@
 function jmayt_title_resize(){
     jQuery('.jmayt-list-wrap').each(function(){
         //make all title boxes the same height as the largest box
-        $this = jQuery(this);
-        var $title_max = Math.max.apply(null, $this.find('h3').map(function () {
+        $title = jQuery(this);
+        var $title_max = Math.max.apply(null, $title.find('h3').map(function () {
             return jQuery(this).outerHeight();
         }).get());
-        $this.find('.jmayt-text-wrap').css('min-height', $title_max + 'px');
+        $title.find('.jmayt-text-wrap').css('min-height', $title_max + 'px');
     });
 }
 
@@ -58,7 +58,6 @@ function jmayt_toggle(){
     }
 
     function jmayt_hide_lightbox() {
-        $this = jQuery(this);
         $this.html('&#xe140;');
         $fixed.animate({
             'top': 0,
@@ -89,22 +88,22 @@ function jmayt_toggle(){
 function hold_fixed(){
     //using the class that is added on show_lightbox
     jQuery('.jmayt-fixed').each(function(){
-        $this = jQuery(this);
+        $fixed_el = jQuery(this);
         //distance the use has scrolled down the window (dynamic)
         $scroll = jQuery(document).scrollTop();
-        $parent = $this.closest('.jmayt-item');
+        $parent = $fixed_el.closest('.jmayt-item');
         //x and y coordinates of the div (static)
         $pos = $parent.offset();
         $pos_top = $pos.top;
         $pos_left = $pos.left;
-        $this.css({
+        $fixed_el.css({
             'top': -($pos_top - $scroll) + 'px',
             'left': -$pos_left + 'px',
             'width': jQuery(window).width() + 'px',
             'height': window.innerHeight + 'px',
         })
         $ratio = 9/16;
-        $video_win = $this.find('.jma-responsive-wrap');
+        $video_win = $fixed_el.find('.jma-responsive-wrap');
         $window = jQuery(window);
         if(($window.height()/$window.width()) < $ratio){//for short window reduce wrap width
             $video_win.css({
@@ -117,9 +116,9 @@ function hold_fixed(){
 
 function jmayt_play_video(){
     jQuery('.jmayt-overlay-button').click(function(){
-        $this = jQuery(this);
-        videoUrl = $this.data('embedurl');
-        $iframe = $this.next();
+        $player = jQuery(this);
+        videoUrl = $player.data('embedurl');
+        $iframe = $player.next();
         $iframe.attr("src", videoUrl);
         $iframe.css({'display': 'block'});
     });

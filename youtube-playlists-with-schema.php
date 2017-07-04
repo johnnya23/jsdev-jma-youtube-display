@@ -445,6 +445,10 @@ box-sizing: border-box;
 .jmayt-outer p, .jmayt-outer br, .jmayt-list-wrap p, .jmayt-list-wrap br {
     display: none;
 }
+.doink-wrap p {
+    display: block!important;
+}
+
 .jmayt-col-xs-020{width:20%}@media (min-width:768px){.jmayt-col-sm-020{width:20%}}@media (min-width:992px){.jmayt-col-md-020{width:20%}}@media (min-width:1200px){.jmayt-col-lg-020{width:20%}}
 .clearfix:before, .clearfix:after {
     zoom:1;

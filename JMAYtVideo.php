@@ -29,9 +29,12 @@ class JMAYtVideo {
         $result = curl_exec($curl);
         curl_close($curl);
         $return = json_decode($result, true);
-        if(!$return || array_key_exists ('error', $return))
-            $return = false;
-
+        if(!$return || array_key_exists ('error', $return)){
+            if(array_key_exists ('error', $return))
+                $return = $return['error']['errors'][0]['reason'];//keyInvalid, playlistNotFound, accessNotConfigured, ipRefererBlocked
+            else
+                $return = 'unknown';
+        }
         return $return;
     }
 
@@ -51,8 +54,10 @@ class JMAYtVideo {
         $snippet = array();
         $youtube = 'https://www.googleapis.com/youtube/v3/videos?part=snippet&id=' . $id . '&fields=items%2Fsnippet&key=' . $this->api;
         $curl_array = JMAYtVideo::curl($youtube);
-        if($curl_array)
+        if(is_array($curl_array))
             $snippet = $curl_array['items'][0]['snippet'];
+        elseif(is_string($curl_array))
+            $snippet = $curl_array;
         return $snippet;
     }
 
@@ -170,6 +175,13 @@ class JMAYtVideo {
         return $return;
     }
 
+
+    protected function error_handler($string){
+        $return = '<div class="doink-wrap"><h2>doink</h2>' . $string . '</div>';//keyInvalid, playlistNotFound, accessNotConfigured or quotaExceeded, ipRefererBlocked
+
+        return $return;
+    }
+
     /*
      * function single_html()
      * @param string $id - the video id
@@ -180,6 +192,8 @@ class JMAYtVideo {
     protected function single_html($id, $list = false){
         global $jmayt_options_array;
         $snippet = JMAYtVideo::video_snippet($id);//echo '<pre>';print_r($snippet); echo '</pre>';
+        if(is_string($snippet))
+            return JMAYtVideo::error_handler($snippet);
         $meta_array = JMAYtVideo::map_meta($snippet, $id);
         $h3_title = $meta_array['name'];
         $elipsis = '';
