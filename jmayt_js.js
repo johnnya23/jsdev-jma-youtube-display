@@ -7,18 +7,11 @@ function jmayt_title_resize(){
         }).get());
         $this.find('.jmayt-text-wrap').css('min-height', $title_max + 'px');
     });
-};
-
-function jmayt_video_resize(){
-    jQuery('.jmayt-fixed').css({
-        'width': jQuery(window).width() + 'px',
-        'height': window.innerHeight + 'px'
-    });
-};
+}
 
 function jmayt_toggle(){
     //create the toggle lightbox effect for the youtube items
-    jQuery('.jmayt-fixed, .jmayt-btn').each(function(){
+    jQuery('.jmayt-btn').each(function(){
         jQuery(this).toggle(jmayt_show_lightbox, jmayt_hide_lightbox);
     });
 
@@ -27,18 +20,16 @@ function jmayt_toggle(){
         //distance the user has scrolled down the window (dynamic)
         $scroll = jQuery(document).scrollTop();
         //get rid of scroll
-        jQuery('body, html').css('overflow-y','hidden');
         $parent = $this.parents('.jmayt-item');
         $parent_width = $parent.innerWidth();
         $button = $this;
         $fixed = $this.parents('.jmayt-video-wrap');
-        $z_index = $fixed.parents('.jmayt-outer').parents().add($fixed)/*.not(jQuery('body, html'))*/;
+        $z_index = $fixed.parents('.jmayt-outer').parents().add($fixed);
         $parent.css('min-height', $parent.height() + 'px');
         $this.html('&#xe097;');
         //bring this section of the page to the top
-        $z_index.each(function(){
-            jQuery(this).css({'z-index': '2147483647', 'overflow': 'visible'})
-        });
+        $z_index.css({'z-index': '2147483647', 'overflow': 'visible'});
+        jQuery('body').css({'overflow-y':'hidden'});
         //first we make it absolute and give it a size
         $fixed.addClass('jmayt-fixed');
         //x and y coordinates of the div (static)
@@ -57,7 +48,7 @@ function jmayt_toggle(){
         });
         $ratio = 9/16;
         $video_win = $this.parents('.jma-responsive-wrap');
-        $window = jQuery(window);//console.log($window.height()/$window.width() + 'ddd'+$ratio);
+        $window = jQuery(window);
         if(($window.height()/$window.width()) < $ratio){
             $video_win.css({
                 'width': ((($window.height()/$window.width())/$ratio)*100) + '%',
@@ -67,6 +58,7 @@ function jmayt_toggle(){
     }
 
     function jmayt_hide_lightbox() {
+        $this = jQuery(this);
         $this.html('&#xe140;');
         $fixed.animate({
             'top': 0,
@@ -83,53 +75,48 @@ function jmayt_toggle(){
                 'padding-bottom': ''
             });
             $parent.css('min-height', '');
-            $z_index.each(function(){
-                jQuery(this).css({'z-index': '', 'overflow': ''})
-            });
-            $video_win.css({
-                'width': '',
-                'padding-bottom': ''
-            });
+            $z_index.css({'z-index': '', 'overflow': ''});
         });
-        jQuery('body, html').css('overflow-y','');
-    }
-
-    function hold_fixed(){
-        //using the class that is added on show_lightbox
-        jQuery('.jmayt-fixed').each(function(){
-            $this = jQuery(this);
-            //distance the use has scrolled down the window (dynamic)
-            $scroll = jQuery(document).scrollTop();
-            $parent = $this.closest('.jmayt-item');
-            //x and y coordinates of the div (static)
-            $pos = $parent.offset();
-            $pos_top = $pos.top;
-            $pos_left = $pos.left;
-            $this.css({
-                'top': -($pos_top - $scroll) + 'px',
-                'left': -$pos_left + 'px',
-                'width': jQuery(window).width() + 'px',
-                'height': window.innerHeight + 'px',
-            })
-            $ratio = 9/16;
-            $video_win = $this.find('.jma-responsive-wrap');
-            $window = jQuery(window);//console.log($window.height()/$window.width() + 'ddd'+$ratio);
-            if(($window.height()/$window.width()) < $ratio){
-                $video_win.css({
-                    'width': ((($window.height()/$window.width())/$ratio)*100) + '%',
-                    'padding-bottom': (($window.height()/$window.width())*100) + '%'
-                });
-            }
+        $video_win.css({
+            'width': '',
+            'padding-bottom': ''
         });
+        jQuery('body').css({'overflow-y':''});
     }
     //for width change and orientation change on mobile
-    jQuery(window).scroll(hold_fixed);
-    jQuery(window).resize(hold_fixed);
+}
+
+function hold_fixed(){
+    //using the class that is added on show_lightbox
+    jQuery('.jmayt-fixed').each(function(){
+        $this = jQuery(this);
+        //distance the use has scrolled down the window (dynamic)
+        $scroll = jQuery(document).scrollTop();
+        $parent = $this.closest('.jmayt-item');
+        //x and y coordinates of the div (static)
+        $pos = $parent.offset();
+        $pos_top = $pos.top;
+        $pos_left = $pos.left;
+        $this.css({
+            'top': -($pos_top - $scroll) + 'px',
+            'left': -$pos_left + 'px',
+            'width': jQuery(window).width() + 'px',
+            'height': window.innerHeight + 'px',
+        })
+        $ratio = 9/16;
+        $video_win = $this.find('.jma-responsive-wrap');
+        $window = jQuery(window);
+        if(($window.height()/$window.width()) < $ratio){//for short window reduce wrap width
+            $video_win.css({
+                'width': ((($window.height()/$window.width())/$ratio)*100) + '%',
+                'padding-bottom': (($window.height()/$window.width())*100) + '%'
+            });
+        }
+    });
 }
 
 function jmayt_play_video(){
-    jQuery('.jmayt-overlay-button').bind('click', function(e){
-        e.preventDefault();
+    jQuery('.jmayt-overlay-button').click(function(){
         $this = jQuery(this);
         videoUrl = $this.data('embedurl');
         $iframe = $this.next();
@@ -138,9 +125,10 @@ function jmayt_play_video(){
     });
 }
 
+jQuery(window).resize(hold_fixed);
+jQuery(window).scroll(hold_fixed);
 jQuery(document).ready(jmayt_title_resize);
 jQuery(document).ready(jmayt_play_video);
 jQuery(document).ready(jmayt_toggle);
 
 jQuery(window).resize(jmayt_title_resize);
-jQuery(window).resize(jmayt_video_resize);
