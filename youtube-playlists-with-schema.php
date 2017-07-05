@@ -163,6 +163,10 @@ function jmayt_clear_cache(){
             if(is_file($file))
                 unlink($file); // delete file
         }
+        $plugin_options = $wpdb->get_results( "SELECT option_name FROM $wpdb->options WHERE option_name LIKE '_transient_jmaytoverlay%' OR option_name LIKE '_transient_timeout_jmaytoverlay%'" );
+        foreach( $plugin_options as $option ) {
+            delete_option( $option->option_name );
+        }
         jmayt_on_deactivation_dc();
     }
 }

@@ -7,30 +7,43 @@
  * Time: 4:31 PM
  */
 class JMAYtOverlay {
-    var $url;
+    var $urls;
     var $id;
     var $add;
 
-    public function __construct($url, $id, $add){//echo $url;
-        $this->url = $url;
+    public function __construct($urls, $id, $add){//echo $urls;
+        $this->urls = $urls;
         $this->id = $id;
         $this->add = $add;
     }
 
     public function get_url(){
-        $ex = explode('.', basename($this->url));
-        $ext = $ex[1];
         $sep = DIRECTORY_SEPARATOR;
-        $filename = realpath(plugin_dir_path(__FILE__)) . $sep . 'overlays' . $sep . $this->id . '.' . $ext;
+        $urls = $this->urls;
         $trans_id = 'jmaytoverlay' . $this->id;
         $return = get_transient( $trans_id );
-        if(false === $return || !file_exists($filename)){
-            $return = plugins_url($sep . 'overlays' . $sep . $this->id . '.' . $ext, __FILE__);
-            $store_dir = realpath(plugin_dir_path(__FILE__)) . $sep . 'overlays';
-            $this->fetch_image($this->url, $store_dir, $this->id);
-            $add = false === $return? 0: $this->add;
-            set_transient( $trans_id, $return, 604800 + $add );
+        $i = 0;
+        $complete = false;
+        do {
+            if(array_key_exists($i, $urls)){
+                $ex = explode('.', basename($urls[$i]));
+                $ext = $ex[1];
+                $filename = realpath(plugin_dir_path(__FILE__)) . $sep . 'overlays' . $sep . $this->id . '.' . $ext;
+                if(false === $return || !file_exists($filename)){
+                    $store_dir = realpath(plugin_dir_path(__FILE__)) . $sep . 'overlays';//echo $this->fetch_image($urls[$i], $store_dir, $this->id);
+                    if($this->fetch_image($urls[$i], $store_dir, $this->id)){
+                        $add = false === $return? 0: $this->add;
+                        $return = plugins_url($sep . 'overlays' . $sep . $this->id . '.' . $ext, __FILE__);
+                        set_transient( $trans_id, $return, 604800 + $add );
+                        $complete = true;
+                    }
+                }
+                $i++;
+            }else
+                $complete = true;
         }
+        while(!$complete);
+
         return $return;
     }
 
