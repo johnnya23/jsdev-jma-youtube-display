@@ -11,7 +11,7 @@ class JMAYtOverlay {
     var $id;
     var $add;
 
-    public function __construct($urls, $id, $add){//echo $urls;
+    public function __construct($urls, $id, $add){
         $this->urls = $urls;
         $this->id = $id;
         $this->add = $add;
@@ -30,7 +30,7 @@ class JMAYtOverlay {
                 $ext = $ex[1];
                 $filename = realpath(plugin_dir_path(__FILE__)) . $sep . 'overlays' . $sep . $this->id . '.' . $ext;
                 if(false === $return || !file_exists($filename)){
-                    $store_dir = realpath(plugin_dir_path(__FILE__)) . $sep . 'overlays';//echo $this->fetch_image($urls[$i], $store_dir, $this->id);
+                    $store_dir = realpath(plugin_dir_path(__FILE__)) . $sep . 'overlays';
                     if($this->fetch_image($urls[$i], $store_dir, $this->id)){
                         $add = false === $return? 0: $this->add;
                         $return = plugins_url($sep . 'overlays' . $sep . $this->id . '.' . $ext, __FILE__);
@@ -53,7 +53,6 @@ class JMAYtOverlay {
      * A custom function in PHP which lets you fetch jpeg or png images from remote server to your local server
      * Can also prevent duplicate by appending an increasing _xxxx to the filename. You can also overwrite it.
      *
-     * Also gives a debug mode to check where the problem is, if this is not working for you.
      *
      * @author Swashata <swashata ~[at]~ intechgrity ~[dot]~ com>
      * @copyright Do what ever you wish - I like GPL <img draggable="false" class="emoji" alt="🙂" src="https://s.w.org/images/core/emoji/2.3/svg/1f642.svg"> (& love tux ;))
@@ -138,9 +137,6 @@ class JMAYtOverlay {
 
         return '';
     }
-
-//a quick test? just uncomment the line below
-//echo itg_fetch_image('http://tuxpaint.org/stamps/stamps/animals/birds/cartoon/tux.png');
 
 
 }

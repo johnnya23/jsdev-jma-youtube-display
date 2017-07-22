@@ -31,7 +31,7 @@ class JMAYtVideo {
         $return = json_decode($result, true);
         if(!$return || array_key_exists ('error', $return)){
             if(array_key_exists ('error', $return))
-                $return = $return['error']['errors'][0]['reason'];//keyInvalid, playlistNotFound, accessNotConfigured, ipRefererBlocked
+                $return = $return['error']['errors'][0]['reason'];//keyInvalid, playlistNotFound, accessNotConfigured, ipRefererBlocked, keyExpired
             else
                 $return = 'unknown';
         }
@@ -54,9 +54,11 @@ class JMAYtVideo {
         $snippet = array();
         $youtube = 'https://www.googleapis.com/youtube/v3/videos?part=snippet&id=' . $id . '&fields=items%2Fsnippet&key=' . $this->api;
         $curl_array = JMAYtVideo::curl($youtube);
-        if(is_array($curl_array))
+        if(is_array($curl_array)){
+            if(!count($curl_array['items']))
+                return 'videoNotFound';
             $snippet = $curl_array['items'][0]['snippet'];
-        elseif(is_string($curl_array))
+        }elseif(is_string($curl_array))
             $snippet = $curl_array;
         return $snippet;
     }
@@ -177,7 +179,46 @@ class JMAYtVideo {
 
 
     protected function error_handler($string){
-        $return = '<div class="doink-wrap"><h2>doink</h2>' . $string . '</div>';//keyInvalid, playlistNotFound, accessNotConfigured or quotaExceeded, ipRefererBlocked
+        switch ($string) {//keyInvalid, playlistNotFound, accessNotConfigured or quotaExceeded, ipRefererBlocked, keyExpired, videoNotFound
+            case 'keyInvalid':
+            case 'keyExpired':
+            $explaination = '<p>keyInvalid or keyExpired:<br/>';
+            $explaination .= 'Either the api value is blank or the wrong value has been inserted for the api value see: WordPress Dashboard > Settings > YouTube Playlists with Schema';
+            $explaination .= '</p>';
+                break;
+            case 'accessNotConfigured':
+            case 'quotaExceeded':
+            $explaination = '<p>accessNotConfigured or quotaExceeded:<br/>';
+            $explaination .= 'This generally means that the YouTube Data Api is not enalbed for your Google Project. Try going <a href="https://console.developers.google.com/apis/api/" target="_blank" >here</a> make sure you are in the correct project. Find the api under the Library tab and click "Enable" toward the top of the tab content';
+            $explaination .= '</p>';
+                break;
+            case 'ipRefererBlocked':
+                $explaination = '<p>ipRefererBlocked:<br/>';
+                $explaination .= 'This generally means that the domain for this website is excluded by restrictions set on the api credentials.  Try going <a href="https://console.developers.google.com/apis/api/" target="_blank" >here</a> make sure you are in the correct project. Find the api key under the Credentials tab and click the edit pencil. A common mistake is "*.domain.com/*" the first dot often needs to be removed if the domain is not on a "www" format.';
+                $explaination .= '</p>';
+                break;
+            case 'playlistNotFound':
+            case 'videoNotFound':
+            $explaination = '<p>playlistNotFound or videoNotFound:<br/>';
+            $explaination .= '<strong>Good News! </strong>Your api code is correct either the video id or plylist id is incorrect';
+            $explaination .= '</p>';
+                break;
+            default:
+                $explaination = '<p>Unknown:<br/>';
+                $explaination .= 'Unknown error. Make sure the list or video is public. Check value at: WordPress Dashboard > Settings > YouTube Playlists with Schema. Check settings <a href="https://console.developers.google.com/apis/api/" target="_blank" >here</a>.';
+                $explaination .= '</p>';
+        }
+        $return = '<div class="doink-wrap"><h2>doink</h2>';
+        $return .= '<p>';
+        $return .= 'There are several possible reasons for an error (keyInvalid or keyExpired, accessNotConfigured or quotaExceeded, ipRefererBlocked, playlistNotFound or videoNotFound)';
+        $return .= '</p>';
+        $return .= '<p>';
+        $return .= 'Current error:<strong>' . $string . '</strong>';
+        $return .= '</p>';
+        $return .= '<p>';
+        $return .= $explaination;
+        $return .= '</p>';
+        $return .= '</div>';
 
         return $return;
     }
@@ -191,9 +232,10 @@ class JMAYtVideo {
     * */
     protected function single_html($id, $list = false){
         global $jmayt_options_array;
-        $snippet = JMAYtVideo::video_snippet($id);//echo '<pre>';print_r($snippet); echo '</pre>';
-        if(is_string($snippet))
+        $snippet = JMAYtVideo::video_snippet($id);
+        if(is_string($snippet)){
             return JMAYtVideo::error_handler($snippet);
+        }else{
         $meta_array = JMAYtVideo::map_meta($snippet, $id);
         $h3_title = $meta_array['name'];
         $elipsis = '';
@@ -231,6 +273,7 @@ class JMAYtVideo {
         $return .= '</div><!--yt-item-->';
         $return .= '</div><!--yt-item-wrap-->';
         return $return;
+        }
     }
 
     /*
