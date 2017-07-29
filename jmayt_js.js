@@ -85,7 +85,7 @@ function jmayt_toggle(){
     //for width change and orientation change on mobile
 }
 
-function hold_fixed(){
+function jmayt_hold_fixed(){
     //using the class that is added on show_lightbox
     jQuery('.jmayt-fixed').each(function(){
         $fixed_el = jQuery(this);
@@ -100,8 +100,8 @@ function hold_fixed(){
             'top': -($pos_top - $scroll) + 'px',
             'left': -$pos_left + 'px',
             'width': jQuery(window).width() + 'px',
-            'height': window.innerHeight + 'px',
-        })
+            'height': window.innerHeight + 'px'
+        });
         $ratio = 9/16;
         $video_win = $fixed_el.find('.jma-responsive-wrap');
         $window = jQuery(window);
@@ -114,18 +114,38 @@ function hold_fixed(){
     });
 }
 
+
 function jmayt_play_video(){
+    var $player;
+
     jQuery('.jmayt-overlay-button').click(function(){
-        $player = jQuery(this);
-        videoUrl = $player.data('embedurl');
-        $iframe = $player.next();
-        $iframe.attr("src", videoUrl);
-        $iframe.css({'display': 'block'});
+        $overlayButton = jQuery(this);
+        $overlayButton.css('display', 'none');
+        setupVideo($overlayButton);
     });
+
+    function setupVideo($button) {
+        // create the global player from the specific iframe (#video) jmayt-overlay-button
+        $button_id = $button.data('embedid');
+        $player = new YT.Player( 'video' + $button_id, {
+            videoId: $button_id,
+            playerVars: {
+                rel: 0
+            },
+            events: {
+                // call this function when player is ready to use
+                'onReady': onPlayerReady,
+            }
+        });
+    }
+
+    function onPlayerReady(event) {
+        $player.playVideo();
+    }
 }
 
-jQuery(window).resize(hold_fixed);
-jQuery(window).scroll(hold_fixed);
+jQuery(window).resize(jmayt_hold_fixed);
+jQuery(window).scroll(jmayt_hold_fixed);
 jQuery(document).ready(jmayt_title_resize);
 jQuery(document).ready(jmayt_play_video);
 jQuery(document).ready(jmayt_toggle);
