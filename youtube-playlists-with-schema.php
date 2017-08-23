@@ -471,6 +471,7 @@ box-sizing: border-box;
 	height: 100%;
 }
 .jmayt-video-wrap .jma-responsive-wrap .jmayt-overlay-button {
+    z-index:9;
     display: block;
     padding: 0;
 	top: -16.66%;

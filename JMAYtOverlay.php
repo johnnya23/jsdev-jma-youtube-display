@@ -1,10 +1,11 @@
 <?php
 
 /**
- * Created by PhpStorm.
- * User: John
- * Date: 6/25/2017
- * Time: 4:31 PM
+ * class JMAYtOverlay
+ * $urls is an array of thumbnail urls
+ * $id is a video id
+ * $add is a number of seconds calulated to try to space transient expiration
+ * Pull images from youtube with fetch_image(
  */
 class JMAYtOverlay {
     var $urls;
@@ -16,33 +17,41 @@ class JMAYtOverlay {
         $this->id = $id;
         $this->add = $add;
     }
-
+    /*
+     * get_url
+     * @variable $urls is an array of image urls
+     * starting with most desirable image size from youtube
+     * 
+     * 
+     * */
     public function get_url(){
         $sep = DIRECTORY_SEPARATOR;
         $urls = $this->urls;
         $trans_id = 'jmaytoverlay' . $this->id;
-        $return = get_transient( $trans_id );
-        $i = 0;
-        $complete = false;
-        do {
-            if(array_key_exists($i, $urls)){
-                $ex = explode('.', basename($urls[$i]));
-                $ext = $ex[1];
-                $filename = realpath(plugin_dir_path(__FILE__)) . $sep . 'overlays' . $sep . $this->id . '.' . $ext;
-                if(false === $return || !file_exists($filename)){
-                    $store_dir = realpath(plugin_dir_path(__FILE__)) . $sep . 'overlays';
-                    if($this->fetch_image($urls[$i], $store_dir, $this->id)){
-                        $add = false === $return? 0: $this->add;
-                        $return = plugins_url($sep . 'overlays' . $sep . $this->id . '.' . $ext, __FILE__);
-                        set_transient( $trans_id, $return, 604800 + $add );
-                        $complete = true;
-                    }
+        $return = get_transient( $trans_id );//evaluated later
+        $folder = realpath(plugin_dir_path(__FILE__)) . $sep . 'overlays';
+        if (!is_dir($folder))
+            mkdir($folder, '0755');
+
+        foreach($urls as $url) {
+
+            $ex = explode('.', basename($url));
+            $ext = $ex[1];
+
+            //asign image to overlays folder with name of youtube id (plus extension)
+            $filename = $folder . $sep . $this->id . '.' . $ext;
+            //transient evaluated here -- also have to check for image file in overlays folder
+            if(false === $return || !file_exists($filename)){
+
+                if($this->fetch_image($url, $folder, $this->id)){
+                    $add = false === $return? 0: $this->add;
+                    $return = plugins_url('/overlays/' . $this->id . '.' . $ext, __FILE__);
+                    set_transient( $trans_id, $return, 604800 + $add );
+
+                    break;//no need to check remaining images
                 }
-                $i++;
-            }else
-                $complete = true;
+            }
         }
-        while(!$complete);
 
         return $return;
     }

@@ -85,7 +85,7 @@ function jmayt_toggle(){
     //for width change and orientation change on mobile
 }
 
-function jmayt_hold_fixed(){
+function hold_fixed(){
     //using the class that is added on show_lightbox
     jQuery('.jmayt-fixed').each(function(){
         $fixed_el = jQuery(this);
@@ -113,41 +113,78 @@ function jmayt_hold_fixed(){
         }
     });
 }
+/* load video when it scrolls into screen */
 
+function JmaytUtils() {
 
-function jmayt_play_video(){
-    var $player;
-
-    jQuery('.jmayt-overlay-button').click(function(){
-        $overlayButton = jQuery(this);
-        $overlayButton.css('display', 'none');
-        setupVideo($overlayButton);
-    });
-
-    function setupVideo($button) {
-        // create the global player from the specific iframe (#video) jmayt-overlay-button
-        $button_id = $button.data('embedid');
-        $player = new YT.Player( 'video' + $button_id, {
-            videoId: $button_id,
-            playerVars: {
-                rel: 0
-            },
-            events: {
-                // call this function when player is ready to use
-                'onReady': onPlayerReady,
-            }
-        });
-    }
-
-    function onPlayerReady(event) {
-        $player.playVideo();
-    }
 }
 
-jQuery(window).resize(jmayt_hold_fixed);
-jQuery(window).scroll(jmayt_hold_fixed);
-jQuery(document).ready(jmayt_title_resize);
-jQuery(document).ready(jmayt_play_video);
-jQuery(document).ready(jmayt_toggle);
+JmaytUtils.prototype = {
+    constructor: JmaytUtils,
+    isElementInView: function (element, fullyInView) {
+        var pageTop = jQuery(window).scrollTop();
+        var pageBottom = pageTop + jQuery(window).height();
+        var elementTop = jQuery(element).offset().top;
+        var elementBottom = elementTop + jQuery(element).height();
 
-jQuery(window).resize(jmayt_title_resize);
+        if (fullyInView === true) {
+            return ((pageTop < elementTop) && (pageBottom > elementBottom));
+        } else {
+            return ((elementTop <= pageBottom) && (elementBottom >= pageTop));
+        }
+    }
+};
+
+var JmaytUtils = new JmaytUtils();
+
+function jmayt_load_video(){
+    jQuery('.jmayt-overlay-button').each(function(){
+        $overlayButton = jQuery(this);
+        if(JmaytUtils.isElementInView($overlayButton, false)){
+            setupVideo($overlayButton);
+        }
+    });
+
+}
+
+function setupVideo($button) {
+    // create the global player from the specific iframe (#video) jmayt-overlay-button
+    $button_id = $button.data('embedid');
+    $player = new YT.Player( 'video' + $button_id, {
+        videoId: $button_id,
+        playerVars: {rel: 0},
+        events: {
+            // call this function when player is ready to use
+            'onReady': onPlayerReady
+        }
+    });
+}
+function onPlayerReady(event) {
+
+    // bind events
+    $iframe = event.target.a;
+    var $playButton = jQuery($iframe).prev();
+    $playButton.bind("click", function() {
+        jQuery(this).css('display', 'none');
+        event.target.playVideo();
+    });
+
+}
+
+
+jQuery(window).scroll(function(){
+    hold_fixed();
+    jmayt_load_video()
+});
+
+jQuery(document).ready(function() {
+    jmayt_title_resize();
+    jmayt_load_video();
+    jmayt_toggle();
+
+});
+
+jQuery(window).resize(function(){
+    hold_fixed();
+    jmayt_title_resize();
+});
