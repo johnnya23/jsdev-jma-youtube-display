@@ -172,6 +172,7 @@ function jmayt_clear_cache(){
 add_action( 'update_option_' . $jmayt_db_option, 'jmayt_clear_cache');
 
 function jmayt_clear_function() {
+    global $wpdb;
     $files = glob(realpath(plugin_dir_path(__FILE__)) . DIRECTORY_SEPARATOR . 'overlays' . DIRECTORY_SEPARATOR . '*'); // get all file names
     foreach($files as $file){ // iterate files
         if(is_file($file))
