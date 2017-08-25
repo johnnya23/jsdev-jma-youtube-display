@@ -11,60 +11,73 @@ function jmayt_title_resize(){
 
 function jmayt_toggle(){
     //create the toggle lightbox effect for the youtube items
+    jQuery('.jmayt-video-wrap').click( function(){
+        if(jQuery(this).hasClass('jmayt-fixed'))
+        jmayt_hide_lightbox();
+    }).children().click(function(e) {
+        return false;
+    });
+
     jQuery('.jmayt-btn').each(function(){
         jQuery(this).toggle(jmayt_show_lightbox, jmayt_hide_lightbox);
     });
 
     function jmayt_show_lightbox() {
-        $this = jQuery(this);
-        //distance the user has scrolled down the window (dynamic)
-        $scroll = jQuery(document).scrollTop();
-        //get rid of scroll
-        $parent = $this.parents('.jmayt-item');
-        $parent_width = $parent.innerWidth();
-        $button = $this;
+        if(jQuery(this).is('button'))//keep $this if toggle is backwards
+            $this = jQuery(this);
         $fixed = $this.parents('.jmayt-video-wrap');
-        $z_index = $fixed.parents('.jmayt-outer').parents().add($fixed);
-        $parent.css('min-height', $parent.height() + 'px');
-        $this.html('&#xe097;');
-        //bring this section of the page to the top
-        $z_index.css({'z-index': '2147483647', 'overflow': 'visible'});
-        jQuery('body').css({'overflow-y':'hidden'});
-        //first we make it absolute and give it a size
-        $fixed.addClass('jmayt-fixed');
-        //x and y coordinates of the div (static)
-        $pos = $parent.offset();
-        $pos_top = $pos.top;
-        $pos_left = $pos.left;
-        $fixed.css({
-            'width': ($parent_width) + 'px',
-            'height': ($parent_width)/1.7778 + 'px',
-            'padding-bottom': 0
-        }).animate({//then we increase it's size while positioning it at the top left of the window
-            'top': -($pos_top - $scroll) + 'px',
-            'left': -$pos_left + 'px',
-            'width': jQuery(window).width() + 'px',
-            'height': window.innerHeight + 'px'
-        });
-        $ratio = 9/16;
-        $video_win = $this.parents('.jma-responsive-wrap');
-        $window = jQuery(window);
-        if(($window.height()/$window.width()) < $ratio){
-            $video_win.css({
-                'width': ((($window.height()/$window.width())/$ratio)*100) + '%',
-                'padding-bottom': (($window.height()/$window.width())*100) + '%'
+        if(!$fixed.hasClass('jmayt-fixed')){//adjust if toggle is backwards
+            //distance the user has scrolled down the window (dynamic)
+            $scroll = jQuery(document).scrollTop();
+            //get rid of scroll
+            $parent = $this.parents('.jmayt-item');
+            $parent_width = $parent.innerWidth();
+            $button = $this;
+            $z_index = $fixed.parents('.jmayt-outer').parents().add($fixed);
+            $parent.css('min-height', $parent.height() + 'px');
+            $this.html('&#xe097;');
+            //bring this section of the page to the top
+            $z_index.css({'z-index': '2147483647', 'overflow': 'visible'});
+            jQuery('body').css({'overflow-y':'hidden'});
+            //first we make it absolute and give it a size
+            $fixed.addClass('jmayt-fixed');
+            //x and y coordinates of the div (static)
+            $pos = $parent.offset();
+            $pos_top = $pos.top;
+            $pos_left = $pos.left;
+            $fixed.css({
+                'width': ($parent_width) + 'px',
+                'height': ($parent_width)/1.7778 + 'px',
+                'padding-bottom': 0
+            }).animate({//then we increase it's size while positioning it at the top left of the window
+                'top': -($pos_top - $scroll) + 'px',
+                'left': -$pos_left + 'px',
+                'width': jQuery(window).width() + 'px',
+                'height': window.innerHeight + 'px'
             });
+            $ratio = 9/16;
+            $video_win = $this.parents('.jma-responsive-wrap');
+            $window = jQuery(window);
+            if(($window.height()/$window.width()) < $ratio){
+                $video_win.css({
+                    'width': ((($window.height()/$window.width())/$ratio)*100) + '%',
+                    'padding-bottom': (($window.height()/$window.width())*100) + '%'
+                });
+            }
+        }else{
+            jmayt_hide_lightbox()
         }
     }
 
     function jmayt_hide_lightbox() {
-        $this.html('&#xe140;');
-        $fixed.animate({
-            'top': 0,
-            'left': 0,
-            'width': ($parent_width) + 'px',
-            'height': ($parent_width)/1.7778 + 'px'
-        }, 300, 'swing',function(){
+        if($fixed.hasClass('jmayt-fixed')){//adjust if toggle is backwards
+            $this.html('&#xe140;');
+            $fixed.animate({
+                'top': 0,
+                'left': 0,
+                'width': ($parent_width) + 'px',
+                'height': ($parent_width) / 1.7778 + 'px'
+            }, 300, 'swing', function () {
             $fixed.removeClass('jmayt-fixed');
             $fixed.css({
                 'top': '',
@@ -75,12 +88,16 @@ function jmayt_toggle(){
             });
             $parent.css('min-height', '');
             $z_index.css({'z-index': '', 'overflow': ''});
-        });
-        $video_win.css({
-            'width': '',
-            'padding-bottom': ''
-        });
-        jQuery('body').css({'overflow-y':''});
+            });
+            $video_win.css({
+                'width': '',
+                'padding-bottom': ''
+            });
+            jQuery('body').css({'overflow-y': ''});
+        }else{
+            $this = jQuery(this);//redefine $this if toggle is backwards
+            jmayt_show_lightbox()
+        }
     }
     //for width change and orientation change on mobile
 }
@@ -137,29 +154,30 @@ JmaytUtils.prototype = {
 
 var JmaytUtils = new JmaytUtils();
 
-function jmayt_load_video(){
-    jQuery('.jmayt-overlay-button').each(function(){
+
+function onYouTubePlayerAPIReady() {
+    jQuery('body').addClass('jmayt_loaded');
+    jQuery('.jmayt-overlay-button').each(function () {
         $overlayButton = jQuery(this);
-        if(JmaytUtils.isElementInView($overlayButton, false)){
-            setupVideo($overlayButton);
-        }
-    });
-
-}
-
-function setupVideo($button) {
-    // create the global player from the specific iframe (#video) jmayt-overlay-button
-    $button_id = $button.data('embedid');
-    $player = new YT.Player( 'video' + $button_id, {
-        videoId: $button_id,
-        playerVars: {rel: 0},
-        events: {
-            // call this function when player is ready to use
-            'onReady': onPlayerReady
+        if (JmaytUtils.isElementInView($overlayButton, false) && !$overlayButton.next().is('iframe')) {
+            jmayt_setup_video($overlayButton);
         }
     });
 }
-function onPlayerReady(event) {
+
+function jmayt_setup_video($button) {
+        // create the global player from the specific iframe (#video) jmayt-overlay-button
+        $button_id = $button.data('embedid');
+        $player = new YT.Player('video' + $button_id, {
+            videoId: $button_id,
+            playerVars: {rel: 0},
+            events: {
+                // call this function when player is ready to use
+                'onReady': jmayt_onPlayerReady
+            }
+        });
+}
+function jmayt_onPlayerReady(event) {
 
     // bind events
     $iframe = event.target.a;
@@ -174,12 +192,13 @@ function onPlayerReady(event) {
 
 jQuery(window).scroll(function(){
     hold_fixed();
-    jmayt_load_video()
+    if(jQuery('body').hasClass('jmayt_loaded'))
+        onYouTubePlayerAPIReady()
 });
 
 jQuery(document).ready(function() {
+    //onYouTubePlayerAPIReady();
     jmayt_title_resize();
-    jmayt_load_video();
     jmayt_toggle();
 
 });
@@ -188,3 +207,10 @@ jQuery(window).resize(function(){
     hold_fixed();
     jmayt_title_resize();
 });
+
+//Inject YouTube API script
+var jmayttag = document.createElement('script');
+//jmayttag.id = "jmatyscript";
+jmayttag.src = "https://www.youtube.com/player_api";
+var jmaytScriptTag = document.getElementsByTagName('script')[0];
+jmaytScriptTag.parentNode.insertBefore(jmayttag, jmaytScriptTag);

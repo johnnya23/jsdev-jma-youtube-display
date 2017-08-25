@@ -31,8 +31,7 @@ add_action('admin_print_footer_scripts','jmayt_quicktags');
 function jmayt_scripts() {
 
     wp_enqueue_style( 'jmayt_bootstrap_css', plugins_url('/jmayt_bootstrap.css', __FILE__) );
-    wp_enqueue_script( 'jmayt-iframe', 'https://www.youtube.com/iframe_api' );
-    wp_enqueue_script( 'jmayt_js', plugins_url('/jmayt_js.js', __FILE__), array( 'jquery', 'jmayt-iframe' ) );
+    wp_enqueue_script( 'jmayt_js', plugins_url('/jmayt_js.js', __FILE__), array( 'jquery' ) );
     $custom_css = jmayt_styles();
     wp_add_inline_style( 'jmayt_bootstrap_css', $custom_css );
 }
