@@ -25,8 +25,6 @@ class JMAYtOverlay {
     public function get_url(){
         $sep = DIRECTORY_SEPARATOR;
         $urls = $this->urls;
-        $trans_id = 'jmaytoverlay' . $this->id;
-        $return = get_transient( $trans_id );//evaluated later
         $folder = realpath(plugin_dir_path(__FILE__)) . $sep . 'overlays';
         if (!is_dir($folder))
             mkdir($folder, '0755');
@@ -35,19 +33,19 @@ class JMAYtOverlay {
 
             $ex = explode('.', basename($url));
             $ext = $ex[1];
+            $return = plugins_url('/overlays/' . $this->id . '.' . $ext, __FILE__);
 
             //asign image to overlays folder with name of youtube id (plus extension)
             $filename = $folder . $sep . $this->id . '.' . $ext;
             //transient evaluated here -- also have to check for image file in overlays folder
-            if(false === $return || !file_exists($filename)){
+            if(!file_exists($filename)){
 
                 if($this->fetch_image($url, $folder, $this->id)){
-                    $return = plugins_url('/overlays/' . $this->id . '.' . $ext, __FILE__);
-                    set_transient( $trans_id, $return );
 
                     break;//no need to check remaining images
                 }
-            }
+            }else
+                break;
         }
 
         return $return;
