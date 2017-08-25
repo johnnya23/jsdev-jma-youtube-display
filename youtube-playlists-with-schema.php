@@ -477,6 +477,35 @@ box-sizing: border-box;
 	height: 133.33%;
 	border-width: 0;
 }
+.jmayt-video-wrap .jma-responsive-wrap .jmayt-overlay-button:after {
+    z-index:12;
+    background: rgba(0,0,0,0.7);
+    content: "";
+	position: absolute;
+    height: 30px;
+    width: 40px;
+    display: block;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	border-radius: 8px;
+}
+.jmayt-video-wrap .jma-responsive-wrap .jmayt-overlay-button:before {
+    z-index:14;
+    content: "";
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 7.5px 0 7.5px 18px;
+    border-color: transparent transparent transparent #ffffff;
+}
+.jmayt-video-wrap .jma-responsive-wrap .jmayt-overlay-button:hover:after {
+    background: rgba(238,0,0,0.7);
+}
 .jmayt-video-wrap .jma-responsive-wrap .jmayt-overlay-button img {
     width: 100%;
 }
