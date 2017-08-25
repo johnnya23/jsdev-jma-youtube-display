@@ -168,6 +168,9 @@ class JMAYtSettings {
                 $style = esc_attr( $field['id'] ) == 'api'? ' style="width: 350px; max-width: 100%" ': '';
                 $html .= '<input id="' . esc_attr( $field['id'] ) . '"' . $style . 'type="' . $field['type'] . '" name="' . esc_attr( $option_name ) . '" placeholder="' . esc_attr( $field['placeholder'] ) . '" value="' . $data . '"/>' . "\n";
                 break;
+            case 'submit':/* THIS IS JUST HARDCODED TO ENABLE BUTTON PLACEMENT WITHIN FORM */
+                $html .= '<p><input type="submit" name="submit" id="submit" class="button button-primary" value="Clear All Images" form="jmaty_clear"  /></p>';
+                break;
 
             case 'text_secret':
                 $html .= '<input id="' . esc_attr( $field['id'] ) . '" type="text" name="' . esc_attr( $option_name ) . '" placeholder="' . esc_attr( $field['placeholder'] ) . '" value=""/>' . "\n";
@@ -286,6 +289,10 @@ class JMAYtSettings {
         // Build page HTML
         $html = '<div class="wrap" id="' . $this->settings_base . 'settings">' . "\n";
         $html .= '<h2>' . __( $this->page_title . ' Settings' , $this->text_domain ) . '</h2>' . "\n";
+        $html .= '<form id="jmaty_clear" action="' . admin_url( "admin-post.php" ) . '">';
+        $html .= '<input type="hidden" name="action" value="jmayt_clear_function">';
+        $html .= '</form>';
+
         $html .= '<form method="post" action="options.php" enctype="multipart/form-data">' . "\n";
 
         $html .= '<div class="clear"></div>' . "\n";

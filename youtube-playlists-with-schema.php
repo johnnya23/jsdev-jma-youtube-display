@@ -171,6 +171,16 @@ function jmayt_clear_cache(){
 }
 add_action( 'update_option_' . $jmayt_db_option, 'jmayt_clear_cache');
 
+function jmayt_clear_function() {
+    $files = glob(realpath(plugin_dir_path(__FILE__)) . DIRECTORY_SEPARATOR . 'overlays' . DIRECTORY_SEPARATOR . '*'); // get all file names
+    foreach($files as $file){ // iterate files
+        if(is_file($file))
+            unlink($file); // delete file
+    }
+    die(  header( 'Location:' . admin_url( 'options-general.php?page=jmayt_settings' )) );
+}
+add_action( 'admin_post_jmayt_clear_function', 'jmayt_clear_function'  );
+
 /**
  * Build settings fields
  * @return array Fields to be displayed on settings page
@@ -227,6 +237,12 @@ $settings = array(
                 'type'			=> 'radio',
                 'options'		=> array( 0 => 'Don\'t cache', 1 => 'Cache images'),
                 'default'		=> 0
+            ),
+            array(
+                'id' 			=> 'clear_images',
+                'label'			=> __( 'Clear Images for lists', 'jmayt_textdomain' ),
+                'description'	=> __( 'Clear all images. This is the only way to get renewed images from YouTube. After clearing (or toggling the cache option above) you may want to load pages with long YouTube Lists as the first load will take a long time.', 'jmayt_textdomain' ),
+                'type'			=> 'submit'/* submit is one time only hardcoded placehoder */
             )
         )
     ),
@@ -490,6 +506,13 @@ box-sizing: border-box;
 	transform: translate(-50%, -50%);
 	border-radius: 8px;
 }
+@media(max-width: 992px){
+.jmayt-video-wrap .jma-responsive-wrap .jmayt-overlay-button:after {
+    background: rgba(238,0,0,0.8);
+}}
+.jmayt-video-wrap .jma-responsive-wrap .jmayt-overlay-button:hover:after {
+    background: rgba(238,0,0,0.6);
+}
 .jmayt-video-wrap .jma-responsive-wrap .jmayt-overlay-button:before {
     z-index:14;
     content: "";
@@ -500,11 +523,8 @@ box-sizing: border-box;
 	width: 0;
     height: 0;
     border-style: solid;
-    border-width: 7.5px 0 7.5px 18px;
+    border-width: 5px 0 5px 12px;
     border-color: transparent transparent transparent #ffffff;
-}
-.jmayt-video-wrap .jma-responsive-wrap .jmayt-overlay-button:hover:after {
-    background: rgba(238,0,0,0.7);
 }
 .jmayt-video-wrap .jma-responsive-wrap .jmayt-overlay-button img {
     width: 100%;

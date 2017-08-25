@@ -260,7 +260,7 @@ class JMAYtVideo {
         if(!$list || !$jmayt_options_array['cache_images']){// single video or image caching off
             $return .=  '<iframe src="' . $meta_array['embedURL'] . '?rel=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe>';
         }else{
-            $overlay = new JMAYtOverlay(array($meta_array['standardUrl'], $meta_array['thumbnailUrl']), $id, $list);
+            $overlay = new JMAYtOverlay(array($meta_array['standardUrl'], $meta_array['thumbnailUrl']), $id);
             $image_url = $overlay->get_url();
             $return .= '<button class="jmayt-overlay-button" data-embedid="' . $id . '"><img src="' . $image_url . '"/></button>';
             $return .=  '<div id="video' . $id . '" class="jmayt-hidden-iframe"></div>';

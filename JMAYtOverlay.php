@@ -10,12 +10,10 @@
 class JMAYtOverlay {
     var $urls;
     var $id;
-    var $add;
 
-    public function __construct($urls, $id, $add){
+    public function __construct($urls, $id){
         $this->urls = $urls;
         $this->id = $id;
-        $this->add = $add;
     }
     /*
      * get_url
@@ -44,9 +42,8 @@ class JMAYtOverlay {
             if(false === $return || !file_exists($filename)){
 
                 if($this->fetch_image($url, $folder, $this->id)){
-                    $add = false === $return? 0: $this->add;
                     $return = plugins_url('/overlays/' . $this->id . '.' . $ext, __FILE__);
-                    set_transient( $trans_id, $return, 604800 + $add );
+                    set_transient( $trans_id, $return );
 
                     break;//no need to check remaining images
                 }
