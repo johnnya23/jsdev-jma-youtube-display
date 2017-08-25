@@ -223,7 +223,7 @@ $settings = array(
             array(
                 'id' 			=> 'cache_images',
                 'label'			=> __( 'Cache Images for lists', 'jmayt_textdomain' ),
-                'description'	=> __( 'cache', 'jmayt_textdomain' ),
+                'description'	=> __( 'This option pulls thumbnail images from YouTube and stores them in the plugin for faster display of long lists. ACTIVATING THIS OPTION CAUSES THE PLUGIN TO TRY TO REWRITE .HTACCESS TO INCREASE MAX PAGE EXECUTION TIME TO 5 MINUTES. The first time a page with a large list loads the plugin will copy the YouTube thumbnail images dynamically. This means the first page load will be very slow. Thereafter the page will load thumbnails from the plugin folder (much faster). THIS OPTION MAY NOT WORK CORRECTLY DEPENDING ON YOUR HOSTING ENVIRONMENT (you can always switch back to conventional loading)', 'jmayt_textdomain' ),
                 'type'			=> 'radio',
                 'options'		=> array( 0 => 'Don\'t cache', 1 => 'Cache images'),
                 'default'		=> 0
