@@ -2,8 +2,8 @@
 Contributors: johnnya23
 Tags: youtube, schema, youtube gallery, youtube playlist, youtube embed, youtube seo, youtube channel, responsive youtube
 Requires at least: 4.0
-Tested up to: 4.8
-Stable tag: 1.1
+Tested up to: 4.8.2
+Stable tag: 1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,13 +14,13 @@ Shortcode for embed of responsive single videos and grids from YouTube video pla
 Creates styled grids in WordPress pages/post/sidebars from YouTube Playlists. Also, displays single YouTube videos from video id. All videos displayed through plugin shortcode (grids and single) include schema.org metadata markup as recommended by google.
 
 Requires YouTube Data API key &#8211; Instructions for getting the api can be found in the installation tab.
-Shortcode examples (remove the spaces immediately within the square brackets):
+Shortcode examples:
 **single videos**
-[ yt_video_wrap width=&#8221;100%&#8221; alignment=&#8221;none&#8221; ]**url here**[ /yt_video_wrap ]
-[ yt_video video_id=&#8221;yt_video_id&#8221; width=&#8221;100%&#8221; alignment=&#8221;none&#8221; ]
+[yt_video_wrap width=&#8221;100%&#8221; alignment=&#8221;none&#8221;]**url here**[/yt_video_wrap]
+[yt_video video_id=&#8221;your_yt_video_id&#8221; width=&#8221;100%&#8221; alignment=&#8221;none&#8221;]
 notice the optional width and alignment attributes above &#8211; just used to make simple positioning easier.
 **lists**
-[ yt_grid yt_list_id=&#8221;yt_list_id&#8221; ]
+[yt_grid yt_list_id=&#8221;your_yt_list_id&#8221;]
 Display attributes can be used to overwrite the plugin settings on a list by list basis (^indicates can be applied to grids only).
 item_font_color &#8211; the color of the h3 title
 item_font_size &#8211; title size in px
