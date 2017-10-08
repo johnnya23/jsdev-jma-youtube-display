@@ -169,7 +169,8 @@ class JMAYtSettings {
                 $html .= '<input id="' . esc_attr( $field['id'] ) . '"' . $style . 'type="' . $field['type'] . '" name="' . esc_attr( $option_name ) . '" placeholder="' . esc_attr( $field['placeholder'] ) . '" value="' . $data . '"/>' . "\n";
                 break;
             case 'submit':/* THIS IS JUST HARDCODED TO ENABLE BUTTON PLACEMENT WITHIN FORM */
-                $html .= '<p><input type="submit" name="submit" id="submit" class="button button-primary" value="Clear All Images" form="jmaty_clear"  /></p>';
+                $html .= '<p><input type="submit" name="submit" id="submit" class="button button-primary" value="Clear All Images (THIS IS NOT A SAVE BUTTON)" 
+form="jmaty_clear"  /></p>';
                 break;
 
             case 'text_secret':
