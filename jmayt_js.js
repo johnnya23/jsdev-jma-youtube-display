@@ -197,7 +197,7 @@ jQuery(window).scroll(function(){
 });
 
 jQuery(document).ready(function() {
-    //onYouTubePlayerAPIReady();
+    onYouTubePlayerAPIReady();
     jmayt_title_resize();
     jmayt_toggle();
 
