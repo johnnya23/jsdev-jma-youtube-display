@@ -200,9 +200,13 @@ jQuery(window).scroll(function(){
 });
 
 jQuery(document).ready(function() {
-    onYouTubePlayerAPIReady();
     jmayt_title_resize();
     jmayt_toggle();
+
+});
+
+jQuery(window).load(function() {
+    onYouTubePlayerAPIReady();
 
 });
 
@@ -210,10 +214,3 @@ jQuery(window).resize(function(){
     hold_fixed();
     jmayt_title_resize();
 });
-
-//Inject YouTube API script
-var jmayttag = document.createElement('script');
-//jmayttag.id = "jmatyscript";
-jmayttag.src = "https://www.youtube.com/player_api";
-var jmaytScriptTag = document.getElementsByTagName('script')[0];
-jmaytScriptTag.parentNode.insertBefore(jmayttag, jmaytScriptTag);

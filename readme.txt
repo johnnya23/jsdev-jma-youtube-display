@@ -2,8 +2,8 @@
 Contributors: johnnya23
 Tags: youtube, schema, youtube gallery, youtube playlist, youtube embed, youtube seo, youtube channel, responsive youtube
 Requires at least: 4.0
-Tested up to: 4.8.2
-Stable tag: 1.2.3
+Tested up to: 4.9
+Stable tag: 1.2.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -124,7 +124,7 @@ add_action('template_redirect', 'jma_template_redirect');
 
 It should. You need to add:
 `
-jmayt_toggle();jmayt_title_resize();
+jmayt_toggle();jmayt_title_resize();onYouTubePlayerAPIReady();
 `
 to the end of your success() function
 
@@ -160,4 +160,7 @@ https://bgrins.github.io/spectrum/
 * overlay fixes
 
 = 1.2.3 =
+* overlay fixes
+
+= 1.2.4 =
 * overlay fixes
