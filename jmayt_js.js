@@ -26,7 +26,7 @@ function jmayt_toggle(){
         if(jQuery(this).is('button'))//keep $this if toggle is backwards
             $this = jQuery(this);
         $fixed = $this.parents('.jmayt-video-wrap');
-        if(!$fixed.hasClass('jmayt-fixed')){//adjust if toggle is backwards
+        if(!$fixed.hasClass('jmayt-fixed')){//make sure toggle is not backwards
             //distance the user has scrolled down the window (dynamic)
             $scroll = jQuery(document).scrollTop();
             //get rid of scroll
@@ -64,7 +64,7 @@ function jmayt_toggle(){
                     'padding-bottom': (($window.height()/$window.width())*100) + '%'
                 });
             }
-        }else{
+        }else{//adjust if toggle is backwards
             jmayt_hide_lightbox()
         }
     }
@@ -170,7 +170,10 @@ function jmayt_setup_video($button) {
         $button_id = $button.data('embedid');
         $player = new YT.Player('video' + $button_id, {
             videoId: $button_id,
-            playerVars: {rel: 0},
+            playerVars: {
+                rel: 0,
+                enablejsapi:1
+            },
             events: {
                 // call this function when player is ready to use
                 'onReady': jmayt_onPlayerReady

@@ -4,7 +4,6 @@
  * class JMAYtOverlay
  * $urls is an array of thumbnail urls
  * $id is a video id
- * $add is a number of seconds calulated to try to space transient expiration
  * Pull images from youtube with fetch_image(
  */
 class JMAYtOverlay {
