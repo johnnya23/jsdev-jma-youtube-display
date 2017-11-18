@@ -155,7 +155,7 @@ JmaytUtils.prototype = {
 var JmaytUtils = new JmaytUtils();
 
 
-function onYouTubePlayerAPIReady() {
+function jmayt_onYouTubePlayerAPIReady() {
     jQuery('body').addClass('jmayt_loaded');
     jQuery('.jmayt-overlay-button').each(function () {
         $overlayButton = jQuery(this);
@@ -196,7 +196,7 @@ function jmayt_onPlayerReady(event) {
 jQuery(window).scroll(function(){
     hold_fixed();
     if(jQuery('body').hasClass('jmayt_loaded'))
-        onYouTubePlayerAPIReady()
+        jmayt_onYouTubePlayerAPIReady()
 });
 
 jQuery(document).ready(function() {
@@ -206,7 +206,7 @@ jQuery(document).ready(function() {
 });
 
 jQuery(window).load(function() {
-    onYouTubePlayerAPIReady();
+    jmayt_onYouTubePlayerAPIReady();
 
 });
 
